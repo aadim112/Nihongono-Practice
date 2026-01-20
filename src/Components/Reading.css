@@ -1,0 +1,161 @@
+.ReadingBanner{
+    width: 99%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    background-color: brown;
+    border-radius: 12px;
+    padding: 10px;
+}
+.ReadingBanner img{
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+}
+.ReadingBanner p{
+    font-size: 45px;
+    font-family: poppins;
+    color: white;
+}
+.ReadingPassage{
+    width: 48%;
+    height: 500px;
+    border: 0.5px solid rgb(228, 226, 226);
+    border-radius: 12px;
+    margin-top: 20px;
+    padding: 10px;
+    overflow: scroll;
+}
+.ReadingSection{
+    display: flex;
+    justify-content: space-between;
+}
+.ReadingAnswer{
+    width: 48%;
+    height: 500px;
+    border: 0.5px solid rgb(228, 226, 226);
+    border-radius: 12px;
+    margin-top: 20px;
+    padding: 10px;
+    overflow: scroll;
+}
+.ReadingAnswer p{
+    font-family: poppins;
+    margin: 0px;
+}
+.ReadingAnswer::-webkit-scrollbar{
+    display: none;
+}
+.ReadingPassage::-webkit-scrollbar{
+    display: none;
+}
+.Translation{
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.TranscribeTab{
+    width: 90px;
+    height: 40px;
+    background-color: rgb(229, 229, 229);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: poppins;
+    font-weight: 400;
+    font-size: 15px;
+    cursor: pointer;   
+}
+.AnswerUnlock{
+    width: 90px;
+    height: 40px;
+    background-color: rgb(229, 229, 229);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: poppins;
+    font-weight: 400;
+    font-size: 15px;
+    cursor: pointer;
+}
+.TranslationOption{
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.TranslationOption button{
+    height: 35px;
+    background-color: rgb(29, 144, 29);
+    border: 0px;
+    border-radius: 8px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-family: poppins;
+    color: white;
+    cursor: pointer;
+}
+.TranslationText{
+    width: 75%;
+    height: 30px;
+    border: 0px;
+    border-bottom: 1px solid grey;
+    font-family: poppins;
+    text-align: center;
+    border: 0.5px solid black;
+    border-radius: 8px;
+    font-size: 15px;
+}
+.TranslationText:focus{
+    outline: none;
+}
+.ResultCardsContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+.ReadingPassage p{
+    font-family: poppins;
+    margin: 0px;
+    font-size: 19px;
+    font-weight: bold;
+    margin: 0px;
+}
+.ResultCards{
+    width: 98%;
+    height: auto;
+    border: 0.5px solid black;
+    border-radius: 8px;
+    padding: 5px;
+}
+.OneLine{
+    line-height: 2.2em;
+    background-image: linear-gradient(
+        to bottom,
+        transparent 95%,
+        rgb(59, 59, 59) 95%
+    );
+    background-size: 100% 2.2em;
+    white-space: pre-line;
+    position: relative;
+    padding-left: 48px;
+
+}
+.OneLine::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 32px;
+  width: 3px;
+  border-left: 0.5px solid #e06666;
+  border-right: 0.5px solid #e06666;
+  height: 100%;
+}

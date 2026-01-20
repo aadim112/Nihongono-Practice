@@ -1,0 +1,200 @@
+[
+  {
+    "id": "n5-001",
+    "pattern": "〜です / 〜じゃありません",
+    "meaning": "To be (affirmative / negative)",
+    "usage": "Used to state or deny facts politely",
+    "example_jp": "わたしは学生です。",
+    "example_en": "I am a student.",
+    "level": "N5",
+    "category": "Copula",
+    "learned": 0
+  },
+  {
+    "id": "n5-002",
+    "pattern": "〜でした / 〜じゃありませんでした",
+    "meaning": "Was / was not",
+    "usage": "Past tense of です", 
+    "example_jp": "きのうは雨でした。",
+    "example_en": "Yesterday was rainy.",
+    "level": "N5",
+    "category": "Copula",
+    "learned": 0
+  },
+  {
+    "id": "n5-003",
+    "pattern": "〜ます / 〜ません",
+    "meaning": "Polite verb form (do / do not)",
+    "usage": "Used for polite present/future actions",
+    "example_jp": "まいにち日本語を勉強します。",
+    "example_en": "I study Japanese every day.",
+    "level": "N5",
+    "category": "Verb",
+    "learned": 0
+  },
+  {
+    "id": "n5-004",
+    "pattern": "〜ました / 〜ませんでした",
+    "meaning": "Did / did not",
+    "usage": "Past polite verb form",
+    "example_jp": "きのう映画を見ました。",
+    "example_en": "I watched a movie yesterday.",
+    "level": "N5",
+    "category": "Verb",
+    "learned": 0
+  },
+  {
+    "id": "n5-005",
+    "pattern": "〜か",
+    "meaning": "Question marker",
+    "usage": "Placed at the end of a sentence to ask a question",
+    "example_jp": "あなたは学生ですか。",
+    "example_en": "Are you a student?",
+    "level": "N5",
+    "category": "Particles",
+    "learned": 0
+  },
+  {
+    "id": "n5-006",
+    "pattern": "〜の",
+    "meaning": "Possession / connection",
+    "usage": "Shows ownership or relation",
+    "example_jp": "これはわたしの本です。",
+    "example_en": "This is my book.",
+    "level": "N5",
+    "category": "Particles",
+    "learned": 0
+  },
+  {
+    "id": "n5-007",
+    "pattern": "〜を",
+    "meaning": "Object marker",
+    "usage": "Marks the direct object of a verb",
+    "example_jp": "パンを食べます。",
+    "example_en": "I eat bread.",
+    "level": "N5",
+    "category": "Particles",
+    "learned": 0
+  },
+  {
+    "id": "n5-008",
+    "pattern": "〜に",
+    "meaning": "Time / destination / existence",
+    "usage": "Used for time, destination, or existence",
+    "example_jp": "７時に起きます。",
+    "example_en": "I wake up at 7.",
+    "level": "N5",
+    "category": "Particles",
+    "learned": 0
+  },
+  {
+    "id": "n5-009",
+    "pattern": "〜で",
+    "meaning": "Location of action / means",
+    "usage": "Indicates where an action happens",
+    "example_jp": "学校で勉強します。",
+    "example_en": "I study at school.",
+    "level": "N5",
+    "category": "Particles",
+    "learned": 0
+  },
+  {
+    "id": "n5-010",
+    "pattern": "〜も",
+    "meaning": "Also / too",
+    "usage": "Indicates inclusion",
+    "example_jp": "わたしも学生です。",
+    "example_en": "I am also a student.",
+    "level": "N5",
+    "category": "Particles",
+    "learned": 0
+  },
+  {
+    "id": "n5-011",
+    "pattern": "〜と",
+    "meaning": "And / with / quotation",
+    "usage": "Connects nouns or quotes speech",
+    "example_jp": "友だちと行きます。",
+    "example_en": "I go with my friend.",
+    "level": "N5",
+    "category": "Particles",
+    "learned": 0
+  },
+  {
+    "id": "n5-012",
+    "pattern": "〜や〜など",
+    "meaning": "And so on",
+    "usage": "Lists examples non-exhaustively",
+    "example_jp": "りんごやバナナなどを買いました。",
+    "example_en": "I bought apples, bananas, etc.",
+    "level": "N5",
+    "category": "Particles",
+    "learned": 0
+  },
+  {
+    "id": "n5-013",
+    "pattern": "〜がいます / 〜があります",
+    "meaning": "There is (living / non-living)",
+    "usage": "Used to express existence",
+    "example_jp": "公園に猫がいます。",
+    "example_en": "There is a cat in the park.",
+    "level": "N5",
+    "category": "Existence",
+    "learned": 0
+  },
+  {
+    "id": "n5-014",
+    "pattern": "〜から",
+    "meaning": "From / because",
+    "usage": "Indicates starting point or reason",
+    "example_jp": "９時から働きます。",
+    "example_en": "I work from 9.",
+    "level": "N5",
+    "category": "Particles",
+    "learned": 0
+  },
+  {
+    "id": "n5-015",
+    "pattern": "〜まで",
+    "meaning": "Until",
+    "usage": "Indicates ending point",
+    "example_jp": "５時まで勉強します。",
+    "example_en": "I study until 5.",
+    "level": "N5",
+    "category": "Particles",
+    "learned": 0
+  },
+  {
+    "id": "n5-016",
+    "pattern": "〜たいです",
+    "meaning": "Want to do",
+    "usage": "Expresses desire",
+    "example_jp": "日本へ行きたいです。",
+    "example_en": "I want to go to Japan.",
+    "level": "N5",
+    "category": "Verb",
+    "learned": 0
+  },
+  {
+    "id": "n5-017",
+    "pattern": "〜てもいいです",
+    "meaning": "May / allowed to",
+    "usage": "Gives permission",
+    "example_jp": "入ってもいいですか。",
+    "example_en": "May I enter?",
+    "level": "N5",
+    "category": "Permission",
+    "learned": 0
+  },
+  {
+    "id": "n5-018",
+    "pattern": "〜てはいけません",
+    "meaning": "Must not",
+    "usage": "Prohibition",
+    "example_jp": "ここでたばこを吸ってはいけません。",
+    "example_en": "You must not smoke here.",
+    "level": "N5",
+    "category": "Prohibition",
+    "learned": 0
+  }
+]
