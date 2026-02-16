@@ -121,6 +121,76 @@
     transform: scale(0.95);
 }
 
+.AudioControls {
+    width: 100%;
+    max-width: 60%;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+}
+
+.SpeedControl {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.SpeedLabel {
+    font-family: poppins;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+}
+
+.SpeedSlider {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #e0e0e0;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.SpeedSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: cornflowerblue;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.SpeedSlider::-webkit-slider-thumb:hover {
+    background: #4169E1;
+}
+
+.SpeedSlider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: cornflowerblue;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s;
+}
+
+.SpeedSlider::-moz-range-thumb:hover {
+    background: #4169E1;
+}
+
+.SpeedLabels {
+    display: flex;
+    justify-content: space-between;
+    font-family: poppins;
+    font-size: 11px;
+    color: #666;
+    margin-top: -5px;
+}
+
 .OptionsContainer {
     display: flex;
     flex-direction: column;

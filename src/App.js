@@ -1,5 +1,5 @@
 import logo from './logo.svg';
-import { useState,useEffect } from 'react';
+import { useState,useEffect, use } from 'react';
 import './App.css';
 import ConsistencyGraph from './Components/ConsistencyGraph';
 import banner1 from './Assets/banner1.jpg'
@@ -14,16 +14,18 @@ import Reading from './Components/Reading';
 import Listening from './Components/Listening';
 import db from './Components/firebase';
 import { get, ref } from 'firebase/database';
+import Kanji from './Components/Kanji';
 
 
 function App() {
 
   const [ConsistentDays,setConsistentDays] = useState({}); 
+  const [user,setUser] = useState(0);
 
   useEffect(() => {
       const fetchConsistency = async () => {
           try {
-              const consistencyRef = ref(db, "Consistency");
+              const consistencyRef = ref(db, `${user}/Consistency`);
               const snapshot = await get(consistencyRef);
 
               if (snapshot.exists()) {
@@ -44,7 +46,7 @@ function App() {
     "2026-01-02": 4,
     "2026-01-03": 1,
   };
-  const [window,setWindow] = useState(0);
+  const [window,setWindow] = useState(1);
 
   return (
     <>
@@ -56,10 +58,13 @@ function App() {
       <div className='UserSmallInfo'>
         <div className='UserName'>
           <span className="material-symbols-outlined">person</span>
-          <p style={{color:'red',fontWeight:'bold'}}>アーディティヤ</p>
+          <select style={{color:'red',fontWeight:'bold',border:'0px'}} value={user} onChange={(e) => setUser(Number(e.target.value))}>
+            <option value={0} style={{color:'red',fontWeight:'bold'}}>アーディティヤ</option>
+            <option value={1} style={{color:'red',fontWeight:'bold'}}>スネハ</option>
+          </select>
         </div>
         |
-        <div className='LeveIndicator'><p style={{margin:'0px'}}>N5 Level</p></div>
+        <div className='LeveIndicator'><p style={{margin:'0px'}}>{user == 0 ? "N5 Level" : "N4 Level"}</p></div>
       </div>
     </div>
     <div className='MainComponent'>
@@ -87,12 +92,13 @@ function App() {
       </div>
       <div className='RightSide'>
         <div className='DefaultWindow'>
-          <ConsistencyGraph activityData={ConsistentDays}/>
+          <ConsistencyGraph activityData={ConsistentDays} user={user}/>
         </div>
-        {window === 1 &&  <VocabSection/>}
-        {window === 2 &&  <GrammerSection/>}
-        {window === 4 && <Listening/>}
-        {window === 5 && <Reading/>}
+        {window === 1 &&  <VocabSection user={user}/>}
+        {window === 2 &&  <GrammerSection user={user}/>}
+        {window === 3 &&  <Kanji user={user}/>}
+        {window === 4 && <Listening user={user}/>}
+        {window === 5 && <Reading user={user}/>}
       </div>
     </div>
     <footer></footer>

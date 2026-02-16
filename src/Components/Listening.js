@@ -5,9 +5,10 @@ import db from './firebase';
 import { ref, get } from 'firebase/database';
 import { useRef, useState, useEffect } from 'react';
 
-const Listening = () => {
+const Listening = ({user}) => {
     const audioRef = useRef(null);
     const messagesEndRef = useRef(null);
+    const currentUtteranceRef = useRef(null);
     const [playing, setPlaying] = useState(false);
     const [hint, setHint] = useState('');
     const [userInput, setUserInput] = useState('');
@@ -16,7 +17,6 @@ const Listening = () => {
     const [currentExchangeIndex, setCurrentExchangeIndex] = useState(0);
     const [conversationData, setConversationData] = useState(null);
     const [messages, setMessages] = useState([]);
-    const [currentAudioBase64, setCurrentAudioBase64] = useState('');
     const [waitingForUserResponse, setWaitingForUserResponse] = useState(false);
     const [conversationComplete, setConversationComplete] = useState(false);
     
@@ -24,6 +24,9 @@ const Listening = () => {
     const [learnedVocab, setLearnedVocab] = useState([]);
     const [grammarForApi, setGrammarForApi] = useState([]);
     const [dataLoaded, setDataLoaded] = useState(false);
+    
+    // Audio playback state
+    const [currentlyPlayingMessageId, setCurrentlyPlayingMessageId] = useState(null);
     
     // Romaji to Hiragana conversion
     const [romanjiBuffer, setRomanjiBuffer] = useState('');
@@ -125,12 +128,73 @@ const Listening = () => {
         return result;
     };
 
+    // Browser TTS function
+    const speakJapanese = (text, messageId) => {
+        // Cancel any ongoing speech
+        window.speechSynthesis.cancel();
+        setCurrentlyPlayingMessageId(messageId);
+        setPlaying(true);
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ja-JP'; // Japanese language
+        utterance.rate = 0.8; // Slightly slower for learning
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+
+        // Try to get a Japanese voice
+        const voices = window.speechSynthesis.getVoices();
+        const japaneseVoice = voices.find(voice => voice.lang.startsWith('ja'));
+        if (japaneseVoice) {
+            utterance.voice = japaneseVoice;
+        }
+
+        // Handle speech end
+        utterance.onend = () => {
+            setPlaying(false);
+            setCurrentlyPlayingMessageId(null);
+        };
+
+        // Handle speech error
+        utterance.onerror = () => {
+            setPlaying(false);
+            setCurrentlyPlayingMessageId(null);
+        };
+
+        currentUtteranceRef.current = utterance;
+        window.speechSynthesis.speak(utterance);
+    };
+
+    // Stop current speech
+    const stopSpeech = () => {
+        window.speechSynthesis.cancel();
+        setPlaying(false);
+        setCurrentlyPlayingMessageId(null);
+        currentUtteranceRef.current = null;
+    };
+
+    // Load voices when they become available
+    useEffect(() => {
+        const loadVoices = () => {
+            window.speechSynthesis.getVoices();
+        };
+        
+        loadVoices();
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        // Cleanup: stop speech when component unmounts
+        return () => {
+            window.speechSynthesis.cancel();
+        };
+    }, []);
+
     // Fetch grammar and vocab from Firebase on mount
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const vocabRef = ref(db, "vocab/words");
-                const grammarRef = ref(db, "grammar/GrammarLearned");
+                const vocabRef = ref(db, `${user}/vocab/words`);
+                const grammarRef = ref(db, `${user}/grammar/GrammarLearned`);
 
                 const [vocabSnap, grammarSnap] = await Promise.all([
                     get(vocabRef),
@@ -215,15 +279,25 @@ const Listening = () => {
             return;
         }
 
+        // Stop any currently playing audio
+        stopSpeech();
+        
+        // Reset all conversation state to ensure fresh start
         setLoading(true);
         setMessages([]);
         setConversationStarted(true);
         setCurrentExchangeIndex(0);
         setConversationComplete(false);
+        setConversationData(null);
+        setWaitingForUserResponse(false);
+        setHint('');
+        setUserInput('');
 
         try {
             // Get conversation data from backend using Firebase data
-            const response = await fetch('http://localhost:5000/api/start-conversation', {
+            // Add timestamp to ensure different conversation each time
+            const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+            const response = await fetch(`${apiUrl}/api/start-conversation`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -231,7 +305,9 @@ const Listening = () => {
                 body: JSON.stringify({
                     grammar: grammarForApi,
                     vocab: learnedVocab,
-                    num_exchanges: numExchanges
+                    num_exchanges: numExchanges,
+                    // Add timestamp to force backend to generate different conversation
+                    timestamp: Date.now()
                 })
             });
 
@@ -241,55 +317,33 @@ const Listening = () => {
                 throw new Error(data.error);
             }
             
-            console.log(data);
+            console.log('New conversation data:', data);
             setConversationData(data);
             
-            await loadExchange(data.exchanges[0], 0);
+            loadExchange(data.exchanges[0], 0);
             
         } catch (error) {
             console.error('Error starting conversation:', error);
             alert('Failed to start conversation: ' + error.message);
+            setConversationStarted(false);
         } finally {
             setLoading(false);
         }
     };
 
-    const loadExchange = async (exchange, index) => {
-        try {
-            // Generate audio for Japanese text
-            const audioResponse = await fetch('http://localhost:5000/api/generate-audio', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    text: exchange.japanese
-                })
-            });
-
-            const audioData = await audioResponse.json();
-            
-            if (audioData.error) {
-                throw new Error(audioData.error);
-            }
-
-            setCurrentAudioBase64(audioData.audio);
-
-            // Add audio message to chat
-            setMessages(prev => [...prev, {
-                type: 'audio',
-                japanese: exchange.japanese,
-                english: exchange.english,
-                options: exchange.options,
-                correctIndex: exchange.correct_option_index,
-                audioBase64: audioData.audio,
-                exchangeIndex: index
-            }]);
-
-        } catch (error) {
-            console.error('Error loading exchange:', error);
-            alert('Failed to load audio: ' + error.message);
-        }
+    const loadExchange = (exchange, index) => {
+        // Stop any currently playing audio
+        stopSpeech();
+        
+        // Add message to chat (no need to fetch audio anymore)
+        setMessages(prev => [...prev, {
+            type: 'audio',
+            japanese: exchange.japanese,
+            english: exchange.english,
+            options: exchange.options,
+            correctIndex: exchange.correct_option_index,
+            exchangeIndex: index
+        }]);
     };
 
     const handleOptionClick = (message, optionIndex, option) => {
@@ -306,9 +360,10 @@ const Listening = () => {
         ));
 
         if (isCorrect) {
-            // Show hint for user response
+            // Show hint for user response - show English hint (user must convert to Japanese)
             setTimeout(() => {
                 const currentExchange = conversationData.exchanges[currentExchangeIndex];
+                // Show English hint - user needs to convert this to Japanese
                 setHint(currentExchange.expected_response_english);
                 setWaitingForUserResponse(true);
             }, 500);
@@ -341,7 +396,8 @@ const Listening = () => {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:5000/api/check-answer', {
+            const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+            const response = await fetch(`${apiUrl}/api/check-answer`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -467,12 +523,14 @@ const Listening = () => {
                                         <button 
                                             className="audio-btn" 
                                             onClick={() => {
-                                                const audio = new Audio(`data:audio/mpeg;base64,${message.audioBase64}`);
-                                                // audio.playbackRate = 0.75;
-                                                audio.play();
+                                                if (currentlyPlayingMessageId === message.exchangeIndex) {
+                                                    stopSpeech();
+                                                } else {
+                                                    speakJapanese(message.japanese, message.exchangeIndex);
+                                                }
                                             }}
                                         >
-                                            ▶
+                                            {currentlyPlayingMessageId === message.exchangeIndex && playing ? '⏸' : '▶'}
                                         </button>
                                         <span className="audio-name">Japanese Audio {idx + 1}</span>
                                     </div>
@@ -522,7 +580,7 @@ const Listening = () => {
                         {hint && 
                             <div className='HintContainer'>
                                 <div className='Hint'>
-                                    Type in Japanese: {hint}
+                                    Reply in Japanese (translate this): {hint}
                                 </div>
                             </div>
                         }

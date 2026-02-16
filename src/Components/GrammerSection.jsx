@@ -5,10 +5,10 @@ import db from './firebase'
 
 import { ref, get, set } from 'firebase/database'
 
-const GrammerSection = () => {
+const GrammerSection = ({user}) => {
   const [grammarData, setGrammarData] = useState(grammar)
 
-  const grammarRef = ref(db, 'grammar/GrammarLearned')
+  const grammarRef = ref(db, `${user}/grammar/GrammarLearned`)
 
   const categoryColors = {
     Copula: '#4CAF50',
@@ -106,7 +106,7 @@ const GrammerSection = () => {
                   }}
                   onClick={() => handleCheckboxChange(item.id)}
                 >
-                  {item.learned === 1 ? 'Learned' : 'Yet to Learn'}
+                  ({item.level})--{item.learned === 1 ? 'Learned' : 'Yet to Learn'}
                 </p>
               </div>
 

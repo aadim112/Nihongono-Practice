@@ -3,50 +3,27 @@ import flask
 from flask_cors import CORS
 import google.generativeai as genai
 import json
-import requests
+import random
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = flask.Flask(__name__)
 CORS(app)
-genai.configure(api_key="AIzaSyARhfqQenL1X4ywd0CfZR0AO4UGKopvcLU")
-model = genai.GenerativeModel("gemini-flash-latest")
 
-# Add your ElevenLabs API key here
-ELEVENLABS_API_KEY = "60a6c7400ce05eedffd80ccfe5ae7c0efc80cb3141313440b955cfd2c90990a2"
-ELEVENLABS_VOICE_ID = "B2hIadtwF0bAORTkJkOs"  
+# Get API key from environment variable
+GOOGLE_API_KEY = os.getenv('GOOGLE_GENERATIVE_AI_API_KEY')
+if not GOOGLE_API_KEY:
+    raise ValueError("GOOGLE_GENERATIVE_AI_API_KEY not found in environment variables. Please check your .env file.")
+
+genai.configure(api_key=GOOGLE_API_KEY)
+model = genai.GenerativeModel("gemini-flash-latest")
 
 @app.route("/")
 def index():
     return "Japanese Reading Passage Generator API"
-
-@app.route("/api/analyze-vocab", methods=["POST"])
-def analyze_vocab():
-    data = request.json
-    word = data.get("word", "")
-
-    prompt = f"""
-You are a Japanese dictionary.
-
-Given this Japanese word:
-{word}
-
-Return ONLY valid JSON. No markdown.
-
-{{
-  "meaning": "simple English meaning",
-  "kanji": "kanji if exists, otherwise same as input"
-}}
-
-Rules:
-- N5 level meaning
-- If word has no kanji, return hiragana as kanji
-"""
-
-    try:
-        response = model.generate_content(prompt)
-        return jsonify(json.loads(response.text))
-    except Exception as e:
-        print("VOCAB ERROR:", e)
-        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/api/grade-reading", methods=["POST"])
@@ -92,6 +69,7 @@ def generate_reading():
     raw_vocab = data.get("vocab", {})
     normalized_vocab = []
 
+    # Normalize vocab into a simple list of word strings
     if isinstance(raw_vocab, dict) and "words" in raw_vocab:
         for v in raw_vocab["words"]:
             if isinstance(v, dict) and "word" in v:
@@ -111,34 +89,81 @@ def generate_reading():
     )
     vocab_text = ", ".join(normalized_vocab[:25])
 
+    # We now ask the model to return a passage PLUS 10–15 comprehension questions.
+    # The model must return ONLY JSON so the frontend can parse it safely.
     prompt = f"""
-        You are a Japanese language teacher.
+You are a Japanese language teacher.
 
-        Create a JLPT N5 level Japanese reading passage.
+Create a JLPT N5 level Japanese reading passage AND comprehension questions.
 
-        Rules:
-        - Use only hiragana
-        - 20 to 25 short sentences
-        - Simple natural Japanese
-        - Make it based on simple story
-        - Use ONLY the following grammar patterns:
-        {grammar_text}
+CRITICAL OUTPUT FORMAT (return ONLY valid JSON, no markdown, no backticks):
+{{
+  "passage": "Japanese passage text in hiragana only. 20–25 short sentences.",
+  "questions": [
+    {{
+      "id": 1,
+      "question_japanese": "Comprehension question in simple hiragana Japanese based ONLY on the passage.",
+      "question_english": "Same question in simple English.",
+      "expected_answer_english": "Short ideal answer in English.",
+      "expected_answer_japanese": "Short ideal answer in hiragana Japanese."
+    }}
+  ]
+}}
 
-        - Prefer using these vocabulary words:
-        {vocab_text}
+REQUIREMENTS:
+- Passage:
+  - JLPT N5 level
+  - Use ONLY hiragana (no kanji, no romaji)
+  - 20–25 short sentences
+  - Simple, natural Japanese
+  - A coherent simple story
+  - Use ONLY the following grammar patterns as much as possible:
+{grammar_text}
+  - Prefer using these vocabulary words (but only if they fit naturally):
+{vocab_text}
 
-        - No romaji
-        - No English explanation
-    """
+- Questions:
+  - Create BETWEEN 10 and 15 questions (inclusive)
+  - Every question MUST be answerable using ONLY information from the passage
+  - Mix of:
+    - who/what/when/where/why/how questions
+    - yes/no questions
+  - Provide each question in BOTH Japanese (hiragana only) and English
+  - Provide BOTH an ideal English answer and an ideal Japanese answer (hiragana only)
+  - Keep answers short (1–2 short sentences)
+"""
 
     try:
         response = model.generate_content(prompt)
+        response_text = response.text.strip()
+
+        # Sometimes models wrap JSON in ``` fences – strip them if present.
+        if response_text.startswith("```"):
+            parts = response_text.split("```")
+            # Take the first non-empty chunk after the first fence
+            if len(parts) > 1:
+                candidate = parts[1].strip()
+                if candidate.startswith("json"):
+                    candidate = candidate[4:].strip()
+                response_text = candidate
+
+        reading_payload = json.loads(response_text)
+
+        # Basic defensive shaping: ensure required keys exist
+        passage = reading_payload.get("passage", "").strip()
+        questions = reading_payload.get("questions", [])
+
+        if not isinstance(questions, list):
+            questions = []
+
         return jsonify({
-            "text": response.text.strip()
+            "passage": passage,
+            "questions": questions
         })
     except Exception as e:
         print("GEMINI ERROR:", repr(e))
         return jsonify({"error": str(e)}), 500
+    
 
 @app.route("/api/start-conversation", methods=["POST"])
 def start_conversation():
@@ -161,24 +186,53 @@ def start_conversation():
 
     vocab_text = ", ".join(normalized_vocab[:25])
 
+    # Add randomness to ensure different conversations each time
+    scenarios = [
+        "a conversation at a train station asking for directions",
+        "a conversation in a restaurant ordering food",
+        "a conversation at school discussing homework and classes",
+        "a conversation at a store shopping for clothes or groceries",
+        "a conversation at home talking about daily plans",
+        "a conversation meeting a new friend and introducing yourself",
+        "a conversation about hobbies and weekend activities",
+        "a conversation about weather and making plans",
+        "a conversation at a library or bookstore",
+        "a conversation about family and personal information",
+        "a conversation about time and scheduling appointments",
+        "a conversation about food preferences and cooking"
+    ]
+    
+    random_scenario = random.choice(scenarios)
+    random_context = random.choice([
+        "Make it very detailed with longer sentences.",
+        "Include more background information in each exchange.",
+        "Add more context and explanation in the conversation.",
+        "Make the dialogue more elaborate and descriptive."
+    ])
+
     prompt = f"""
-You are a Japanese language teacher creating a listening comprehension exercise.
+You are a Japanese language teacher creating a JLPT N5 listening comprehension exercise.
 
-Create a conversation with EXACTLY {num_exchanges} exchanges for JLPT N5 level students.
+Create a COMPLETELY NEW and DIFFERENT conversation with EXACTLY {num_exchanges} exchanges.
+IMPORTANT: This conversation must be UNIQUE and DIFFERENT from any previous conversation you've created.
 
-CRITICAL REQUIREMENTS:
+SCENARIO: {random_scenario}
+CONTEXT VARIATION: {random_context}
+
+CRITICAL REQUIREMENTS FOR JLPT LISTENING PRACTICE:
 - You MUST use ONLY the grammar patterns provided below
 - You MUST use ONLY the vocabulary words provided below
-- Each Japanese sentence should be 8-15 words long (not too short!)
-- Make it a coherent, natural conversation (like meeting someone, daily activities, etc.)
-- Do not repeat sentences
-- Keep conversation about day-to-day topics like shopping, school, hobbies, weather, family, etc.
+- Each Japanese sentence should be 15-25 words long (LONGER sentences for realistic JLPT practice!)
+- Make it a coherent, natural conversation with detailed exchanges
+- Do not repeat sentences or ideas
 - Use ONLY hiragana for Japanese text
+- Create realistic JLPT-style listening questions with longer dialogues
+- Each exchange should feel like a real conversation with context
 
-Grammar patterns you MUST use (use at least 3-4 different patterns across the conversation):
+Grammar patterns you MUST use (use at least 4-5 different patterns across the conversation):
 {grammar_text}
 
-Vocabulary words you MUST use (use as many as possible):
+Vocabulary words you MUST use (use as many as possible naturally):
 {vocab_text}
 
 Return ONLY valid JSON in this exact format (no markdown, no backticks):
@@ -186,41 +240,53 @@ Return ONLY valid JSON in this exact format (no markdown, no backticks):
 {{
   "exchanges": [
     {{
-      "japanese": "longer Japanese sentence using provided vocab and grammar (8-15 words)",
+      "japanese": "Longer Japanese sentence using provided vocab and grammar (15-25 words minimum, make it detailed!)",
       "english": "English translation",
-      "options": ["correct English translation", "wrong option 1", "wrong option 2", "wrong option 3"],
+      "options": ["Brief correct English translation (5-10 words max)", "Brief wrong option 1 (5-10 words max)", "Brief wrong option 2 (5-10 words max)", "Brief wrong option 3 (5-10 words max)"],
       "correct_option_index": 0,
-      "expected_response_english": "What the student should reply in English (8-12 words)",
-      "expected_response_japanese": "What the student should reply in Japanese using provided vocab/grammar (8-15 words)"
+      "expected_response_english": "What the student should reply in English (for reference only)",
+      "expected_response_japanese": "What the student should reply in Japanese using provided vocab/grammar (10-20 words, natural response)"
     }}
   ]
 }}
 
-EXAMPLE FORMAT (DO NOT COPY, CREATE YOUR OWN):
-If vocab includes: わたし, がっこう, いく, たべる, すき
-And grammar includes: ～です, ～ます
+CRITICAL FORMATTING RULES:
+- Options MUST be BRIEF (5-10 words maximum each) - short, clear phrases that are easy to understand
+- Options should be simple English translations, not complex sentences
+- Example good options: ["I want to go to the store", "I'm studying Japanese", "It's raining today", "I like this book"]
+- Example bad options: ["Good evening. This is tea and water. Please give those, these, and a ticket to the student. Delicious!"]
+- expected_response_japanese should be a natural, conversational Japanese response (10-20 words)
+- The response should be appropriate for the conversation context
 
-Good Japanese sentence: "わたしはまいにちがっこうにいきます。あなたはどうですか。"
-(I go to school every day. How about you?)
+EXAMPLE FORMAT (DO NOT COPY, CREATE YOUR OWN):
+If vocab includes: わたし, がっこう, いく, たべる, すき, ともだち, まいにち
+And grammar includes: ～です, ～ます, ～たいです
+
+Good LONG Japanese sentence: "わたしはまいにちがっこうにいきます。きょうはともだちとがっこうのしょくどうでひるごはんをたべたいです。あなたもいっしょにいきませんか。"
+(I go to school every day. Today I want to eat lunch at the school cafeteria with my friend. Won't you come with us too?)
 
 Bad (too short): "がっこうです。"
 
 Rules:
 - Create EXACTLY {num_exchanges} exchanges
 - Use ONLY hiragana for Japanese
-- Make sentences 8-15 words long (use multiple grammar patterns and vocab in each sentence)
-- Create a natural, flowing conversation
-- Shuffle options so correct answer isn't always first
-- Make wrong options plausible but clearly incorrect
+- Japanese audio sentences: 15-25 words long MINIMUM (use multiple grammar patterns and vocab)
+- OPTIONS MUST BE BRIEF: Each option should be 5-10 words maximum - short, clear English phrases
+- Options are English translations of the Japanese audio - keep them simple and understandable
+- Create a natural, flowing conversation with DETAILED exchanges
+- Shuffle options so correct answer isn't always first (randomize correct_option_index)
+- Make wrong options plausible but clearly incorrect - they should be related but wrong
 - Use particles correctly (は, が, を, に, で, etc.)
-- Student responses should also be 8-15 words and use the provided vocab/grammar
+- Student Japanese responses: 10-20 words, natural conversational responses
+- Make this conversation COMPLETELY DIFFERENT from any previous conversation
+- Add variety: use different sentence structures, different topics within the scenario
+- Each exchange: Japanese audio → user selects English translation → user types Japanese response
+- Ensure expected_response_japanese is logical and appropriate for the conversation context
 """
 
     try:
         response = model.generate_content(prompt)
         response_text = response.text.strip()
-        
-        # Remove markdown code blocks if present
         if response_text.startswith("```"):
             response_text = response_text.split("```")[1]
             if response_text.startswith("json"):
@@ -234,48 +300,6 @@ Rules:
         print("Response:", response.text if 'response' in locals() else "No response")
         return jsonify({"error": str(e)}), 500
 
-@app.route("/api/generate-audio", methods=["POST"])
-def generate_audio():
-    """Generate audio using ElevenLabs API"""
-    data = request.json
-    text = data.get("text", "")
-
-    if not text:
-        return jsonify({"error": "No text provided"}), 400
-
-    url = f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE_ID}"
-    
-    headers = {
-        "Accept": "audio/mpeg",
-        "Content-Type": "application/json",
-        "xi-api-key": ELEVENLABS_API_KEY
-    }
-    
-    payload = {
-        "text": text,
-        "model_id": "eleven_multilingual_v2",
-        "voice_settings": {
-            "stability": 0.5,
-            "similarity_boost": 0.5
-        }
-    }
-
-    try:
-        response = requests.post(url, json=payload, headers=headers)
-        
-        if response.status_code == 200:
-            # Return audio as base64
-            import base64
-            audio_base64 = base64.b64encode(response.content).decode('utf-8')
-            return jsonify({"audio": audio_base64})
-        else:
-            print("ELEVENLABS ERROR:", response.status_code, response.text)
-            return jsonify({"error": "Audio generation failed"}), 500
-            
-    except Exception as e:
-        print("AUDIO ERROR:", repr(e))
-        return jsonify({"error": str(e)}), 500
-
 @app.route("/api/check-answer", methods=["POST"])
 def check_answer():
     """Check if student's Japanese answer is correct"""
@@ -285,33 +309,33 @@ def check_answer():
     expected_english = data.get("expected_english", "")
 
     prompt = f"""
-You are checking a Japanese N5 student's answer.
+        You are checking a Japanese N5 student's answer.
 
-Expected meaning in English: {expected_english}
-Expected answer in Japanese: {expected_japanese}
-Student's answer in Japanese: {student_answer}
+        Expected meaning in English: {expected_english}
+        Expected answer in Japanese: {expected_japanese}
+        Student's answer in Japanese: {student_answer}
 
-Compare the student's answer to the expected answer.
+        Compare the student's answer to the expected answer.
 
-Be VERY LENIENT:
-- Accept if the core meaning matches
-- Accept different word order (は vs が, particle variations)
-- Accept minor hiragana typos (1-2 character mistakes)
-- Accept if they express the same idea using similar vocabulary
-- The student is a beginner, so don't be too strict
+        Be VERY LENIENT:
+        - Accept if the core meaning matches
+        - Accept different word order (は vs が, particle variations)
+        - Accept minor hiragana typos (1-2 character mistakes)
+        - Accept if they express the same idea using similar vocabulary
+        - The student is a beginner, so don't be too strict
 
-Only mark as incorrect if:
-- The meaning is completely different
-- They used completely wrong vocabulary
-- The grammar makes it incomprehensible
+        Only mark as incorrect if:
+        - The meaning is completely different
+        - They used completely wrong vocabulary
+        - The grammar makes it incomprehensible
 
-Return ONLY valid JSON (no markdown):
+        Return ONLY valid JSON (no markdown):
 
-{{
-  "correct": true or false,
-  "feedback": "brief encouraging feedback in English (if correct: 'Great job!' if incorrect: hint what was wrong)"
-}}
-"""
+        {{
+        "correct": true or false,
+        "feedback": "brief encouraging feedback in English (if correct: 'Great job!' if incorrect: hint what was wrong)"
+        }}
+        """
 
     try:
         response = model.generate_content(prompt)
@@ -329,5 +353,96 @@ Return ONLY valid JSON (no markdown):
         print("CHECK ERROR:", repr(e))
         return jsonify({"error": str(e)}), 500
 
+
+@app.route("/api/grade-reading-questions", methods=["POST"])
+def grade_reading_questions():
+    """
+    Grade free-text answers to 10–15 comprehension questions about a passage.
+
+    Expected JSON body:
+    {
+      "passage": "Japanese passage text",
+      "questions": [
+        {
+          "id": 1,
+          "question_english": "...",
+          "expected_answer_english": "...",
+          "expected_answer_japanese": "..."
+        },
+        ...
+      ],
+      "answers": ["student answer for q1", "student answer for q2", ...]
+    }
+    """
+    data = request.json
+    passage = data.get("passage", "")
+    questions = data.get("questions", [])
+    answers = data.get("answers", [])
+
+    # Build a compact structure for the model
+    qa_pairs = []
+    for idx, q in enumerate(questions):
+        qa_pairs.append({
+            "id": q.get("id", idx + 1),
+            "question_english": q.get("question_english", ""),
+            "expected_answer_english": q.get("expected_answer_english", ""),
+            "expected_answer_japanese": q.get("expected_answer_japanese", ""),
+            "student_answer": answers[idx] if idx < len(answers) else ""
+        })
+
+    prompt = f"""
+You are grading a Japanese reading comprehension exercise for a JLPT N5 student.
+
+The passage (in Japanese) is:
+{passage}
+
+Here are the questions, ideal answers, and student answers:
+{qa_pairs}
+
+TASK:
+- For EACH item in the list, decide if the student's answer shows a correct understanding of the passage.
+- Be VERY LENIENT:
+  - Accept paraphrasing and different wording
+  - Accept minor grammar and spelling mistakes
+  - Accept if the core meaning matches the expected answer
+- Only mark incorrect if the meaning is clearly wrong or unrelated to the passage.
+
+Return ONLY valid JSON in this exact format (no markdown, no backticks):
+{{
+  "score": number,   // percentage 0–100 of correctly answered questions (round to integer)
+  "results": [
+    {{
+      "id": number,
+      "question": string,              // English question
+      "expected_answer": string,       // ideal English answer
+      "student_answer": string,
+      "correct": boolean,
+      "feedback": string               // short, encouraging English feedback/hint
+    }}
+  ]
+}}
+"""
+
+    try:
+        response = model.generate_content(prompt)
+        response_text = response.text.strip()
+
+        if response_text.startswith("```"):
+            response_text = response_text.split("```")[1]
+            if response_text.startswith("json"):
+                response_text = response_text[4:]
+            response_text = response_text.strip()
+
+        graded = json.loads(response_text)
+        return jsonify(graded)
+    except Exception as e:
+        print("GRADE QUESTIONS ERROR:", repr(e))
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Get configuration from environment variables
+    host = os.getenv('FLASK_HOST', '127.0.0.1')
+    port = int(os.getenv('FLASK_PORT', 5000))
+    debug = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
+    
+    app.run(host=host, port=port, debug=debug)

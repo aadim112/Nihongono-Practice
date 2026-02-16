@@ -196,5 +196,170 @@
     "level": "N5",
     "category": "Prohibition",
     "learned": 0
+  },
+    {
+    "id": "n4-001",
+    "pattern": "〜ている",
+    "meaning": "Be doing / ongoing state",
+    "usage": "Expresses continuous action or current state",
+    "example_jp": "いま日本語を勉強しています。",
+    "example_en": "I am studying Japanese now.",
+    "level": "N4",
+    "category": "Verb",
+    "learned": 0
+  },
+  {
+    "id": "n4-002",
+    "pattern": "〜たことがある",
+    "meaning": "Have experienced",
+    "usage": "Used to talk about past experiences",
+    "example_jp": "日本へ行ったことがあります。",
+    "example_en": "I have been to Japan.",
+    "level": "N4",
+    "category": "Experience",
+    "learned": 0
+  },
+  {
+    "id": "n4-003",
+    "pattern": "〜ながら",
+    "meaning": "While doing",
+    "usage": "Two actions done at the same time",
+    "example_jp": "音楽を聞きながら勉強します。",
+    "example_en": "I study while listening to music.",
+    "level": "N4",
+    "category": "Verb",
+    "learned": 0
+  },
+  {
+    "id": "n4-004",
+    "pattern": "〜そうです",
+    "meaning": "It seems / I heard",
+    "usage": "Used for appearance or hearsay",
+    "example_jp": "雨が降りそうです。",
+    "example_en": "It looks like it will rain.",
+    "level": "N4",
+    "category": "Expression",
+    "learned": 0
+  },
+  {
+    "id": "n4-005",
+    "pattern": "〜ようと思っています",
+    "meaning": "Planning to",
+    "usage": "Expresses intention or plan",
+    "example_jp": "来年日本で働こうと思っています。",
+    "example_en": "I’m planning to work in Japan next year.",
+    "level": "N4",
+    "category": "Intention",
+    "learned": 0
+  },
+  {
+    "id": "n4-006",
+    "pattern": "〜ば",
+    "meaning": "If",
+    "usage": "Conditional form",
+    "example_jp": "時間があれば行きます。",
+    "example_en": "If I have time, I will go.",
+    "level": "N4",
+    "category": "Condition",
+    "learned": 0
+  },
+  {
+    "id": "n4-007",
+    "pattern": "〜なくてもいい",
+    "meaning": "Do not have to",
+    "usage": "Expresses lack of necessity",
+    "example_jp": "急がなくてもいいです。",
+    "example_en": "You don’t have to hurry.",
+    "level": "N4",
+    "category": "Permission",
+    "learned": 0
+  },
+  {
+    "id": "n4-008",
+    "pattern": "〜なければならない",
+    "meaning": "Must do",
+    "usage": "Expresses obligation",
+    "example_jp": "毎日勉強しなければなりません。",
+    "example_en": "I must study every day.",
+    "level": "N4",
+    "category": "Obligation",
+    "learned": 0
+  },
+  {
+    "id": "n4-009",
+    "pattern": "〜ために",
+    "meaning": "In order to / because of",
+    "usage": "Expresses purpose or cause",
+    "example_jp": "日本へ行くために日本語を勉強します。",
+    "example_en": "I study Japanese in order to go to Japan.",
+    "level": "N4",
+    "category": "Purpose",
+    "learned": 0
+  },
+  {
+    "id": "n4-010",
+    "pattern": "〜てから",
+    "meaning": "After doing",
+    "usage": "Indicates sequence of actions",
+    "example_jp": "ご飯を食べてから勉強します。",
+    "example_en": "I will study after eating.",
+    "level": "N4",
+    "category": "Sequence",
+    "learned": 0
+  },
+  {
+    "id": "n4-011",
+    "pattern": "〜し",
+    "meaning": "And / reasons",
+    "usage": "Lists reasons or multiple facts",
+    "example_jp": "安いし、便利です。",
+    "example_en": "It’s cheap and convenient.",
+    "level": "N4",
+    "category": "Conjunction",
+    "learned": 0
+  },
+  {
+    "id": "n4-012",
+    "pattern": "〜ても",
+    "meaning": "Even if",
+    "usage": "Expresses contrast or unexpected result",
+    "example_jp": "雨が降っても行きます。",
+    "example_en": "I will go even if it rains.",
+    "level": "N4",
+    "category": "Condition",
+    "learned": 0
+  },
+  {
+    "id": "n4-013",
+    "pattern": "〜ように",
+    "meaning": "So that",
+    "usage": "Expresses purpose or desired outcome",
+    "example_jp": "忘れないようにメモします。",
+    "example_en": "I take notes so that I won’t forget.",
+    "level": "N4",
+    "category": "Purpose",
+    "learned": 0
+  },
+  {
+    "id": "n4-014",
+    "pattern": "〜すぎる",
+    "meaning": "Too much",
+    "usage": "Indicates excess",
+    "example_jp": "食べすぎました。",
+    "example_en": "I ate too much.",
+    "level": "N4",
+    "category": "Degree",
+    "learned": 0
+  },
+  {
+    "id": "n4-015",
+    "pattern": "〜ほうがいい",
+    "meaning": "Had better",
+    "usage": "Gives advice",
+    "example_jp": "早く寝たほうがいいです。",
+    "example_en": "You should go to bed early.",
+    "level": "N4",
+    "category": "Advice",
+    "learned": 0
   }
 ]

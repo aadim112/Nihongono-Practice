@@ -1,54 +1,46 @@
-import "./Consistency.css"
+import "./Consistency.css";
 
-const ConsistencyGraph = ({ activityData = {} }) => {
-  const DAYS = 365;
+const ConsistencyGraph = ({ activityData = {} ,user}) => {
   const today = new Date();
+  const sixMonthsAgo = new Date(today);
+  sixMonthsAgo.setMonth(today.getMonth() - 6);
 
-  const getLevel = (count) => {
-    if (count === 0) return "";
-    if (count <= 2) return "level-2";
-    if (count <= 4) return "level-3";
-    return "level-4";
-  };
+  // Calculate days between sixMonthsAgo and today
+  const daysDiff = Math.ceil((today - sixMonthsAgo) / (1000 * 60 * 60 * 24));
 
-  const daysArray = Array.from({ length: DAYS }, (_, i) => {
-    const date = new Date(today);
-    date.setDate(today.getDate() - (DAYS - i - 1));
-
+  const daysArray = Array.from({ length: daysDiff + 1 }, (_, i) => {
+    const date = new Date(sixMonthsAgo);
+    date.setDate(sixMonthsAgo.getDate() + i);
     const key = date.toISOString().split("T")[0];
-
     return {
       date,
       key,
       count: activityData[key] || 0,
-      level: getLevel(activityData[key] || 0),
-      month: date.getMonth(),
+      hasActivity: (activityData[key] || 0) > 0,
+      dayOfMonth: date.getDate(),
+      month: date.toLocaleString("default", { month: "short" }),
       isMonthStart: date.getDate() === 1,
     };
   });
 
   return (
-    <div className="graph-wrapper">
-      <div className="months-row">
-        {daysArray.map((day, index) => {
-          if (!day.isMonthStart) return null;
-
-          const weekIndex = Math.floor(index / 7);
-          const monthName = day.date.toLocaleString("default", {month: "short",});
-
-          return (
-            <span key={day.key} className="month-label" style={{ gridColumnStart: weekIndex + 1 }}>{monthName}</span>
-          );
-        })}
-      </div>
-
-      <div className="consistency-container">
-        {daysArray.map((day) => (
-          <div
-            key={day.key}
-            className={`day ${day.level}`}
-            title={`${day.key}: ${day.count} activities`}
-          />
+    <div className="timeline-wrapper">
+      <div className="timeline-container">
+        <div className="timeline-line"></div>
+        {daysArray.map((day, index) => (
+          <div key={day.key} className="timeline-item">
+            <div
+              className={`timeline-circle ${
+                day.hasActivity ? "active" : "inactive"
+              }`}
+              title={`${day.date.toLocaleDateString()}: ${day.count} activities`}
+            ></div>
+            {day.isMonthStart && (
+              <div className="timeline-month-label">
+                {day.month}
+              </div>
+            )}
+          </div>
         ))}
       </div>
     </div>
