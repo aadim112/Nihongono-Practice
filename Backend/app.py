@@ -441,8 +441,9 @@ Return ONLY valid JSON in this exact format (no markdown, no backticks):
 
 if __name__ == "__main__":
     # Get configuration from environment variables
-    host = os.getenv('FLASK_HOST', '127.0.0.1')
-    port = int(os.getenv('FLASK_PORT', 5000))
+    # Render uses PORT environment variable, fallback to FLASK_PORT or 5000
+    host = os.getenv('FLASK_HOST', '0.0.0.0')
+    port = int(os.getenv('PORT', os.getenv('FLASK_PORT', 5000)))
     debug = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
     
     app.run(host=host, port=port, debug=debug)

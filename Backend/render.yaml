@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: japanese-practice-backend
+    env: python
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: python -m gunicorn app:app
+    envVars:
+      - key: GOOGLE_GENERATIVE_AI_API_KEY
+        sync: false
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_DEBUG
+        value: False
+      - key: FLASK_HOST
+        value: 0.0.0.0
+      - key: FLASK_PORT
+        value: 10000
+      - key: CORS_ORIGINS
+        sync: false
