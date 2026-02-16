@@ -2,6 +2,7 @@ services:
   - type: web
     name: japanese-practice-backend
     env: python
+    pythonVersion: 3.12.7
     buildCommand: pip install --upgrade pip && pip install -r requirements.txt
     startCommand: python -m gunicorn app:app
     envVars:
