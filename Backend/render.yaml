@@ -2,9 +2,9 @@ services:
   - type: web
     name: japanese-practice-backend
     env: python
-    pythonVersion: 3.12.7
-    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
-    startCommand: python -m gunicorn app:app
+    pythonVersion: 3.11.9
+    buildCommand: pip install --upgrade pip && pip install -r Backend/requirements.txt
+    startCommand: gunicorn app:app --chdir Backend
     envVars:
       - key: GOOGLE_GENERATIVE_AI_API_KEY
         sync: false
