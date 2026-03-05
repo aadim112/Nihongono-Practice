@@ -16,6 +16,7 @@
 .VocabText {
   font-size: 80px;
   font-weight: bold;
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-image: url("../Assets/banner2.jpg");
@@ -26,6 +27,7 @@
   font-weight: bold;
   font-size: 20px;
   padding-inline: 10px;
+  padding-bottom: 40px;
 }
 .VocabInput {
   display: flex;
@@ -83,6 +85,7 @@
 .list li:hover {
   background-color: #f0f0f0;
   border-radius: 12px;
+  transition: all 0.2s;
   -webkit-transition: all 0.2s;
   -moz-transition: all 0.2s;
   -ms-transition: all 0.2s;
@@ -111,4 +114,186 @@
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
+}
+.changeSection{
+  width: 150px;
+ border: 1px solid #6a4a73;
+ border-radius: 8px;
+ padding: 10px;
+ text-align: center;
+ font-family: poppins;
+ font-weight: bold;
+ font-size: 15px;
+ cursor: pointer;
+}
+
+.RevisionLayout {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 16px;
+  align-items: start;
+}
+
+.RevisionMain {
+  min-width: 0;
+}
+
+.RevisionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.RevisionScore {
+  font-family: poppins;
+  font-size: 16px;
+  color: #333;
+}
+
+.RevisionScoreNumber {
+  color: #6a4a73;
+  font-weight: 900;
+}
+
+.RevisionNext {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #6a4a73;
+  background: #fff;
+  font-family: poppins;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.RevisionNext:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.RevisionCard {
+  border: 1px solid #dedede;
+  border-radius: 14px;
+  padding: 16px;
+  background: white;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.RevisionPrompt {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px dashed #ddd;
+}
+
+.RevisionKana {
+  font-family: "Zen Kaku Gothic Antique", sans-serif;
+  font-size: 34px;
+  font-weight: 900;
+  color: #6a4a73;
+  letter-spacing: 0.5px;
+}
+
+.RevisionKanji {
+  font-family: "Zen Kaku Gothic Antique", sans-serif;
+  font-size: 40px;
+  font-weight: 900;
+  color: #222;
+}
+
+.RevisionOptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.RevisionOption {
+  text-align: left;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid #dedede;
+  background: #fafafa;
+  cursor: pointer;
+  font-family: poppins;
+  font-weight: 700;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.15s ease;
+}
+
+.RevisionOption:hover {
+  background: #f1e9f4;
+  border-color: #6a4a73;
+}
+
+.RevisionOption:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.RevisionSidebar {
+  border: 1px solid #dedede;
+  border-radius: 14px;
+  padding: 14px;
+  background: white;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.RevisionSidebarTitle {
+  font-family: poppins;
+  font-weight: 900;
+  font-size: 16px;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.RevisionSidebarEmpty {
+  font-family: poppins;
+  font-size: 13px;
+  color: #666;
+}
+
+.RevisionWrongList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 460px;
+  overflow: auto;
+}
+
+.RevisionWrongList::-webkit-scrollbar {
+  display: none;
+}
+
+.RevisionWrongItem {
+  border-bottom: 1px dotted #ddd;
+  padding: 10px 0;
+}
+
+.RevisionWrongItem:last-child {
+  border-bottom: none;
+}
+
+.RevisionWrongWord {
+  font-family: "Zen Kaku Gothic Antique", sans-serif;
+  font-weight: 900;
+  font-size: 16px;
+  color: #d36cff;
+  margin-bottom: 4px;
+}
+
+.RevisionWrongMeta {
+  font-family: poppins;
+  font-size: 12px;
+  color: #555;
+}
+
+@media (max-width: 900px) {
+  .RevisionLayout {
+    grid-template-columns: 1fr;
+  }
 }

@@ -1,5 +1,5 @@
 import './Vocab.css'
-import { useState, useEffect, useMemo, use } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ref, push, update, get, child, onValue } from "firebase/database";
 import db from './firebase'
 import kanjiData from './Kanjis.json';
@@ -13,9 +13,12 @@ const VocabSection = ({user}) => {
     const [words, setWords] = useState([]);
     const [uploadedWord, setUploadedWords] = useState([]);
     const [toggle,setToggle] = useState(false);
-    
-    const [jmdictData, setJmdictData] = useState(null);
-    const [dictionaryLoaded, setDictionaryLoaded] = useState(false);
+
+    const [isRevisionMode, setIsRevisionMode] = useState(false);
+    const [revisionQuestion, setRevisionQuestion] = useState(null); // { word, kanji, correctMeaning, options: string[] }
+    const [revisionLocked, setRevisionLocked] = useState(false);
+    const [correctCount, setCorrectCount] = useState(0);
+    const [wrongAnswers, setWrongAnswers] = useState([]); // { word, kanji, correctMeaning, chosenMeaning }
     
     const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -37,46 +40,50 @@ const VocabSection = ({user}) => {
         return () => unsubscribe();
     }, []);
 
-    // Auto-load dictionary on mount - try localStorage first, then imported file
-    useEffect(() => {
-        const loadDictionary = () => {
-            // First, try to load from localStorage
-            const storedDict = localStorage.getItem('jmdict_dictionary');
-            if (storedDict) {
-                try {
-                    const parsedData = JSON.parse(storedDict);
-                    if (parsedData && parsedData.words && Array.isArray(parsedData.words)) {
-                        setJmdictData(parsedData);
-                        setDictionaryLoaded(true);
-                        console.log('Dictionary loaded from localStorage:', parsedData.words.length.toLocaleString(), 'entries');
-                        return;
-                    }
-                } catch (err) {
-                    console.error('Error parsing stored dictionary:', err);
-                    localStorage.removeItem('jmdict_dictionary'); // Remove corrupted data
-                }
-            }
+    const dictionaryLoaded = !!(jmdictData && jmdictData.words && Array.isArray(jmdictData.words));
 
-            // If not in localStorage, use the imported dictionary file (imported at top of file)
-            // jmdictData is imported from '../data/jmdict.json'
-            if (jmdictData && jmdictData.words && Array.isArray(jmdictData.words)) {
-                setJmdictData(jmdictData);
-                setDictionaryLoaded(true);
-                // Store in localStorage for future use
-                try {
-                    localStorage.setItem('jmdict_dictionary', JSON.stringify(jmdictData));
-                    console.log('Dictionary loaded from imported file and saved to localStorage:', jmdictData.words.length.toLocaleString(), 'entries');
-                } catch (err) {
-                    console.error('Error saving dictionary to localStorage:', err);
-                    // localStorage might be full, but continue anyway
-                }
-            } else {
-                console.warn('Imported jmdict.json not found or invalid. Please upload manually.');
-            }
+    const shuffle = (arr) => {
+        const copy = [...arr];
+        for (let i = copy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+    };
+
+    const buildRevisionQuestion = (pool) => {
+        const valid = (pool || []).filter(w => w && w.word && w.kanji && w.meaning);
+        const uniqueMeanings = Array.from(new Set(valid.map(w => String(w.meaning).trim()).filter(Boolean)));
+
+        if (valid.length === 0) return null;
+
+        const chosen = valid[Math.floor(Math.random() * valid.length)];
+        const correctMeaning = String(chosen.meaning).trim();
+
+        const distractorPool = uniqueMeanings.filter(m => m !== correctMeaning);
+        const distractors = shuffle(distractorPool).slice(0, 5);
+
+        const options = shuffle([correctMeaning, ...distractors]);
+        return {
+            word: chosen.word,
+            kanji: chosen.kanji,
+            correctMeaning,
+            options
         };
+    };
 
-        loadDictionary();
-    }, []); // Empty dependency array - only run once on mount
+    const startNextRevisionQuestion = () => {
+        const next = buildRevisionQuestion(uploadedWord);
+        setRevisionQuestion(next);
+        setRevisionLocked(false);
+    };
+
+    useEffect(() => {
+        if (!isRevisionMode) return;
+        if (!revisionQuestion) {
+            startNextRevisionQuestion();
+        }
+    }, [isRevisionMode, uploadedWord]);
 
     const normalize = (str) => str.trim().normalize("NFKC");
 
@@ -102,37 +109,6 @@ const VocabSection = ({user}) => {
 
         return map;
     }, [jmdictData]);
-
-    const handleDictionaryUpload = (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                const data = JSON.parse(e.target.result);
-                setJmdictData(data);
-                setDictionaryLoaded(true);
-                
-                // Save to localStorage for persistence
-                try {
-                    localStorage.setItem('jmdict_dictionary', JSON.stringify(data));
-                    console.log('Dictionary saved to localStorage');
-                } catch (err) {
-                    console.error('Error saving dictionary to localStorage:', err);
-                    // Continue even if localStorage fails
-                }
-                
-                alert(`Dictionary loaded: ${data.words.length.toLocaleString()} entries`);
-            } catch (err) {
-                alert("Failed to parse dictionary file: " + err.message);
-            }
-        };
-        reader.onerror = () => {
-            alert("Failed to read file");
-        };
-        reader.readAsText(file);
-    };
 
     const searchInDictionary = (word) => {
         const normalized = normalize(word);
@@ -451,9 +427,9 @@ const VocabSection = ({user}) => {
     const handleAdd = async () => {
         if (!romanjiBuffer.trim()) return;
 
-        // Check if dictionary is loaded
+        // Check if dictionary is available
         if (!dictionaryLoaded) {
-            alert("Please upload the JMdict dictionary file first!");
+            alert("Dictionary data is not available. Please make sure jmdict.json is bundled with the app.");
             return;
         }
 
@@ -619,34 +595,6 @@ const VocabSection = ({user}) => {
                 <h2 className='VocabText'>VOCAB</h2>
             </div>
             <div className='VocabContents'>
-                {!dictionaryLoaded && (
-                    <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#fff3cd', borderRadius: '8px',border: '1px solid #ffc107'}}>
-                        <p style={{ marginBottom: '10px', fontWeight: 'bold' }}>
-                            📚 Loading JMdict Dictionary...
-                        </p>
-                        <p style={{ marginBottom: '10px', fontSize: '14px', color: '#666' }}>
-                            If the dictionary doesn't load automatically, you can upload it manually:
-                        </p>
-                        <label style={{
-                            display: 'inline-block',
-                            padding: '10px 20px',
-                            backgroundColor: '#007bff',
-                            color: 'white',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            fontWeight: '600'
-                        }}>
-                            Upload jmdict.json
-                            <input 
-                                type="file" 
-                                accept=".json"
-                                onChange={handleDictionaryUpload}
-                                style={{ display: 'none' }}
-                            />
-                        </label>
-                    </div>
-                )}
-
                 {dictionaryLoaded && (
                     <div style={{ 
                         marginTop: '15px', 
@@ -786,6 +734,26 @@ const VocabSection = ({user}) => {
                     >
                         Submit
                     </button>
+                    <div
+                        className='changeSection'
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => {
+                            setIsRevisionMode(prev => !prev);
+                            setRevisionQuestion(null);
+                            setRevisionLocked(false);
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                setIsRevisionMode(prev => !prev);
+                                setRevisionQuestion(null);
+                                setRevisionLocked(false);
+                            }
+                        }}
+                    >
+                        {isRevisionMode ? 'Back to Vocab' : 'Vocab Revision'}
+                    </div>
                 </div>
                 <div className='AddedWords'>
                     <ul className='AddedWordsSection'>
@@ -804,19 +772,117 @@ const VocabSection = ({user}) => {
                         ))}
                     </ul>
                 </div>
-                <p>{wordCount + 2} Words Learned</p>
-                <div className="words">
-                    <div className='lines'></div>
-                    <ul className='list'>
-                        {uploadedWord.map((w, index) => (
-                            <li key={index} style={{fontSize:'18px'}}>
-                                {index+1}. {w.word} - ({w.kanji}) - {w.meaning}
-                            </li>
-                        ))}
-                        <li>ようこそ</li>
-                        <li>ありがとうございます</li>
-                    </ul>
-                </div>
+
+                {!isRevisionMode && (
+                    <>
+                        <p>{wordCount + 2} Words Learned</p>
+                        <div className="words">
+                            <div className='lines'></div>
+                            <ul className='list'>
+                                {uploadedWord.map((w, index) => (
+                                    <li key={index} style={{fontSize:'18px'}}>
+                                        {index+1}. {w.word} - ({w.kanji}) - {w.meaning}
+                                    </li>
+                                ))}
+                                <li>ようこそ</li>
+                                <li>ありがとうございます</li>
+                            </ul>
+                        </div>
+                    </>
+                )}
+
+                {isRevisionMode && (
+                    <div className="RevisionLayout">
+                        <div className="RevisionMain">
+                            <div className="RevisionHeader">
+                                <div className="RevisionScore">
+                                    Correct: <span className="RevisionScoreNumber">{correctCount}</span>
+                                </div>
+                                <button
+                                    className="RevisionNext"
+                                    onClick={() => {
+                                        if (revisionLocked) return;
+                                        startNextRevisionQuestion();
+                                    }}
+                                    disabled={revisionLocked}
+                                >
+                                    Skip
+                                </button>
+                            </div>
+
+                            {uploadedWord.filter(w => w && w.word && w.kanji && w.meaning).length < 6 ? (
+                                <div className="RevisionCard">
+                                    Add at least 6 saved words to start revision.
+                                </div>
+                            ) : (
+                                <div className="RevisionCard">
+                                    <div className="RevisionPrompt">
+                                        <div className="RevisionKana">{revisionQuestion?.word}</div>
+                                        <div className="RevisionKanji">{revisionQuestion?.kanji}</div>
+                                    </div>
+
+                                    <div className="RevisionOptions">
+                                        {(revisionQuestion?.options || []).map((opt, idx) => (
+                                            <button
+                                                key={`${opt}-${idx}`}
+                                                className="RevisionOption"
+                                                disabled={revisionLocked}
+                                                onClick={() => {
+                                                    if (revisionLocked || !revisionQuestion) return;
+                                                    setRevisionLocked(true);
+
+                                                    const isCorrect = opt === revisionQuestion.correctMeaning;
+                                                    if (isCorrect) {
+                                                        setCorrectCount(c => c + 1);
+                                                    } else {
+                                                        setWrongAnswers(prev => ([
+                                                            {
+                                                                word: revisionQuestion.word,
+                                                                kanji: revisionQuestion.kanji,
+                                                                correctMeaning: revisionQuestion.correctMeaning,
+                                                                chosenMeaning: opt
+                                                            },
+                                                            ...prev
+                                                        ]));
+                                                    }
+
+                                                    window.setTimeout(() => {
+                                                        startNextRevisionQuestion();
+                                                    }, 450);
+                                                }}
+                                            >
+                                                {opt}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="RevisionSidebar">
+                            <div className="RevisionSidebarTitle">Wrong answers</div>
+                            {wrongAnswers.length === 0 ? (
+                                <div className="RevisionSidebarEmpty">No wrong answers yet.</div>
+                            ) : (
+                                <ul className="RevisionWrongList">
+                                    {wrongAnswers.map((w, i) => (
+                                        <li key={`${w.word}-${w.kanji}-${i}`} className="RevisionWrongItem">
+                                            <div className="RevisionWrongWord">
+                                                {w.word} ({w.kanji})
+                                            </div>
+                                            <div className="RevisionWrongMeta">
+                                                Correct: {w.correctMeaning}
+                                            </div>
+                                            <div className="RevisionWrongMeta">
+                                                You chose: {w.chosenMeaning}
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
