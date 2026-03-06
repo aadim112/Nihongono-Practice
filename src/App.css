@@ -2,27 +2,48 @@ body, html {
   height: 100%;
   margin: 0;
 }
+.Navbar, .MainComponent, .LeftSide, .RightSide, .DefaultWindow {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
 .body,html::-webkit-scrollbar{
   display: none;
 }
 .Navbar{
   width: 100%;
-  height: 60px;
+  min-height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 8px 12px;
 }
 .Navbar h2{
-  margin-left: 30px;
+  margin: 0;
+  padding-left: 18px;
   color: red;
   font-weight: 500;
 }
 .UserSmallInfo{
-  width: 300px;
+  width: auto;
+  max-width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
   font-family: poppins;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 .UserName{
   display: flex;
@@ -44,27 +65,32 @@ body, html {
 }
 .MainComponent{
   width: 100%;
-  height: calc(100vh - 80px);
+  min-height: calc(100vh - 80px);
   display: flex;
   justify-content: space-between;
+  gap: 12px;
 }
 .LeftSide{
-  width: 20%;
+  width: 240px;
+  flex: 0 0 240px;
   display: flex;
   flex-direction: column;
   gap: 30px;
   align-items: center;
   margin-top: 10px;
+  padding: 0 6px;
 }
 .LeftSide div{
   position: relative;
-  width: 200px;
+  width: 100%;
+  max-width: 200px;
   height: 50px;
   border-radius: 6px;
   box-shadow: 6px 6px;
   cursor: pointer;
   display: flex;
   gap: 15px;
+  overflow: hidden;
 }
 .LeftSide div:nth-child(1){
   box-shadow: 6px 6px #df342c;
@@ -79,8 +105,10 @@ body, html {
   box-shadow: 8px 8px black;
 }
 .RightSide{
-  width: 80%;
-  height: 100vh;
+  width: auto;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: auto;
   padding-inline: 20px;
   margin-top: 10px;
   overflow: scroll;
@@ -92,4 +120,50 @@ body, html {
   width: 100%;
   height: auto;
   margin-bottom: 30px;
+}
+
+@media (max-width: 900px) {
+  .Navbar h2{
+    padding-left: 0;
+  }
+
+  .MainComponent{
+    flex-direction: column;
+    min-height: unset;
+  }
+
+  .LeftSide{
+    width: 100%;
+    flex: 0 0 auto;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 0 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .LeftSide div{
+    max-width: none;
+    width: 180px;
+    height: 46px;
+    flex: 0 0 auto;
+  }
+
+  .RightSide{
+    width: 100%;
+    padding-inline: 12px;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 520px) {
+  .Navbar{
+    justify-content: flex-start;
+  }
+
+  .Navbar > div{
+    max-width: 100%;
+  }
 }

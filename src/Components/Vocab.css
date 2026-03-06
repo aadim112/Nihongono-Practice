@@ -14,7 +14,7 @@
   justify-content: center;
 }
 .VocabText {
-  font-size: 80px;
+  font-size: clamp(44px, 9vw, 80px);
   font-weight: bold;
   background-clip: text;
   -webkit-background-clip: text;
@@ -32,9 +32,13 @@
 .VocabInput {
   display: flex;
   gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 .VocabInput input {
   width: 250px;
+  max-width: 100%;
+  flex: 1 1 260px;
   height: 35px;
   border-radius: 8px;
   border: 2px solid #6a4a73;
@@ -78,6 +82,7 @@
   font-size: 12px;
   text-transform: capitalize;
   font-size: 15px;
+  overflow-wrap: anywhere;
 }
 .list li:last-child {
   border-bottom: none;
@@ -294,6 +299,64 @@
 
 @media (max-width: 900px) {
   .RevisionLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .VocabBanner {
+    height: 96px;
+  }
+
+  .VocabContents {
+    font-size: 18px;
+    padding-inline: 8px;
+  }
+
+  .VocabInput {
+    gap: 10px;
+  }
+
+  .VocabInput input {
+    flex-basis: 100%;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .SubmitButton,
+  .LanguageChange {
+    height: 40px;
+  }
+
+  .changeSection {
+    width: auto;
+    flex: 1 1 100%;
+  }
+
+  .lines {
+    display: none;
+  }
+
+  .list li {
+    text-indent: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .RevisionPrompt {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .RevisionKana {
+    font-size: 28px;
+  }
+
+  .RevisionKanji {
+    font-size: 34px;
+  }
+
+  .RevisionOptions {
     grid-template-columns: 1fr;
   }
 }

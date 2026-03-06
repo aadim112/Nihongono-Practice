@@ -1,5 +1,5 @@
 .ReadingBanner{
-    width: 99%;
+    width: 100%;
     height: 60px;
     display: flex;
     align-items: center;
@@ -14,7 +14,7 @@
     border-radius: 50%;
 }
 .ReadingBanner p{
-    font-size: 45px;
+    font-size: clamp(22px, 5vw, 45px);
     font-family: poppins;
     color: white;
 }
@@ -30,6 +30,7 @@
 .ReadingSection{
     display: flex;
     justify-content: space-between;
+    gap: 16px;
 }
 .ReadingAnswer{
     width: 48%;
@@ -111,6 +112,7 @@
     border: 0.5px solid black;
     border-radius: 8px;
     font-size: 15px;
+    max-width: 100%;
 }
 .TranslationText:focus{
     outline: none;
@@ -158,4 +160,53 @@
   border-left: 0.5px solid #e06666;
   border-right: 0.5px solid #e06666;
   height: 100%;
+}
+
+@media (max-width: 900px) {
+    .ReadingSection{
+        flex-direction: column;
+    }
+
+    .ReadingPassage,
+    .ReadingAnswer{
+        width: 100%;
+        height: auto;
+        max-height: none;
+    }
+
+    .Translation{
+        height: auto;
+        flex-wrap: wrap;
+    }
+
+    .TranscribeTab,
+    .AnswerUnlock{
+        width: 48%;
+        min-width: 140px;
+    }
+
+    .TranslationText{
+        width: 100%;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 520px) {
+    .ReadingBanner{
+        gap: 12px;
+    }
+
+    .ReadingBanner img{
+        width: 44px;
+        height: 44px;
+    }
+
+    .OneLine{
+        padding-left: 38px;
+    }
+
+    .OneLine::before {
+        left: 24px;
+    }
 }

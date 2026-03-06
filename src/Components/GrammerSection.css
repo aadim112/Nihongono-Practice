@@ -14,7 +14,7 @@
     justify-content: center;
 }
 .GrammarText{
-  font-size: 80px;
+  font-size: clamp(44px, 9vw, 80px);
   font-weight: bold;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -34,19 +34,22 @@
     align-items: center;
 }
 .GrammarDiv{
-    width: 580px;
-    height: 90px;
+    width: min(580px, 100%);
+    height: auto;
     border-radius: 12px;
     margin-top: 10px;
     border-bottom: 1px solid grey;
     border-right: 1px solid grey;
     border-left: 1px solid grey;
+    padding-bottom: 10px;
 }
 .GrammarDivHeading{
     width: 90%;
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 .GrammarDivOtherInfo{
     margin-left: 15px;
@@ -54,4 +57,19 @@
 }
 .GrammarDivOtherInfo p{
     margin: 0px;
+}
+
+@media (max-width: 520px){
+    .GrammarBanner{
+        height: 96px;
+    }
+
+    .GrammarDivHeading{
+        width: 100%;
+    }
+
+    .GrammarDivOtherInfo{
+        margin-left: 12px;
+        margin-right: 12px;
+    }
 }
