@@ -27,6 +27,13 @@ const VocabSection = ({user, userName, users = []}) => {
     const [showSuggestions, setShowSuggestions] = useState(false);
 
     useEffect(() => {
+        // Reset per-user revision session/UI state when switching users
+        setRevisionQuestion(null);
+        setRevisionLocked(false);
+        setCorrectCount(0);
+        setWrongAnswers([]);
+        revisionSessionRef.current = { sig: '', remainingIds: [], asked: new Set() };
+
         const vocabRef = ref(db, `${user}/vocab`);
 
         const unsubscribe = onValue(vocabRef, (snapshot) => {
@@ -43,7 +50,7 @@ const VocabSection = ({user, userName, users = []}) => {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         if (!isRevisionMode) return;
