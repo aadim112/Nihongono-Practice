@@ -1,12 +1,12 @@
 import './Vocab.css'
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { ref, push, update, get, child, onValue } from "firebase/database";
 import db from './firebase'
 import kanjiData from './Kanjis.json';
 import jmdictData from '../data/jmdict.json';
 
 
-const VocabSection = ({user}) => {
+const VocabSection = ({user, userName, users = []}) => {
     const [inputValue, setInputValue] = useState('');
     const [wordCount, setWordCount] = useState(0);
     const [romanjiBuffer, setRomanjiBuffer] = useState(''); 
@@ -15,10 +15,13 @@ const VocabSection = ({user}) => {
     const [toggle,setToggle] = useState(false);
 
     const [isRevisionMode, setIsRevisionMode] = useState(false);
-    const [revisionQuestion, setRevisionQuestion] = useState(null); // { word, kanji, correctMeaning, options: string[] }
+    const [revisionQuestion, setRevisionQuestion] = useState(null);
     const [revisionLocked, setRevisionLocked] = useState(false);
     const [correctCount, setCorrectCount] = useState(0);
-    const [wrongAnswers, setWrongAnswers] = useState([]); // { word, kanji, correctMeaning, chosenMeaning }
+    const [wrongAnswers, setWrongAnswers] = useState([]); // { prompt, correctAnswer, chosenAnswer, mode, word, kanji, meaning }
+    const [revisionMode, setRevisionMode] = useState('jp_to_en'); // 'jp_to_en' | 'en_to_jp'
+    const revisionSessionRef = useRef({ sig: '', remainingIds: [], asked: new Set() });
+    const [maxScoresByUser, setMaxScoresByUser] = useState({});
     
     const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -31,14 +34,56 @@ const VocabSection = ({user}) => {
                 const data = snapshot.val();
                 setUploadedWords(data.words ?? []);
                 setWordCount(data.totalCount ?? 0);
+                setMaxScoresByUser(prev => ({ ...prev, [user]: Number(data.revisionMaxScore ?? 0) }));
             } else {
                 setUploadedWords([]);
                 setWordCount(0);
+                setMaxScoresByUser(prev => ({ ...prev, [user]: 0 }));
             }
         });
 
         return () => unsubscribe();
     }, []);
+
+    useEffect(() => {
+        if (!isRevisionMode) return;
+        const currentMax = Number(maxScoresByUser?.[user] ?? 0);
+        if (correctCount <= currentMax) return;
+
+        const vocabRef = ref(db, `${user}/vocab`);
+        setMaxScoresByUser(prev => ({ ...prev, [user]: correctCount }));
+        update(vocabRef, { revisionMaxScore: correctCount }).catch((e) => {
+            console.error("Failed to update revisionMaxScore:", e);
+        });
+    }, [correctCount, maxScoresByUser, isRevisionMode, user]);
+
+    useEffect(() => {
+        if (!Array.isArray(users) || users.length === 0) return;
+
+        const unsubscribes = users.map(u => {
+            const userId = u?.id;
+            if (userId === undefined || userId === null) return null;
+
+            const scoreRef = ref(db, `${userId}/vocab/revisionMaxScore`);
+            return onValue(scoreRef, (snapshot) => {
+                const val = snapshot.exists() ? Number(snapshot.val() ?? 0) : 0;
+                setMaxScoresByUser(prev => ({ ...prev, [userId]: val }));
+            });
+        }).filter(Boolean);
+
+        return () => {
+            unsubscribes.forEach(fn => {
+                try { fn(); } catch {}
+            });
+        };
+    }, [users]);
+
+    const getUserDisplayName = (userId) => {
+        const fromList = Array.isArray(users) ? users.find(u => u?.id === userId)?.name : undefined;
+        if (fromList) return fromList;
+        if (userId === user) return (userName || String(userId));
+        return String(userId);
+    };
 
     const dictionaryLoaded = !!(jmdictData && jmdictData.words && Array.isArray(jmdictData.words));
 
@@ -51,39 +96,107 @@ const VocabSection = ({user}) => {
         return copy;
     };
 
-    const buildRevisionQuestion = (pool) => {
-        const valid = (pool || []).filter(w => w && w.word && w.kanji && w.meaning);
-        const uniqueMeanings = Array.from(new Set(valid.map(w => String(w.meaning).trim()).filter(Boolean)));
+    const validRevisionPool = useMemo(() => {
+        const valid = (uploadedWord || []).filter(w => w && w.word && w.kanji && w.meaning);
+        return valid.map((w) => ({
+            id: `${String(w.word).trim()}|${String(w.kanji).trim()}|${String(w.meaning).trim()}`,
+            word: String(w.word).trim(),
+            kanji: String(w.kanji).trim(),
+            meaning: String(w.meaning).trim(),
+        }));
+    }, [uploadedWord]);
 
-        if (valid.length === 0) return null;
+    const buildRevisionQuestionForItem = (item, mode, pool) => {
+        if (!item) return null;
 
-        const chosen = valid[Math.floor(Math.random() * valid.length)];
-        const correctMeaning = String(chosen.meaning).trim();
+        if (mode === 'en_to_jp') {
+            const correct = `${item.word} | ${item.kanji}`;
+            const distractorPool = (pool || [])
+                .filter(p => p.id !== item.id)
+                .map(p => `${p.word} | ${p.kanji}`);
+            const distractors = shuffle(Array.from(new Set(distractorPool))).slice(0, 5);
+            const options = shuffle([correct, ...distractors]);
+            return {
+                id: item.id,
+                mode,
+                word: item.word,
+                kanji: item.kanji,
+                meaning: item.meaning,
+                prompt: item.meaning,
+                options,
+                correctAnswer: correct,
+            };
+        }
 
-        const distractorPool = uniqueMeanings.filter(m => m !== correctMeaning);
-        const distractors = shuffle(distractorPool).slice(0, 5);
-
-        const options = shuffle([correctMeaning, ...distractors]);
+        const correct = item.meaning;
+        const distractorPool = (pool || [])
+            .filter(p => p.id !== item.id)
+            .map(p => p.meaning);
+        const distractors = shuffle(Array.from(new Set(distractorPool))).slice(0, 5);
+        const options = shuffle([correct, ...distractors]);
         return {
-            word: chosen.word,
-            kanji: chosen.kanji,
-            correctMeaning,
-            options
+            id: item.id,
+            mode,
+            word: item.word,
+            kanji: item.kanji,
+            meaning: item.meaning,
+            prompt: `${item.word} (${item.kanji})`,
+            options,
+            correctAnswer: correct,
         };
     };
 
+    const initRevisionSessionIfNeeded = () => {
+        const sig = validRevisionPool.map(v => v.id).join('||');
+        if (revisionSessionRef.current.sig === sig) return;
+
+        revisionSessionRef.current.sig = sig;
+        revisionSessionRef.current.asked = new Set();
+        revisionSessionRef.current.remainingIds = shuffle(validRevisionPool.map(v => v.id));
+    };
+
     const startNextRevisionQuestion = () => {
-        const next = buildRevisionQuestion(uploadedWord);
+        initRevisionSessionIfNeeded();
+
+        const asked = revisionSessionRef.current.asked;
+        const remaining = revisionSessionRef.current.remainingIds;
+
+        while (remaining.length > 0 && asked.has(remaining[0])) {
+            remaining.shift();
+        }
+
+        const nextId = remaining.shift();
+        if (!nextId) {
+            setRevisionQuestion(null);
+            setRevisionLocked(false);
+            return;
+        }
+
+        asked.add(nextId);
+        const item = validRevisionPool.find(v => v.id === nextId);
+        const next = buildRevisionQuestionForItem(item, revisionMode, validRevisionPool);
         setRevisionQuestion(next);
         setRevisionLocked(false);
     };
 
+    const flipRevisionMode = () => {
+        setRevisionMode(prev => (prev === 'jp_to_en' ? 'en_to_jp' : 'jp_to_en'));
+        setRevisionLocked(false);
+        setRevisionQuestion((current) => {
+            if (!current) return current;
+            const item = validRevisionPool.find(v => v.id === current.id);
+            const nextMode = current.mode === 'jp_to_en' ? 'en_to_jp' : 'jp_to_en';
+            return buildRevisionQuestionForItem(item, nextMode, validRevisionPool);
+        });
+    };
+
     useEffect(() => {
         if (!isRevisionMode) return;
+        initRevisionSessionIfNeeded();
         if (!revisionQuestion) {
             startNextRevisionQuestion();
         }
-    }, [isRevisionMode, uploadedWord]);
+    }, [isRevisionMode, validRevisionPool]);
 
     const normalize = (str) => str.trim().normalize("NFKC");
 
@@ -742,6 +855,8 @@ const VocabSection = ({user}) => {
                             setIsRevisionMode(prev => !prev);
                             setRevisionQuestion(null);
                             setRevisionLocked(false);
+                            setWrongAnswers([]);
+                            setCorrectCount(0);
                         }}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
@@ -749,6 +864,8 @@ const VocabSection = ({user}) => {
                                 setIsRevisionMode(prev => !prev);
                                 setRevisionQuestion(null);
                                 setRevisionLocked(false);
+                                setWrongAnswers([]);
+                                setCorrectCount(0);
                             }
                         }}
                     >
@@ -797,7 +914,33 @@ const VocabSection = ({user}) => {
                             <div className="RevisionHeader">
                                 <div className="RevisionScore">
                                     Correct: <span className="RevisionScoreNumber">{correctCount}</span>
+                                    <span style={{ marginLeft: '10px' }}>
+                                        {users.length > 0 ? (
+                                            <>
+                                                {users.map((u, idx) => (
+                                                    <span key={u.id} style={{ marginLeft: idx === 0 ? 0 : '10px' }}>
+                                                        Max ({getUserDisplayName(u.id)}):{" "}
+                                                        <span className="RevisionScoreNumber">{Number(maxScoresByUser?.[u.id] ?? 0)}</span>
+                                                    </span>
+                                                ))}
+                                            </>
+                                        ) : (
+                                            <>
+                                                Max ({userName || user}):{" "}
+                                                <span className="RevisionScoreNumber">{Number(maxScoresByUser?.[user] ?? 0)}</span>
+                                            </>
+                                        )}
+                                    </span>
                                 </div>
+                                <div>
+                                <button
+                                    className="RevisionFlip"
+                                    onClick={flipRevisionMode}
+                                    disabled={revisionLocked || validRevisionPool.length === 0}
+                                    title="Flip question/answer direction"
+                                >
+                                    Flip
+                                </button>
                                 <button
                                     className="RevisionNext"
                                     onClick={() => {
@@ -808,17 +951,30 @@ const VocabSection = ({user}) => {
                                 >
                                     Skip
                                 </button>
+                                </div>
                             </div>
 
                             {uploadedWord.filter(w => w && w.word && w.kanji && w.meaning).length < 6 ? (
                                 <div className="RevisionCard">
                                     Add at least 6 saved words to start revision.
                                 </div>
+                            ) : !revisionQuestion ? (
+                                <div className="RevisionCard">
+                                    You’ve gone through all saved words for this session. Leave/reload the page to restart.
+                                </div>
                             ) : (
                                 <div className="RevisionCard">
                                     <div className="RevisionPrompt">
-                                        <div className="RevisionKana">{revisionQuestion?.word}</div>
-                                        <div className="RevisionKanji">{revisionQuestion?.kanji}</div>
+                                        {revisionQuestion?.mode === 'en_to_jp' ? (
+                                            <div className="RevisionKana" style={{ width: '100%' }}>
+                                                {revisionQuestion?.meaning}
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <div className="RevisionKana">{revisionQuestion?.word}</div>
+                                                <div className="RevisionKanji">{revisionQuestion?.kanji}</div>
+                                            </>
+                                        )}
                                     </div>
 
                                     <div className="RevisionOptions">
@@ -831,16 +987,19 @@ const VocabSection = ({user}) => {
                                                     if (revisionLocked || !revisionQuestion) return;
                                                     setRevisionLocked(true);
 
-                                                    const isCorrect = opt === revisionQuestion.correctMeaning;
+                                                    const isCorrect = opt === revisionQuestion.correctAnswer;
                                                     if (isCorrect) {
                                                         setCorrectCount(c => c + 1);
                                                     } else {
                                                         setWrongAnswers(prev => ([
                                                             {
+                                                                mode: revisionQuestion.mode,
+                                                                prompt: revisionQuestion.mode === 'en_to_jp' ? revisionQuestion.meaning : `${revisionQuestion.word} (${revisionQuestion.kanji})`,
                                                                 word: revisionQuestion.word,
                                                                 kanji: revisionQuestion.kanji,
-                                                                correctMeaning: revisionQuestion.correctMeaning,
-                                                                chosenMeaning: opt
+                                                                meaning: revisionQuestion.meaning,
+                                                                correctAnswer: revisionQuestion.correctAnswer,
+                                                                chosenAnswer: opt
                                                             },
                                                             ...prev
                                                         ]));
@@ -868,13 +1027,13 @@ const VocabSection = ({user}) => {
                                     {wrongAnswers.map((w, i) => (
                                         <li key={`${w.word}-${w.kanji}-${i}`} className="RevisionWrongItem">
                                             <div className="RevisionWrongWord">
-                                                {w.word} ({w.kanji})
+                                                {w.mode === 'en_to_jp' ? w.meaning : `${w.word} (${w.kanji})`}
                                             </div>
                                             <div className="RevisionWrongMeta">
-                                                Correct: {w.correctMeaning}
+                                                Correct: {w.correctAnswer}
                                             </div>
                                             <div className="RevisionWrongMeta">
-                                                You chose: {w.chosenMeaning}
+                                                You chose: {w.chosenAnswer}
                                             </div>
                                         </li>
                                     ))}

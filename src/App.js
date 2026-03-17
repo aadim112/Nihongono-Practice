@@ -21,6 +21,11 @@ function App() {
 
   const [ConsistentDays,setConsistentDays] = useState({}); 
   const [user,setUser] = useState(0);
+  const users = [
+    { id: 0, name: "アーディティヤ" },
+    { id: 1, name: "スネハ" },
+  ];
+  const selectedUserName = users.find(u => u.id === user)?.name ?? String(user);
 
   useEffect(() => {
       const fetchConsistency = async () => {
@@ -59,8 +64,9 @@ function App() {
         <div className='UserName'>
           <span className="material-symbols-outlined">person</span>
           <select style={{color:'red',fontWeight:'bold',border:'0px'}} value={user} onChange={(e) => setUser(Number(e.target.value))}>
-            <option value={0} style={{color:'red',fontWeight:'bold'}}>アーディティヤ</option>
-            <option value={1} style={{color:'red',fontWeight:'bold'}}>スネハ</option>
+            {users.map(u => (
+              <option key={u.id} value={u.id} style={{color:'red',fontWeight:'bold'}}>{u.name}</option>
+            ))}
           </select>
         </div>
         |
@@ -94,7 +100,7 @@ function App() {
         <div className='DefaultWindow'>
           <ConsistencyGraph activityData={ConsistentDays} user={user}/>
         </div>
-        {window === 1 &&  <VocabSection user={user}/>}
+        {window === 1 &&  <VocabSection user={user} userName={selectedUserName} users={users} />}
         {window === 2 &&  <GrammerSection user={user}/>}
         {window === 3 &&  <Kanji user={user}/>}
         {window === 4 && <Listening user={user}/>}

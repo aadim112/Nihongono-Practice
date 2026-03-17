@@ -172,6 +172,23 @@
   cursor: pointer;
 }
 
+.RevisionFlip {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #6a4a73;
+  background: #6a4a73;
+  color: #fff;
+  font-family: poppins;
+  font-weight: 800;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.RevisionFlip:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .RevisionNext:disabled {
   opacity: 0.6;
   cursor: not-allowed;
