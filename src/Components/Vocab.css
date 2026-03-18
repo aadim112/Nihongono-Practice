@@ -181,10 +181,41 @@
   font-family: poppins;
   font-weight: 800;
   cursor: pointer;
-  margin-right: 20px;
+  margin-right: 8px;
+}
+
+.RevisionExtra {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #dedede;
+  background: #fafafa;
+  color: #333;
+  font-family: poppins;
+  font-weight: 800;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.RevisionStar {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #f0c14b;
+  background: #fff6d6;
+  color: #8a6d00;
+  font-family: poppins;
+  font-weight: 900;
+  cursor: pointer;
+  margin-right: 8px;
+  min-width: 44px;
 }
 
 .RevisionFlip:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.RevisionExtra:disabled,
+.RevisionStar:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }

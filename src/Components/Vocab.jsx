@@ -1,6 +1,6 @@
 import './Vocab.css'
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { ref, push, update, get, child, onValue } from "firebase/database";
+import { ref, push, update, get, child, onValue, set, remove } from "firebase/database";
 import db from './firebase'
 import kanjiData from './Kanjis.json';
 import jmdictData from '../data/jmdict.json';
@@ -21,7 +21,10 @@ const VocabSection = ({user, userName, users = []}) => {
     const [wrongAnswers, setWrongAnswers] = useState([]); // { prompt, correctAnswer, chosenAnswer, mode, word, kanji, meaning }
     const [revisionMode, setRevisionMode] = useState('jp_to_en'); // 'jp_to_en' | 'en_to_jp'
     const revisionSessionRef = useRef({ sig: '', remainingIds: [], asked: new Set() });
+    const extraRevisionSessionRef = useRef({ sig: '', remainingKeys: [], asked: new Set() });
     const [maxScoresByUser, setMaxScoresByUser] = useState({});
+    const [extraRevisionMap, setExtraRevisionMap] = useState({}); // key -> saved question object
+    const [isExtraRevise, setIsExtraRevise] = useState(false);
     
     const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -33,6 +36,9 @@ const VocabSection = ({user, userName, users = []}) => {
         setCorrectCount(0);
         setWrongAnswers([]);
         revisionSessionRef.current = { sig: '', remainingIds: [], asked: new Set() };
+        extraRevisionSessionRef.current = { sig: '', remainingKeys: [], asked: new Set() };
+        setIsExtraRevise(false);
+        setExtraRevisionMap({});
 
         const vocabRef = ref(db, `${user}/vocab`);
 
@@ -50,6 +56,15 @@ const VocabSection = ({user, userName, users = []}) => {
         });
 
         return () => unsubscribe();
+    }, [user]);
+
+    useEffect(() => {
+        const extraRef = ref(db, `${user}/ExtraRevision`);
+        const unsub = onValue(extraRef, (snapshot) => {
+            const data = snapshot.exists() ? snapshot.val() : {};
+            setExtraRevisionMap(data && typeof data === 'object' ? data : {});
+        });
+        return () => unsub();
     }, [user]);
 
     useEffect(() => {
@@ -162,7 +177,53 @@ const VocabSection = ({user, userName, users = []}) => {
         revisionSessionRef.current.remainingIds = shuffle(validRevisionPool.map(v => v.id));
     };
 
+    const buildExtraKey = (baseId, mode) => `${baseId}::${mode}`;
+
+    const starredKeysForMode = useMemo(() => {
+        const keys = Object.keys(extraRevisionMap || {});
+        return keys.filter(k => extraRevisionMap?.[k]?.mode === revisionMode);
+    }, [extraRevisionMap, revisionMode]);
+
+    const initExtraRevisionSessionIfNeeded = () => {
+        const sig = starredKeysForMode.join('||');
+        if (extraRevisionSessionRef.current.sig === sig) return;
+
+        extraRevisionSessionRef.current.sig = sig;
+        extraRevisionSessionRef.current.asked = new Set();
+        extraRevisionSessionRef.current.remainingKeys = shuffle([...starredKeysForMode]);
+    };
+
     const startNextRevisionQuestion = () => {
+        if (isExtraRevise) {
+            initExtraRevisionSessionIfNeeded();
+
+            const asked = extraRevisionSessionRef.current.asked;
+            const remaining = extraRevisionSessionRef.current.remainingKeys;
+
+            while (remaining.length > 0 && asked.has(remaining[0])) {
+                remaining.shift();
+            }
+
+            const nextKey = remaining.shift();
+            if (!nextKey) {
+                setRevisionQuestion(null);
+                setRevisionLocked(false);
+                return;
+            }
+
+            asked.add(nextKey);
+            const saved = extraRevisionMap?.[nextKey];
+            if (!saved) {
+                setRevisionQuestion(null);
+                setRevisionLocked(false);
+                return;
+            }
+
+            setRevisionQuestion(saved);
+            setRevisionLocked(false);
+            return;
+        }
+
         initRevisionSessionIfNeeded();
 
         const asked = revisionSessionRef.current.asked;
@@ -199,11 +260,47 @@ const VocabSection = ({user, userName, users = []}) => {
 
     useEffect(() => {
         if (!isRevisionMode) return;
-        initRevisionSessionIfNeeded();
+        if (isExtraRevise) {
+            initExtraRevisionSessionIfNeeded();
+        } else {
+            initRevisionSessionIfNeeded();
+        }
         if (!revisionQuestion) {
             startNextRevisionQuestion();
         }
-    }, [isRevisionMode, validRevisionPool]);
+    }, [isRevisionMode, validRevisionPool, isExtraRevise, starredKeysForMode]);
+
+    const isCurrentQuestionStarred = useMemo(() => {
+        if (!revisionQuestion?.id || !revisionQuestion?.mode) return false;
+        const key = buildExtraKey(revisionQuestion.id, revisionQuestion.mode);
+        return !!extraRevisionMap?.[key];
+    }, [revisionQuestion, extraRevisionMap]);
+
+    const toggleStarCurrentQuestion = async () => {
+        if (!revisionQuestion?.id || !revisionQuestion?.mode) return;
+        const key = buildExtraKey(revisionQuestion.id, revisionQuestion.mode);
+        const targetRef = ref(db, `${user}/ExtraRevision/${key}`);
+
+        if (extraRevisionMap?.[key]) {
+            await remove(targetRef);
+            return;
+        }
+
+        const payload = {
+            ...revisionQuestion,
+            key,
+            starredAt: Date.now(),
+        };
+        await set(targetRef, payload);
+    };
+
+    const toggleExtraRevise = () => {
+        setIsExtraRevise(prev => !prev);
+        setRevisionQuestion(null);
+        setRevisionLocked(false);
+        extraRevisionSessionRef.current = { sig: '', remainingKeys: [], asked: new Set() };
+        revisionSessionRef.current = { sig: '', remainingIds: [], asked: new Set() };
+    };
 
     const normalize = (str) => str.trim().normalize("NFKC");
 
@@ -941,6 +1038,22 @@ const VocabSection = ({user, userName, users = []}) => {
                                 </div>
                                 <div>
                                 <button
+                                    className="RevisionExtra"
+                                    onClick={toggleExtraRevise}
+                                    disabled={revisionLocked}
+                                    title="Revise only starred questions"
+                                >
+                                    {isExtraRevise ? 'Normal revise' : 'Extra revise'}
+                                </button>
+                                <button
+                                    className="RevisionStar"
+                                    onClick={toggleStarCurrentQuestion}
+                                    disabled={revisionLocked || !revisionQuestion}
+                                    title={isCurrentQuestionStarred ? 'Unstar this question' : 'Star this question'}
+                                >
+                                    {isCurrentQuestionStarred ? '★' : '☆'}
+                                </button>
+                                <button
                                     className="RevisionFlip"
                                     onClick={flipRevisionMode}
                                     disabled={revisionLocked || validRevisionPool.length === 0}
@@ -964,6 +1077,10 @@ const VocabSection = ({user, userName, users = []}) => {
                             {uploadedWord.filter(w => w && w.word && w.kanji && w.meaning).length < 6 ? (
                                 <div className="RevisionCard">
                                     Add at least 6 saved words to start revision.
+                                </div>
+                            ) : isExtraRevise && starredKeysForMode.length === 0 ? (
+                                <div className="RevisionCard">
+                                    No starred questions yet for this mode. Use ☆ to star questions, then come back to Extra revise.
                                 </div>
                             ) : !revisionQuestion ? (
                                 <div className="RevisionCard">
