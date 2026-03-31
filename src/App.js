@@ -44,7 +44,7 @@ function App() {
       };
 
       fetchConsistency();
-  }, []);
+  }, [user]);
 
   const mockData = {
     "2026-01-01": 2,
@@ -100,11 +100,11 @@ function App() {
         <div className='DefaultWindow'>
           <ConsistencyGraph activityData={ConsistentDays} user={user}/>
         </div>
-        {window === 1 &&  <VocabSection user={user} userName={selectedUserName} users={users} />}
-        {window === 2 &&  <GrammerSection user={user}/>}
-        {window === 3 &&  <Kanji user={user}/>}
-        {window === 4 && <Listening user={user}/>}
-        {window === 5 && <Reading user={user}/>}
+        {window === 1 &&  <VocabSection key={user} user={user} userName={selectedUserName} users={users} />}
+        {window === 2 &&  <GrammerSection key={user} user={user}/>}
+        {window === 3 &&  <Kanji key={user} user={user}/>}
+        {window === 4 && <Listening key={user} user={user}/>}
+        {window === 5 && <Reading key={user} user={user}/>}
       </div>
     </div>
     <footer></footer>
