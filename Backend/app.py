@@ -5,7 +5,13 @@ import google.generativeai as genai
 import json
 import random
 import os
+import re
+import requests
+import traceback
+from xml.etree.ElementTree import ParseError
 from dotenv import load_dotenv
+from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound, VideoUnavailable
+from janome.tokenizer import Tokenizer
 
 # Load environment variables from .env file
 load_dotenv()
@@ -20,6 +26,128 @@ if not GOOGLE_API_KEY:
 
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel("gemini-flash-latest")
+
+tokenizer = Tokenizer()
+
+def extract_video_id(url):
+    """
+    Extracts the video ID from a YouTube URL.
+    """
+    patterns = [
+        r"(?:v=|\/)([0-9A-Za-z_-]{11}).*",
+        r"youtu\.be\/([0-9A-Za-z_-]{11})",
+        r"embed\/([0-9A-Za-z_-]{11})"
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, url)
+        if match:
+            return match.group(1)
+    return None
+
+@app.route("/api/youtube-transcript", methods=["GET"])
+def get_youtube_transcript():
+    video_url = request.args.get("url")
+    if not video_url:
+        return jsonify({"error": "No URL provided"}), 400
+    
+    video_id = extract_video_id(video_url)
+    if not video_id:
+        return jsonify({"error": "Invalid YouTube URL"}), 400
+
+    try:
+        ytt_api = YouTubeTranscriptApi()
+        transcript_list = ytt_api.list(video_id)
+        
+        # Try to find Japanese transcript (manual first, then auto)
+        try:
+            ja_transcript = transcript_list.find_transcript(['ja'])
+        except:
+            # If no Japanese, we can't really do the task as requested
+            return jsonify({"error": "No Japanese transcript available for this video"}), 404
+        
+        ja_data = ja_transcript.fetch()
+        
+        # Try to find English transcript for translation
+        en_data = []
+        try:
+            en_transcript = transcript_list.find_transcript(['en'])
+            en_data = en_transcript.fetch()
+        except:
+            # If no manual English, check if we can translate the Japanese one
+            try:
+                en_data = ja_transcript.translate('en').fetch()
+            except:
+                pass
+
+        # Combine and tokenize
+        processed_transcript = []
+        for i, entry in enumerate(ja_data):
+            # Tokenize Japanese text
+            tokens = []
+            for token in tokenizer.tokenize(entry.text):
+                tokens.append({
+                    "surface": token.surface,
+                    "base": token.base_form,
+                    "reading": token.reading,
+                    "pos": token.part_of_speech.split(',')[0]
+                })
+            
+            # Find matching English translation if available
+            translation = ""
+            if i < len(en_data):
+                # Simple heuristic: matching by index if lengths are same, 
+                # or finding closest timestamp. For now, we'll try to find 
+                # the one that overlaps the most with ja_data's time.
+                start = entry.start
+                best_match = None
+                min_diff = 100
+                for en_entry in en_data:
+                    diff = abs(en_entry.start - start)
+                    if diff < min_diff:
+                        min_diff = diff
+                        best_match = en_entry
+                
+                if best_match and min_diff < 5: # 5 seconds window
+                    translation = best_match.text
+
+            processed_transcript.append({
+                "start": entry.start,
+                "duration": entry.duration,
+                "text": entry.text,
+                "tokens": tokens,
+                "translation": translation
+            })
+
+        return jsonify({
+            "video_id": video_id,
+            "transcript": processed_transcript
+        })
+
+    except TranscriptsDisabled:
+        return jsonify({"error": "Transcripts are disabled for this video."}), 404
+    except NoTranscriptFound:
+        return jsonify({"error": "No Japanese transcript was found for this video."}), 404
+    except VideoUnavailable:
+        return jsonify({"error": "This video is unavailable, private, or age-restricted. Please try another one."}), 404
+    except ParseError:
+        return jsonify({"error": "Could not retrieve transcripts for this video (no subtitle data found)."}), 404
+    except Exception as e:
+        print("TRANSCRIPT ERROR:")
+        traceback.print_exc()
+        return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
+
+@app.route("/api/jisho-proxy", methods=["GET"])
+def jisho_proxy():
+    keyword = request.args.get("keyword")
+    if not keyword:
+        return jsonify({"error": "No keyword provided"}), 400
+    
+    try:
+        url = f"https://jisho.org/api/v1/search/words?keyword={keyword}"
+        response = requests.get(url)
+        return jsonify(response.json())
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/")
 def index():

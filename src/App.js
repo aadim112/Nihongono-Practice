@@ -15,6 +15,7 @@ import Listening from './Components/Listening';
 import db from './Components/firebase';
 import { get, ref } from 'firebase/database';
 import Kanji from './Components/Kanji';
+import YoutubePractice from './Components/YoutubePractice';
 
 
 function App() {
@@ -95,6 +96,10 @@ function App() {
           <img style={{width:'50px',height:'100%',borderTopLeftRadius:'6px',borderBottomLeftRadius:'6px',objectFit:'cover'}} src={banner4}></img>
           <p style={{fontFamily:"Shippori Antique"}}>Reading | よむ</p>
         </div>
+        <div className='KanjiButton' onClick={()=>{setWindow(6)}}>
+          <img style={{width:'50px',height:'100%',borderTopLeftRadius:'6px',borderBottomLeftRadius:'6px',objectFit:'cover', filter: 'hue-rotate(90deg)'}} src={banner1}></img>
+          <p style={{fontFamily:"Shippori Antique"}}>Video | 動画</p>
+        </div>
       </div>
       <div className='RightSide'>
         <div className='DefaultWindow'>
@@ -105,6 +110,7 @@ function App() {
         {window === 3 &&  <Kanji key={user} user={user}/>}
         {window === 4 && <Listening key={user} user={user}/>}
         {window === 5 && <Reading key={user} user={user}/>}
+        {window === 6 && <YoutubePractice key={user} user={user}/>}
       </div>
     </div>
     <footer></footer>

@@ -12,6 +12,7 @@
     "kuromoji": "^0.1.2",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "react-player": "^3.4.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },

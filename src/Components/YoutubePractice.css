@@ -1,0 +1,323 @@
+.YoutubePracticeContainer {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 80px); /* Adjust based on navbar height */
+    padding: 20px;
+    background-color: #f8fafc;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    color: #1e293b;
+}
+
+.YoutubeHeader {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.YoutubeUrlInput {
+    flex: 1;
+    padding: 12px 18px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.YoutubeUrlInput:focus {
+    border-color: #3b82f6;
+}
+
+.LoadVideoButton {
+    padding: 12px 24px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.LoadVideoButton:hover {
+    background-color: #2563eb;
+}
+
+.LoadVideoButton:active {
+    transform: scale(0.98);
+}
+
+.YoutubeMainLayout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+}
+
+.VideoWrapper {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+}
+
+.VideoWrapper > div,
+.VideoWrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    border: none;
+    border-radius: 16px;
+}
+
+.TranscriptSidebar {
+    background: white;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+
+.TranscriptHeader {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    background: #f1f5f9;
+}
+
+.TranscriptHeader h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #475569;
+}
+
+.TranscriptContent {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 0;
+    scroll-behavior: smooth;
+}
+
+.TranscriptLine {
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-left: 4px solid transparent;
+}
+
+.TranscriptLine:hover {
+    background-color: #f1f5f9;
+}
+
+.TranscriptLine.active {
+    background-color: #eff6ff;
+    border-left-color: #3b82f6;
+}
+
+.JapaneseText {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #1e293b;
+    margin-bottom: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+.Token {
+    display: inline-block;
+    padding: 1px 2px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.Token:hover {
+    background-color: #cbd5e1;
+    text-decoration: underline;
+}
+
+.EnglishTranslation {
+    font-size: 0.9rem;
+    color: #64748b;
+    font-style: italic;
+}
+
+/* Dictionary Popup */
+.DictionaryPopup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    width: 90%;
+    max-width: 450px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    z-index: 1000;
+    padding: 25px;
+    animation: popupFadeIn 0.3s ease-out;
+    border: 1px solid #e2e8f0;
+}
+
+@keyframes popupFadeIn {
+    from { opacity: 0; transform: translate(-50%, -45%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.PopupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+}
+
+.PopupHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.WordInfo h2 {
+    margin: 0;
+    font-size: 28px;
+    color: #1e293b;
+}
+
+.WordReading {
+    color: #64748b;
+    font-size: 16px;
+}
+
+.ClosePopup {
+    background: #f1f5f9;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+}
+
+.WordMeaning {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #334155;
+    margin-bottom: 20px;
+}
+
+.AddToVocabBtn {
+    width: 100%;
+    padding: 12px;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.AddToVocabBtn:hover {
+    background-color: #059669;
+}
+
+.AddToVocabBtn.success {
+    background-color: #059669;
+}
+
+.EmptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #94a3b8;
+    text-align: center;
+    padding: 40px;
+}
+
+.EmptyState .icon {
+    font-size: 64px;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 1024px) {
+    .YoutubeMainLayout {
+        grid-template-columns: 1fr;
+    }
+    
+    .YoutubePracticeContainer {
+        height: auto;
+        overflow: visible;
+    }
+    
+    .TranscriptSidebar {
+        height: 500px;
+    }
+}
+
+/* Subtitle Mode Styles */
+.TranscriptContent.subtitle-mode {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+.TranscriptLine.subtitle-display {
+    border-left: none;
+    background: transparent;
+    text-align: center;
+    cursor: default;
+    width: 100%;
+}
+
+.TranscriptLine.subtitle-display:hover {
+    background-color: transparent;
+}
+
+.JapaneseText.subtitle-text {
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.5;
+    color: #1e293b;
+}
+
+.EnglishTranslation.subtitle-translation {
+    font-size: 1rem;
+    color: #64748b;
+    font-style: italic;
+    text-align: center;
+    line-height: 1.6;
+    min-height: 1.6em;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 10px;
+    margin-top: 4px;
+}
