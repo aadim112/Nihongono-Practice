@@ -11,7 +11,7 @@ import traceback
 from xml.etree.ElementTree import ParseError
 from dotenv import load_dotenv
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound, VideoUnavailable
-from janome.tokenizer import Tokenizer as JanomeTokenizer
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -27,15 +27,47 @@ if not GOOGLE_API_KEY:
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel("gemini-flash-latest")
 
-# Lazy-load tokenizer: do NOT initialize at startup to avoid OOM on Render free tier.
-# Janome loads a ~300MB dictionary - initializing at boot with multiple gunicorn workers crashes.
-_tokenizer = None
-
-def get_tokenizer():
-    global _tokenizer
-    if _tokenizer is None:
-        _tokenizer = JanomeTokenizer()
-    return _tokenizer
+def simple_tokenize(text):
+    """
+    Lightweight Japanese tokenizer using regex — no external dictionary needed.
+    Splits text by character-type boundaries (kanji, hiragana, katakana, latin, punctuation).
+    Replaces Janome to avoid the ~300MB dictionary that crashes Render's free tier.
+    """
+    pattern = re.compile(
+        r'[一-龯々〆〇]+'
+        r'|[ぁ-ん]+'
+        r'|[ァ-ヶ]+'
+        r'|[a-zA-Z0-9]+'
+        r'|[^\s]'
+    )
+    pos_map = {
+        'kanji':    '名詞',
+        'hiragana': '助詞',
+        'katakana': '名詞',
+        'latin':    '名詞',
+        'other':    '記号',
+    }
+    tokens = []
+    for m in pattern.finditer(text):
+        surface = m.group()
+        ch = surface[0]
+        if '\u4e00' <= ch <= '\u9fff' or ch in '々〆〇':
+            pos = pos_map['kanji']
+        elif '\u3041' <= ch <= '\u3096':
+            pos = pos_map['hiragana']
+        elif '\u30a1' <= ch <= '\u30f6':
+            pos = pos_map['katakana']
+        elif ch.isascii() and (ch.isalnum()):
+            pos = pos_map['latin']
+        else:
+            pos = pos_map['other']
+        tokens.append({
+            'surface': surface,
+            'base': surface,
+            'reading': surface,
+            'pos': pos,
+        })
+    return tokens
 
 def extract_video_id(url):
     """
@@ -91,14 +123,7 @@ def get_youtube_transcript():
         processed_transcript = []
         for i, entry in enumerate(ja_data):
             # Tokenize Japanese text
-            tokens = []
-            for token in get_tokenizer().tokenize(entry.text):
-                tokens.append({
-                    "surface": token.surface,
-                    "base": token.base_form,
-                    "reading": token.reading,
-                    "pos": token.part_of_speech.split(',')[0]
-                })
+            tokens = simple_tokenize(entry.text)
             
             # Find matching English translation if available
             translation = ""
