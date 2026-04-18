@@ -4,7 +4,7 @@ services:
     env: python
     pythonVersion: 3.11.9
     buildCommand: pip install --upgrade pip && pip install -r Backend/requirements.txt
-    startCommand: cd Backend && gunicorn app:app --workers 1 --timeout 120 --bind 0.0.0.0:$PORT
+    startCommand: gunicorn app:app --workers 1 --timeout 120 --bind 0.0.0.0:$PORT
     envVars:
       - key: GOOGLE_GENERATIVE_AI_API_KEY
         sync: false
