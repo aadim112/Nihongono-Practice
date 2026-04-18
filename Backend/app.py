@@ -11,7 +11,7 @@ import traceback
 from xml.etree.ElementTree import ParseError
 from dotenv import load_dotenv
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound, VideoUnavailable
-from janome.tokenizer import Tokenizer
+from janome.tokenizer import Tokenizer as JanomeTokenizer
 
 # Load environment variables from .env file
 load_dotenv()
@@ -27,7 +27,15 @@ if not GOOGLE_API_KEY:
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel("gemini-flash-latest")
 
-tokenizer = Tokenizer()
+# Lazy-load tokenizer: do NOT initialize at startup to avoid OOM on Render free tier.
+# Janome loads a ~300MB dictionary - initializing at boot with multiple gunicorn workers crashes.
+_tokenizer = None
+
+def get_tokenizer():
+    global _tokenizer
+    if _tokenizer is None:
+        _tokenizer = JanomeTokenizer()
+    return _tokenizer
 
 def extract_video_id(url):
     """
@@ -84,7 +92,7 @@ def get_youtube_transcript():
         for i, entry in enumerate(ja_data):
             # Tokenize Japanese text
             tokens = []
-            for token in tokenizer.tokenize(entry.text):
+            for token in get_tokenizer().tokenize(entry.text):
                 tokens.append({
                     "surface": token.surface,
                     "base": token.base_form,
