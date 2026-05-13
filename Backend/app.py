@@ -11,10 +11,14 @@ import traceback
 from xml.etree.ElementTree import ParseError
 from dotenv import load_dotenv
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound, VideoUnavailable
+import pykakasi
 
 
 # Load environment variables from .env file
 load_dotenv()
+
+# Initialize pykakasi converter once at module level (expensive to re-create)
+_kks = pykakasi.kakasi()
 
 app = flask.Flask(__name__)
 CORS(app)
@@ -27,11 +31,26 @@ if not GOOGLE_API_KEY:
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel("gemini-flash-latest")
 
+def get_furigana_reading(text):
+    """
+    Use pykakasi to get the hiragana reading of a Japanese text string.
+    Returns the hiragana reading, or the original text if it's already kana/latin.
+    """
+    result = _kks.convert(text)
+    # Build reading from hiragana conversion
+    reading = ''.join(item['hira'] for item in result)
+    return reading
+
+
+def is_kanji(ch):
+    return '\u4e00' <= ch <= '\u9fff' or ch in '々〆〇'
+
+
 def simple_tokenize(text):
     """
     Lightweight Japanese tokenizer using regex — no external dictionary needed.
     Splits text by character-type boundaries (kanji, hiragana, katakana, latin, punctuation).
-    Replaces Janome to avoid the ~300MB dictionary that crashes Render's free tier.
+    Attaches hiragana readings to kanji tokens using pykakasi for furigana rendering.
     """
     pattern = re.compile(
         r'[一-龯々〆〇]+'
@@ -51,20 +70,26 @@ def simple_tokenize(text):
     for m in pattern.finditer(text):
         surface = m.group()
         ch = surface[0]
-        if '\u4e00' <= ch <= '\u9fff' or ch in '々〆〇':
+        if is_kanji(ch):
             pos = pos_map['kanji']
+            # Get furigana reading from pykakasi
+            reading = get_furigana_reading(surface)
         elif '\u3041' <= ch <= '\u3096':
             pos = pos_map['hiragana']
+            reading = surface  # already hiragana — no furigana needed
         elif '\u30a1' <= ch <= '\u30f6':
             pos = pos_map['katakana']
+            reading = surface  # katakana — no furigana needed
         elif ch.isascii() and (ch.isalnum()):
             pos = pos_map['latin']
+            reading = surface
         else:
             pos = pos_map['other']
+            reading = surface
         tokens.append({
             'surface': surface,
             'base': surface,
-            'reading': surface,
+            'reading': reading,
             'pos': pos,
         })
     return tokens
@@ -121,26 +146,25 @@ def get_youtube_transcript():
 
         # Combine and tokenize
         processed_transcript = []
+        has_translations = len(en_data) > 0
+
         for i, entry in enumerate(ja_data):
             # Tokenize Japanese text
             tokens = simple_tokenize(entry.text)
-            
-            # Find matching English translation if available
+
+            # Find matching English translation — wider 10-second window
             translation = ""
-            if i < len(en_data):
-                # Simple heuristic: matching by index if lengths are same, 
-                # or finding closest timestamp. For now, we'll try to find 
-                # the one that overlaps the most with ja_data's time.
+            if has_translations:
                 start = entry.start
                 best_match = None
-                min_diff = 100
+                min_diff = float('inf')
                 for en_entry in en_data:
                     diff = abs(en_entry.start - start)
                     if diff < min_diff:
                         min_diff = diff
                         best_match = en_entry
-                
-                if best_match and min_diff < 5: # 5 seconds window
+
+                if best_match and min_diff < 10:  # widened to 10-second window
                     translation = best_match.text
 
             processed_transcript.append({
@@ -150,6 +174,35 @@ def get_youtube_transcript():
                 "tokens": tokens,
                 "translation": translation
             })
+
+        # --- Gemini fallback translation ---
+        # If no English track was found at all, translate all lines in one batch call.
+        if not has_translations:
+            try:
+                japanese_lines = [entry["text"] for entry in processed_transcript]
+                lines_json = json.dumps(japanese_lines, ensure_ascii=False)
+                translation_prompt = f"""
+Translate each of the following Japanese sentences into natural English.
+Return ONLY a JSON array of strings (same order, same count). No markdown, no extra keys.
+
+Japanese lines:
+{lines_json}
+"""
+                trans_response = model.generate_content(translation_prompt)
+                trans_text = trans_response.text.strip()
+                # Strip possible markdown fences
+                if trans_text.startswith("```"):
+                    parts = trans_text.split("```")
+                    trans_text = parts[1].strip()
+                    if trans_text.startswith("json"):
+                        trans_text = trans_text[4:].strip()
+                translations = json.loads(trans_text)
+                if isinstance(translations, list) and len(translations) == len(processed_transcript):
+                    for i, t in enumerate(translations):
+                        processed_transcript[i]["translation"] = t
+            except Exception as te:
+                print("GEMINI TRANSLATION FALLBACK ERROR:", te)
+                # Non-fatal — transcript still works, just no translations
 
         return jsonify({
             "video_id": video_id,
@@ -245,10 +298,17 @@ def generate_reading():
     if not grammar:
         grammar = [{"pattern": "〜です", "meaning": "to be"}]
 
+    # Safety cap: even if the client sends more, limit what goes into the prompt.
+    # The frontend already samples before sending; this is a defensive backstop.
+    grammar = grammar[:8]
+    normalized_vocab = normalized_vocab[:25]
+
+    print(f"[generate-reading] grammar patterns: {len(grammar)}, vocab words: {len(normalized_vocab)}")
+
     grammar_text = "\n".join(
         f"- {g['pattern']} ({g['meaning']})" for g in grammar
     )
-    vocab_text = ", ".join(normalized_vocab[:25])
+    vocab_text = ", ".join(normalized_vocab)
 
     # We now ask the model to return a passage PLUS 10–15 comprehension questions.
     # The model must return ONLY JSON so the frontend can parse it safely.
@@ -259,7 +319,7 @@ Create a JLPT N5 level Japanese reading passage AND comprehension questions.
 
 CRITICAL OUTPUT FORMAT (return ONLY valid JSON, no markdown, no backticks):
 {{
-  "passage": "Japanese passage text in hiragana only. 20–25 short sentences.",
+  "passage": "Japanese passage text. Use JLPT N5 level kanji where appropriate, otherwise use hiragana. 20–25 short sentences.",
   "questions": [
     {{
       "id": 1,
@@ -274,7 +334,7 @@ CRITICAL OUTPUT FORMAT (return ONLY valid JSON, no markdown, no backticks):
 REQUIREMENTS:
 - Passage:
   - JLPT N5 level
-  - Use ONLY hiragana (no kanji, no romaji)
+  - You MAY use kanji, but ONLY JLPT N5 level kanji. If a word uses kanji above N5 level, write it in hiragana.
   - 20–25 short sentences
   - Simple, natural Japanese
   - A coherent simple story
@@ -286,6 +346,7 @@ REQUIREMENTS:
 - Questions:
   - Create BETWEEN 10 and 15 questions (inclusive)
   - Every question MUST be answerable using ONLY information from the passage
+  - Strictly Use N5 kanji words if using them otherwise use hiragana
   - Mix of:
     - who/what/when/where/why/how questions
     - yes/no questions
@@ -317,8 +378,11 @@ REQUIREMENTS:
         if not isinstance(questions, list):
             questions = []
 
+        passage_tokens = simple_tokenize(passage)
+
         return jsonify({
             "passage": passage,
+            "passage_tokens": passage_tokens,
             "questions": questions
         })
     except Exception as e:

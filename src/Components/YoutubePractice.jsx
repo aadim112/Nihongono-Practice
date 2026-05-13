@@ -16,9 +16,10 @@ const YoutubePractice = ({ user }) => {
     const [loadingDictionary, setLoadingDictionary] = useState(false);
     const [addedStatus, setAddedStatus] = useState(false);
 
-    const playerRef = useRef(null);   // holds the YT.Player instance
+    const playerRef = useRef(null);
     const iframeContainerId = 'yt-player-container';
     const timeIntervalRef = useRef(null);
+    const activeLineRef = useRef(null);   // ref attached to the active transcript line
 
     const rawApiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
     const apiUrl = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
@@ -26,7 +27,7 @@ const YoutubePractice = ({ user }) => {
     // Extract video ID from any YouTube URL format
     const extractVideoId = (ytUrl) => {
         const patterns = [
-            /(?:v=|\/)([\w-]{11})(?:\?|&|$)/,
+            /(?:v=|\/)([\\w-]{11})(?:\?|&|$)/,
             /youtu\.be\/([\w-]{11})/,
             /embed\/([\w-]{11})/,
         ];
@@ -37,9 +38,8 @@ const YoutubePractice = ({ user }) => {
         return null;
     };
 
-    // Initialize the YouTube IFrame Player after the iframe div is rendered
+    // Initialize the YouTube IFrame Player
     const initPlayer = useCallback((vid) => {
-        // Clean up previous player and interval
         if (timeIntervalRef.current) clearInterval(timeIntervalRef.current);
         if (playerRef.current && typeof playerRef.current.destroy === 'function') {
             playerRef.current.destroy();
@@ -51,7 +51,6 @@ const YoutubePractice = ({ user }) => {
                 playerVars: { autoplay: 0, controls: 1, rel: 0 },
                 events: {
                     onReady: () => {
-                        // Poll the current time every 500ms
                         timeIntervalRef.current = setInterval(() => {
                             if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
                                 setCurrentTime(playerRef.current.getCurrentTime());
@@ -65,7 +64,6 @@ const YoutubePractice = ({ user }) => {
         if (window.YT && window.YT.Player) {
             createPlayer();
         } else {
-            // Load the IFrame API script if not already loaded
             if (!document.getElementById('yt-iframe-api')) {
                 const script = document.createElement('script');
                 script.id = 'yt-iframe-api';
@@ -119,7 +117,6 @@ const YoutubePractice = ({ user }) => {
     // Init the player when videoId changes
     useEffect(() => {
         if (videoId) {
-            // Small delay to ensure the div is rendered
             setTimeout(() => initPlayer(videoId), 100);
         }
     }, [videoId, initPlayer]);
@@ -138,7 +135,20 @@ const YoutubePractice = ({ user }) => {
         }
     }, [currentTime, transcript, activeLineIndex]);
 
+    // Auto-scroll active line into view
+    useEffect(() => {
+        if (activeLineRef.current) {
+            activeLineRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+            });
+        }
+    }, [activeLineIndex]);
+
     const handleWordClick = async (token) => {
+        // Ignore punctuation / symbols
+        if (token.pos === '記号' || token.surface.trim() === '') return;
+
         setSelectedWord(token);
         setLoadingDictionary(true);
         setDictionaryData(null);
@@ -156,6 +166,7 @@ const YoutubePractice = ({ user }) => {
             }
         } catch (err) {
             console.error('Dictionary error:', err);
+            setDictionaryData({ error: 'Failed to look up word' });
         } finally {
             setLoadingDictionary(false);
         }
@@ -169,7 +180,6 @@ const YoutubePractice = ({ user }) => {
             const snapshot = await get(vocabRef);
             const existing = snapshot.exists() ? snapshot.val() : {};
 
-            // Firebase stores arrays as objects with numeric keys — normalise
             const existingWordsRaw = existing.words;
             const existingWords = Array.isArray(existingWordsRaw)
                 ? existingWordsRaw
@@ -193,7 +203,6 @@ const YoutubePractice = ({ user }) => {
 
             const updatedWords = [...existingWords, newWord];
 
-            // Write the full vocab object using set() to avoid array-merge issues
             await set(vocabRef, {
                 ...existing,
                 words: updatedWords,
@@ -208,94 +217,171 @@ const YoutubePractice = ({ user }) => {
         }
     };
 
-    const activeLine = transcript[activeLineIndex];
+    /**
+     * Renders a single transcript token.
+     * - Kanji tokens (reading !== surface) → <ruby> with <rt> furigana
+     * - All others → plain <span>
+     * Both are clickable (except punctuation).
+     */
+    const renderToken = (token, tIdx) => {
+        const isPunctuation = token.pos === '記号' || /^[。、！？…・「」『』【】〜ー\s]+$/.test(token.surface);
+        const hasReading = token.reading && token.reading !== token.surface;
+
+        if (hasReading) {
+            return (
+                <ruby
+                    key={tIdx}
+                    className={`Token KanjiToken${isPunctuation ? ' Punctuation' : ''}`}
+                    onClick={!isPunctuation ? () => handleWordClick(token) : undefined}
+                    title={!isPunctuation ? token.reading : undefined}
+                >
+                    {token.surface}
+                    <rt>{token.reading}</rt>
+                </ruby>
+            );
+        }
+
+        return (
+            <span
+                key={tIdx}
+                className={`Token${isPunctuation ? ' Punctuation' : ''}`}
+                onClick={!isPunctuation ? () => handleWordClick(token) : undefined}
+            >
+                {token.surface}
+            </span>
+        );
+    };
 
     return (
         <div className="YoutubePracticeContainer">
+            {/* ── URL Input Bar ── */}
             <div className="YoutubeHeader">
                 <input
                     type="text"
                     className="YoutubeUrlInput"
-                    placeholder="Paste YouTube Video URL here..."
+                    placeholder="Paste YouTube Video URL here…"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && loadVideo()}
                 />
                 <button className="LoadVideoButton" onClick={loadVideo} disabled={loading}>
-                    {loading ? 'Loading...' : 'Load Video'}
+                    {loading ? (
+                        <span className="LoadingSpinner">⟳ Loading…</span>
+                    ) : (
+                        '▶ Load Video'
+                    )}
                 </button>
             </div>
 
             {error && (
-                <div style={{ color: '#ef4444', marginBottom: '15px', padding: '10px', background: '#fee2e2', borderRadius: '8px' }}>
-                    {error}
-                </div>
+                <div className="ErrorBanner">{error}</div>
             )}
 
+            {/* ── Main Layout ── */}
             <div className="YoutubeMainLayout">
+                {/* Left — Video Player */}
                 <div className="VideoWrapper">
                     {videoId ? (
-                        /* The YT IFrame API replaces this div with an iframe */
                         <div id={iframeContainerId} style={{ width: '100%', height: '100%' }} />
                     ) : (
                         <div className="EmptyState">
                             <span className="icon">📺</span>
                             <p>Paste a YouTube URL above to start</p>
-                            <p style={{ fontSize: '14px' }}>Works best with Japanese videos that have captions</p>
+                            <p className="EmptySubtext">Works best with Japanese videos that have captions</p>
                         </div>
                     )}
                 </div>
 
+                {/* Right — Transcript Panel */}
                 <div className="TranscriptSidebar">
                     <div className="TranscriptHeader">
-                        <h2>Transcript / スクリプト</h2>
+                        <h2>スクリプト <span className="TranscriptSubtitle">Transcript</span></h2>
+                        {transcript.length > 0 && (
+                            <span className="TranscriptCount">{transcript.length} lines</span>
+                        )}
                     </div>
-                    <div className="TranscriptContent subtitle-mode">
+
+                    <div className="TranscriptContent">
                         {transcript.length > 0 ? (
-                            activeLine ? (
-                                <div className="TranscriptLine active subtitle-display">
-                                    <div className="JapaneseText subtitle-text">
-                                        {activeLine.tokens.map((token, tIdx) => (
-                                            <span
-                                                key={tIdx}
-                                                className="Token"
-                                                onClick={() => handleWordClick(token)}
-                                            >
-                                                {token.surface}
+                            <div className="TranscriptList">
+                                {transcript.map((line, lineIdx) => {
+                                    const isActive = lineIdx === activeLineIndex;
+                                    return (
+                                        <div
+                                            key={lineIdx}
+                                            ref={isActive ? activeLineRef : null}
+                                            className={`TranscriptLine${isActive ? ' active' : ''}`}
+                                            onClick={() => {
+                                                // Clicking a line seeks the video to that timestamp
+                                                if (playerRef.current && typeof playerRef.current.seekTo === 'function') {
+                                                    playerRef.current.seekTo(line.start, true);
+                                                    playerRef.current.playVideo();
+                                                }
+                                            }}
+                                        >
+                                            {/* Timestamp badge */}
+                                            <span className="TimeStamp">
+                                                {Math.floor(line.start / 60)}:{String(Math.floor(line.start % 60)).padStart(2, '0')}
                                             </span>
-                                        ))}
-                                    </div>
-                                    <div className="EnglishTranslation subtitle-translation">
-                                        {activeLine.translation || '　'}
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="EmptyState">
-                                    <p style={{ color: '#94a3b8' }}>▶ Play the video to see the transcript</p>
-                                </div>
-                            )
+
+                                            {/* Japanese text with furigana */}
+                                            <div className="JapaneseText">
+                                                {line.tokens.map((token, tIdx) => renderToken(token, tIdx))}
+                                            </div>
+
+                                            {/* English translation */}
+                                            {line.translation && line.translation.trim() !== '' && (
+                                                <div className="EnglishTranslation">
+                                                    {line.translation}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         ) : (
                             <div className="EmptyState">
-                                <span className="icon">📝</span>
-                                <p>Transcript will appear here</p>
+                                {loading ? (
+                                    <>
+                                        <span className="icon LoadingIcon">⟳</span>
+                                        <p>Fetching transcript…</p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span className="icon">📝</span>
+                                        <p>Transcript will appear here</p>
+                                        <p className="EmptySubtext">Load a video to get started</p>
+                                    </>
+                                )}
                             </div>
                         )}
                     </div>
                 </div>
             </div>
 
+            {/* ── Dictionary Popup ── */}
             {selectedWord && (
                 <>
                     <div className="PopupOverlay" onClick={() => setSelectedWord(null)} />
                     <div className="DictionaryPopup">
                         <div className="PopupHeader">
                             <div className="WordInfo">
-                                <h2>{selectedWord.surface}</h2>
+                                <h2 className="PopupWord">{selectedWord.surface}</h2>
+                                {selectedWord.reading && selectedWord.reading !== selectedWord.surface && (
+                                    <div className="PopupReading">
+                                        {selectedWord.reading}
+                                    </div>
+                                )}
                                 {dictionaryData && !dictionaryData.error && (
                                     <div className="WordReading">
-                                        {dictionaryData.japanese?.[0]?.reading}
-                                        {dictionaryData.japanese?.[0]?.word !== selectedWord.surface &&
-                                            ` (${dictionaryData.japanese?.[0]?.word})`}
+                                        {dictionaryData.japanese?.[0]?.reading &&
+                                            dictionaryData.japanese[0].reading !== selectedWord.surface &&
+                                            <span>{dictionaryData.japanese[0].reading}</span>
+                                        }
+                                        {dictionaryData.japanese?.[0]?.word &&
+                                            dictionaryData.japanese[0].word !== selectedWord.surface &&
+                                            <span className="KanjiForm"> {dictionaryData.japanese[0].word}</span>
+                                        }
                                     </div>
                                 )}
                             </div>
@@ -304,16 +390,22 @@ const YoutubePractice = ({ user }) => {
 
                         <div className="WordMeaning">
                             {loadingDictionary ? (
-                                <div style={{ textAlign: 'center', padding: '20px' }}>Looking up...</div>
+                                <div className="LookupSpinner">Looking up…</div>
                             ) : dictionaryData?.error ? (
-                                <div style={{ color: '#ef4444' }}>{dictionaryData.error}</div>
+                                <div className="LookupError">{dictionaryData.error}</div>
                             ) : (
                                 <div>
-                                    <p><strong>Meaning:</strong></p>
-                                    <p>{dictionaryData?.senses?.[0]?.english_definitions?.join(', ')}</p>
-                                    <p style={{ fontSize: '14px', color: '#64748b', marginTop: '10px' }}>
-                                        {dictionaryData?.senses?.[0]?.parts_of_speech?.join(', ')}
-                                    </p>
+                                    {dictionaryData?.senses?.slice(0, 3).map((sense, sIdx) => (
+                                        <div key={sIdx} className="SenseRow">
+                                            <span className="SenseNum">{sIdx + 1}.</span>
+                                            <div className="SenseDetail">
+                                                <p className="SenseMeaning">{sense.english_definitions?.join(', ')}</p>
+                                                {sense.parts_of_speech?.length > 0 && (
+                                                    <p className="SensePos">{sense.parts_of_speech.join(', ')}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             )}
                         </div>
