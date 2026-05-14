@@ -25,6 +25,17 @@ const VocabSection = ({user, userName, users = []}) => {
     const [maxScoresByUser, setMaxScoresByUser] = useState({});
     const [extraRevisionMap, setExtraRevisionMap] = useState({}); // key -> saved question object
     const [isExtraRevise, setIsExtraRevise] = useState(false);
+
+    // --- Selective Vocab Revision ---
+    const [isSelectiveMode, setIsSelectiveMode] = useState(false);
+    const [selectiveIds, setSelectiveIds] = useState([]);
+    const [selectiveRevisionQuestion, setSelectiveRevisionQuestion] = useState(null);
+    const [selectiveRevisionLocked, setSelectiveRevisionLocked] = useState(false);
+    const [selectiveCorrectCount, setSelectiveCorrectCount] = useState(0);
+    const [selectiveWrongAnswers, setSelectiveWrongAnswers] = useState([]);
+    const [selectiveRevisionMode, setSelectiveRevisionMode] = useState('jp_to_en');
+    const selectiveSessionRef = useRef({ sig: '', remainingIds: [], asked: new Set() });
+    const [selectiveWordPickerOpen, setSelectiveWordPickerOpen] = useState(false);
     
     const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -39,6 +50,13 @@ const VocabSection = ({user, userName, users = []}) => {
         extraRevisionSessionRef.current = { sig: '', remainingKeys: [], asked: new Set() };
         setIsExtraRevise(false);
         setExtraRevisionMap({});
+        setIsSelectiveMode(false);
+        setSelectiveRevisionQuestion(null);
+        setSelectiveRevisionLocked(false);
+        setSelectiveCorrectCount(0);
+        setSelectiveWrongAnswers([]);
+        selectiveSessionRef.current = { sig: '', remainingIds: [], asked: new Set() };
+        setSelectiveWordPickerOpen(false);
 
         const vocabRef = ref(db, `${user}/vocab`);
 
@@ -63,6 +81,20 @@ const VocabSection = ({user, userName, users = []}) => {
         const unsub = onValue(extraRef, (snapshot) => {
             const data = snapshot.exists() ? snapshot.val() : {};
             setExtraRevisionMap(data && typeof data === 'object' ? data : {});
+        });
+        return () => unsub();
+    }, [user]);
+
+    // Sync selected word IDs from Firebase
+    useEffect(() => {
+        const selectiveRef = ref(db, `${user}/SelectiveRevision/selectedIds`);
+        const unsub = onValue(selectiveRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                setSelectiveIds(Array.isArray(data) ? data : Object.values(data || {}));
+            } else {
+                setSelectiveIds([]);
+            }
         });
         return () => unsub();
     }, [user]);
@@ -270,6 +302,8 @@ const VocabSection = ({user, userName, users = []}) => {
         }
     }, [isRevisionMode, validRevisionPool, isExtraRevise, starredKeysForMode]);
 
+
+
     const isCurrentQuestionStarred = useMemo(() => {
         if (!revisionQuestion?.id || !revisionQuestion?.mode) return false;
         const key = buildExtraKey(revisionQuestion.id, revisionQuestion.mode);
@@ -301,6 +335,79 @@ const VocabSection = ({user, userName, users = []}) => {
         extraRevisionSessionRef.current = { sig: '', remainingKeys: [], asked: new Set() };
         revisionSessionRef.current = { sig: '', remainingIds: [], asked: new Set() };
     };
+
+    // ---- Selective Revision Helpers ----
+    const selectiveRevisionPool = useMemo(() => {
+        return validRevisionPool.filter(v => selectiveIds.includes(v.id));
+    }, [validRevisionPool, selectiveIds]);
+
+    const toggleSelectiveWord = async (wordId) => {
+        const selectiveRef = ref(db, `${user}/SelectiveRevision/selectedIds`);
+        const updatedIds = selectiveIds.includes(wordId)
+            ? selectiveIds.filter(id => id !== wordId)
+            : [...selectiveIds, wordId];
+        await set(selectiveRef, updatedIds);
+    };
+
+    const initSelectiveSessionIfNeeded = () => {
+        const sig = selectiveRevisionPool.map(v => v.id).join('||');
+        if (selectiveSessionRef.current.sig === sig) return;
+        selectiveSessionRef.current.sig = sig;
+        selectiveSessionRef.current.asked = new Set();
+        selectiveSessionRef.current.remainingIds = shuffle(selectiveRevisionPool.map(v => v.id));
+    };
+
+    const startNextSelectiveQuestion = () => {
+        initSelectiveSessionIfNeeded();
+        const asked = selectiveSessionRef.current.asked;
+        const remaining = selectiveSessionRef.current.remainingIds;
+        while (remaining.length > 0 && asked.has(remaining[0])) remaining.shift();
+        const nextId = remaining.shift();
+        if (!nextId) { setSelectiveRevisionQuestion(null); setSelectiveRevisionLocked(false); return; }
+        asked.add(nextId);
+        const item = selectiveRevisionPool.find(v => v.id === nextId);
+        setSelectiveRevisionQuestion(buildRevisionQuestionForItem(item, selectiveRevisionMode, validRevisionPool));
+        setSelectiveRevisionLocked(false);
+    };
+
+    const flipSelectiveRevisionMode = () => {
+        setSelectiveRevisionMode(prev => (prev === 'jp_to_en' ? 'en_to_jp' : 'jp_to_en'));
+        setSelectiveRevisionLocked(false);
+        setSelectiveRevisionQuestion(current => {
+            if (!current) return current;
+            const item = selectiveRevisionPool.find(v => v.id === current.id);
+            const nextMode = current.mode === 'jp_to_en' ? 'en_to_jp' : 'jp_to_en';
+            return buildRevisionQuestionForItem(item, nextMode, validRevisionPool);
+        });
+    };
+
+    const enterSelectiveMode = () => {
+        setIsSelectiveMode(true);
+        setIsRevisionMode(false);
+        setSelectiveRevisionQuestion(null);
+        setSelectiveRevisionLocked(false);
+        setSelectiveCorrectCount(0);
+        setSelectiveWrongAnswers([]);
+        selectiveSessionRef.current = { sig: '', remainingIds: [], asked: new Set() };
+    };
+
+    const exitSelectiveMode = () => {
+        setIsSelectiveMode(false);
+        setSelectiveRevisionQuestion(null);
+        setSelectiveRevisionLocked(false);
+        setSelectiveWordPickerOpen(false);
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => {
+        if (!isSelectiveMode) return;
+        if (selectiveRevisionPool.length < 2) return;
+        initSelectiveSessionIfNeeded();
+        if (!selectiveRevisionQuestion) {
+            startNextSelectiveQuestion();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSelectiveMode, selectiveRevisionPool, selectiveRevisionMode]);
 
     const normalize = (str) => str.trim().normalize("NFKC");
 
@@ -956,6 +1063,7 @@ const VocabSection = ({user, userName, users = []}) => {
                         role="button"
                         tabIndex={0}
                         onClick={() => {
+                            setIsSelectiveMode(false);
                             setIsRevisionMode(prev => !prev);
                             setRevisionQuestion(null);
                             setRevisionLocked(false);
@@ -965,6 +1073,7 @@ const VocabSection = ({user, userName, users = []}) => {
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
                                 e.preventDefault();
+                                setIsSelectiveMode(false);
                                 setIsRevisionMode(prev => !prev);
                                 setRevisionQuestion(null);
                                 setRevisionLocked(false);
@@ -974,6 +1083,16 @@ const VocabSection = ({user, userName, users = []}) => {
                         }}
                     >
                         {isRevisionMode ? 'Back to Vocab' : 'Vocab Revision'}
+                    </div>
+                    <div
+                        className='changeSection SelectiveBtn'
+                        role="button"
+                        tabIndex={0}
+                        onClick={enterSelectiveMode}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterSelectiveMode(); } }}
+                        title="Practice MCQ on hand-picked words"
+                    >
+                        🎯 Selective {selectiveIds.length > 0 ? `(${selectiveIds.length})` : ''}
                     </div>
                 </div>
                 <div className='AddedWords'>
@@ -994,7 +1113,131 @@ const VocabSection = ({user, userName, users = []}) => {
                     </ul>
                 </div>
 
-                {!isRevisionMode && (
+                {isSelectiveMode && (
+                    <>
+                        {/* Word Picker Modal */}
+                        {selectiveWordPickerOpen && (
+                            <div className="WordPickerOverlay" onClick={() => setSelectiveWordPickerOpen(false)}>
+                                <div className="WordPickerPanel" onClick={e => e.stopPropagation()}>
+                                    <div className="WordPickerHeader">
+                                        <span className="WordPickerTitle">Select Words to Practice</span>
+                                        <span className="WordPickerBadge">{selectiveIds.length} selected</span>
+                                        <button className="WordPickerClose" onClick={() => setSelectiveWordPickerOpen(false)}>✕</button>
+                                    </div>
+                                    <div className="WordPickerList">
+                                        {validRevisionPool.length === 0 ? (
+                                            <div style={{ padding: '24px', color: '#888', textAlign: 'center' }}>No words learned yet.</div>
+                                        ) : validRevisionPool.map(item => {
+                                            const selected = selectiveIds.includes(item.id);
+                                            return (
+                                                <div key={item.id} className={`WordPickerItem${selected ? ' selected' : ''}`} onClick={() => toggleSelectiveWord(item.id)}>
+                                                    <div className="WordPickerItemInfo">
+                                                        <span className="WordPickerWord">{item.word}</span>
+                                                        <span className="WordPickerKanji">（{item.kanji}）</span>
+                                                        <span className="WordPickerMeaning">{item.meaning}</span>
+                                                    </div>
+                                                    <div className={`WordPickerCheck${selected ? ' checked' : ''}`}>{selected ? '✓' : ''}</div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                    <div className="WordPickerFooter">
+                                        <button className="WordPickerDone" onClick={() => setSelectiveWordPickerOpen(false)}>
+                                            Done — {selectiveIds.length} word{selectiveIds.length !== 1 ? 's' : ''} selected
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="RevisionLayout">
+                            <div className="RevisionMain">
+                                <div className="RevisionHeader">
+                                    <div className="RevisionScore">
+                                        <span style={{ color: '#1a7f5a', fontWeight: 900 }}>🎯 Selective</span>
+                                        <span style={{ marginLeft: '12px' }}>Correct: <span className="RevisionScoreNumber">{selectiveCorrectCount}</span></span>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                                        <button className="SelectiveManageBtn" onClick={() => setSelectiveWordPickerOpen(true)} title="Manage selected words">
+                                            📝 Manage ({selectiveIds.length})
+                                        </button>
+                                        <button className="RevisionFlip" onClick={flipSelectiveRevisionMode} disabled={selectiveRevisionLocked || selectiveRevisionPool.length === 0}>Flip</button>
+                                        <button className="RevisionNext" onClick={() => { if (!selectiveRevisionLocked) startNextSelectiveQuestion(); }} disabled={selectiveRevisionLocked}>Skip</button>
+                                        <button className="RevisionNext" style={{ borderColor: '#c0392b', color: '#c0392b' }} onClick={exitSelectiveMode}>← Back</button>
+                                    </div>
+                                </div>
+
+                                {selectiveIds.length < 2 ? (
+                                    <div className="RevisionCard SelectiveEmptyCard">
+                                        <div style={{ fontSize: '32px', marginBottom: '10px' }}>🎯</div>
+                                        <div style={{ fontWeight: 800, fontSize: '18px', marginBottom: '8px' }}>No words selected yet</div>
+                                        <div style={{ fontSize: '14px', color: '#666', marginBottom: '18px' }}>Select at least 2 words to start practicing</div>
+                                        <button className="SelectiveManageBtn" onClick={() => setSelectiveWordPickerOpen(true)}>📝 Select Words</button>
+                                    </div>
+                                ) : !selectiveRevisionQuestion ? (
+                                    <div className="RevisionCard">All selected words done for this session. Reload to restart.</div>
+                                ) : (
+                                    <div className="RevisionCard">
+                                        <div className="RevisionPrompt">
+                                            {selectiveRevisionQuestion?.mode === 'en_to_jp' ? (
+                                                <div className="RevisionKana" style={{ width: '100%' }}>{selectiveRevisionQuestion?.meaning}</div>
+                                            ) : (
+                                                <>
+                                                    <div className="RevisionKana">{selectiveRevisionQuestion?.word}</div>
+                                                    <div className="RevisionKanji">{selectiveRevisionQuestion?.kanji}</div>
+                                                </>
+                                            )}
+                                        </div>
+                                        <div className="RevisionOptions">
+                                            {(selectiveRevisionQuestion?.options || []).map((opt, idx) => (
+                                                <button
+                                                    key={`${opt}-${idx}`}
+                                                    className="RevisionOption"
+                                                    disabled={selectiveRevisionLocked}
+                                                    onClick={() => {
+                                                        if (selectiveRevisionLocked || !selectiveRevisionQuestion) return;
+                                                        setSelectiveRevisionLocked(true);
+                                                        if (opt === selectiveRevisionQuestion.correctAnswer) {
+                                                            setSelectiveCorrectCount(c => c + 1);
+                                                        } else {
+                                                            setSelectiveWrongAnswers(prev => ([{
+                                                                mode: selectiveRevisionQuestion.mode,
+                                                                word: selectiveRevisionQuestion.word,
+                                                                kanji: selectiveRevisionQuestion.kanji,
+                                                                meaning: selectiveRevisionQuestion.meaning,
+                                                                correctAnswer: selectiveRevisionQuestion.correctAnswer,
+                                                                chosenAnswer: opt
+                                                            }, ...prev]));
+                                                        }
+                                                        window.setTimeout(() => startNextSelectiveQuestion(), 450);
+                                                    }}
+                                                >{opt}</button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="RevisionSidebar">
+                                <div className="RevisionSidebarTitle">Wrong answers</div>
+                                {selectiveWrongAnswers.length === 0 ? (
+                                    <div className="RevisionSidebarEmpty">No wrong answers yet.</div>
+                                ) : (
+                                    <ul className="RevisionWrongList">
+                                        {selectiveWrongAnswers.map((w, i) => (
+                                            <li key={`${w.word}-${i}`} className="RevisionWrongItem">
+                                                <div className="RevisionWrongWord">{w.mode === 'en_to_jp' ? w.meaning : `${w.word} (${w.kanji})`}</div>
+                                                <div className="RevisionWrongMeta">Correct: {w.correctAnswer}</div>
+                                                <div className="RevisionWrongMeta">You chose: {w.chosenAnswer}</div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        </div>
+                    </>
+                )}
+
+                {!isSelectiveMode && !isRevisionMode && (
                     <>
                         <p>{wordCount + 2} Words Learned</p>
                         <div className="words">
@@ -1012,7 +1255,7 @@ const VocabSection = ({user, userName, users = []}) => {
                     </>
                 )}
 
-                {isRevisionMode && (
+                {!isSelectiveMode && isRevisionMode && (
                     <div className="RevisionLayout">
                         <div className="RevisionMain">
                             <div className="RevisionHeader">
@@ -1044,6 +1287,13 @@ const VocabSection = ({user, userName, users = []}) => {
                                     title="Revise only starred questions"
                                 >
                                     {isExtraRevise ? 'Normal revise' : 'Extra revise'}
+                                </button>
+                                <button
+                                    className="SelectiveRevisionBtn"
+                                    onClick={enterSelectiveMode}
+                                    title="Practice with hand-picked words"
+                                >
+                                    🎯 Selective {selectiveIds.length > 0 ? `(${selectiveIds.length})` : ''}
                                 </button>
                                 <button
                                     className="RevisionStar"
