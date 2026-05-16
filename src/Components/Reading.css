@@ -139,11 +139,10 @@
     padding: 5px;
 }
 .OneLine{
-    line-height: 2.2em;
+    line-height: 3em;
     background-image: linear-gradient(
         to bottom,
         transparent 95%,
-        rgb(59, 59, 59) 95%
     );
     background-size: 100% 2.2em;
     white-space: pre-line;
