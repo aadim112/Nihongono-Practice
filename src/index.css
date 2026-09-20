@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +11,90 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+=======
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Shippori+Antique&family=Zen+Kaku+Gothic+Antique:wght@400;700;900&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Color Palette - Crimson (#c5050c), Black & White Theme */
+  --color-primary: #c5050c;
+  --color-primary-hover: #a0030a;
+  --color-primary-light: #fef2f2;
+  
+  --color-dark-main: #111111;
+  --color-dark-surface: #1a1a1a;
+  --color-dark-border: #262626;
+  --color-dark-muted: #404040;
+  --color-dark-subtle: #666666;
+  
+  --bg-page: #f8f9fa;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  
+  --text-main: #111111;
+  --text-muted: #555555;
+  --text-light: #888888;
+  
+  --border-light: #e5e7eb;
+  --border-medium: #d1d5db;
+  --border-dark: #111111;
+  
+  --font-jp-heading: 'Shippori Antique', 'Noto Sans JP', serif;
+  --font-jp-body: 'Zen Kaku Gothic Antique', 'Noto Sans JP', sans-serif;
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 9999px;
+  
+  --transition-fast: 0.15s ease;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Simple clean scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cccccc;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #999999;
+}
+
+input, button, select, textarea {
+  font-family: inherit;
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
 }

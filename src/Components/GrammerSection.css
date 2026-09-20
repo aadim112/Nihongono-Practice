@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .GrammarSection{
     width: 100%;
     height: auto;
@@ -72,4 +73,149 @@
         margin-left: 12px;
         margin-right: 12px;
     }
+=======
+.GrammarSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.GrammarBanner {
+  width: 100%;
+  padding: 24px 20px;
+  border-radius: var(--radius-md);
+  background-color: #111111;
+  border-bottom: 3px solid var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.GrammarText {
+  font-family: var(--font-jp-heading);
+  font-size: clamp(26px, 5vw, 36px);
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.GrammarSubtitle {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: #aaaaaa;
+  margin-top: 4px;
+}
+
+.GrammarSectionTitle {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+  text-align: center;
+  margin: 4px 0;
+}
+
+.GrammarListContainer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+.GrammarList {
+  display: flex;
+}
+
+.GrammarDiv {
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1.5px solid #e5e7eb;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition-fast);
+}
+
+.GrammarDiv:hover {
+  border-color: #111111;
+}
+
+.GrammarDivHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid #f3f4f6;
+  gap: 10px;
+}
+
+.GrammarCheckGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.GrammarCheckGroup input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.GrammarPattern {
+  margin: 0;
+  font-family: var(--font-jp-body);
+  font-size: 17px;
+  font-weight: 900;
+  color: #111111;
+  cursor: pointer;
+}
+
+.GrammarStatusBadge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.GrammarStatusBadge.learned {
+  background-color: #111111;
+  color: #ffffff;
+}
+
+.GrammarStatusBadge.unlearned {
+  background-color: #ffffff;
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+}
+
+.GrammarDivOtherInfo {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.GrammarInfoRow {
+  font-size: 13px;
+  color: #555555;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.GrammarInfoRow strong {
+  color: #111111;
+}
+
+@media (max-width: 520px) {
+  .GrammarListContainer {
+    grid-template-columns: 1fr;
+  }
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
 }

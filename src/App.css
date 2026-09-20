@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 body, html {
   height: 100%;
   margin: 0;
@@ -165,5 +166,334 @@ img {
 
   .Navbar > div{
     max-width: 100%;
+=======
+.AppContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-page);
+  padding-bottom: 80px;
+}
+
+@media (min-width: 769px) {
+  .AppContainer {
+    padding-bottom: 24px;
+  }
+}
+
+/* --- Header / Navbar --- */
+.Navbar {
+  width: 100%;
+  min-height: 64px;
+  background-color: #ffffff;
+  border-bottom: 2px solid #111111;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.NavBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.NavLogoIcon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.NavTitleGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.NavTitle {
+  margin: 0;
+  font-family: var(--font-jp-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.2px;
+}
+
+.NavSubtitle {
+  font-family: var(--font-jp-heading);
+  font-size: 11px;
+  color: #555555;
+  margin-top: -2px;
+}
+
+.UserSmallInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.UserSelectPill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #ffffff;
+  border: 1.5px solid #111111;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.UserIcon {
+  font-size: 18px;
+  color: var(--color-primary);
+}
+
+.UserSelect {
+  background: transparent;
+  border: none;
+  color: #111111;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+}
+
+.LevelBadge,
+.LevelSelectPill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #111111;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.LevelSelect {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  outline: none;
+}
+
+.LevelSelect option {
+  background-color: #111111;
+  color: #ffffff;
+}
+
+.BadgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+}
+
+/* --- Main Layout Grid --- */
+.MainComponent {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 20px;
+  display: flex;
+  gap: 24px;
+  flex: 1;
+}
+
+/* --- Desktop Sidebar --- */
+.LeftSideDesktop {
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.SidebarConsistencyWrapper {
+  margin-top: 6px;
+  width: 100%;
+}
+
+.MobileConsistencySection {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .MobileConsistencySection {
+    display: block;
+    width: 100%;
+  }
+}
+
+.NavTabBtn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background-color: #ffffff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  text-align: left;
+  width: 100%;
+}
+
+.NavTabBtn:hover {
+  border-color: #111111;
+  background-color: #f8f9fa;
+}
+
+.NavTabBtn.active {
+  border-color: var(--color-primary);
+  background-color: #111111;
+  color: #ffffff;
+}
+
+.NavBtnImageWrap {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.NavBtnImageWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.NavBtnLabel {
+  display: flex;
+  flex-direction: column;
+}
+
+.NavBtnMain {
+  font-weight: 700;
+  font-size: 14px;
+  color: #111111;
+}
+
+.NavTabBtn.active .NavBtnMain {
+  color: #ffffff;
+}
+
+.NavBtnSub {
+  font-family: var(--font-jp-heading);
+  font-size: 12px;
+  color: #666666;
+}
+
+.NavTabBtn.active .NavBtnSub {
+  color: #cccccc;
+}
+
+/* --- Right Side Content --- */
+.RightSide {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.DefaultWindow {
+  background-color: #ffffff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+}
+
+.SectionCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.SectionCardIcon {
+  font-size: 18px;
+}
+
+.SectionCardHeader h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
+}
+
+/* --- Mobile Bottom Nav (< 768px) --- */
+.MobileBottomNav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .Navbar {
+    padding: 10px 14px;
+  }
+
+  .NavTitle {
+    font-size: 17px;
+  }
+
+  .NavSubtitle {
+    display: none;
+  }
+
+  .MainComponent {
+    padding: 14px 12px;
+  }
+
+  .LeftSideDesktop {
+    display: none;
+  }
+
+  .MobileBottomNav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #ffffff;
+    border-top: 2px solid #111111;
+    z-index: 1000;
+  }
+
+  .BottomNavTab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    background: transparent;
+    border: none;
+    color: #555555;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    padding: 6px 0;
+  }
+
+  .BottomNavIcon {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .BottomNavText {
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .BottomNavTab.active {
+    color: var(--color-primary);
+    background-color: #fef2f2;
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
   }
 }

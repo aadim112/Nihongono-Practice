@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .VocabSection {
   width: 100%;
   height: auto;
@@ -651,4 +652,622 @@
 
 .WordPickerDone:hover {
   opacity: 0.9;
-}
+}
+=======
+.VocabSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Banner */
+.VocabBanner {
+  width: 100%;
+  padding: 24px 20px;
+  border-radius: var(--radius-md);
+  background-color: #111111;
+  border-bottom: 3px solid var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.VocabText {
+  font-family: var(--font-jp-heading);
+  font-size: clamp(26px, 5vw, 36px);
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.VocabSubtitle {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: #aaaaaa;
+  margin-top: 4px;
+}
+
+.VocabContents {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Dictionary Loaded Banner */
+.DictStatusBanner {
+  padding: 10px 14px;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: var(--radius-sm);
+  color: #111111;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* --- Clean Vocab Input Card --- */
+.VocabInputCard {
+  background-color: #ffffff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.VocabInputCardTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+  margin: 0;
+}
+
+/* Row 1: Word Input + Kana Toggle + Add Button */
+.VocabInputRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.VocabInputField {
+  flex: 1 1 200px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid #d1d5db;
+  background-color: #ffffff;
+  font-family: var(--font-jp-body);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 0 12px;
+  outline: none;
+  color: #111111;
+}
+
+.VocabInputField:focus {
+  border-color: var(--color-primary);
+}
+
+.LanguageChange {
+  height: 42px;
+  min-width: 48px;
+  padding: 0 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid #111111;
+  background-color: #111111;
+  color: #ffffff;
+  font-family: var(--font-jp-body);
+  font-weight: 900;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.LanguageChange:hover {
+  background-color: #262626;
+}
+
+.AddWordBtn {
+  height: 42px;
+  padding: 0 18px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.AddWordBtn:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.SubmitButton {
+  height: 42px;
+  padding: 0 18px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.SubmitButton:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Row 2: Mode Toggle & Selective Buttons */
+.VocabToolsRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.ModeToggleBtn {
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid #111111;
+  background-color: #ffffff;
+  color: #111111;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.ModeToggleBtn:hover {
+  background-color: #111111;
+  color: #ffffff;
+}
+
+.SelectiveModeBtn {
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--color-primary);
+  background-color: #ffffff;
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.SelectiveModeBtn:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+/* --- Added Words Card (Pending Submit) --- */
+.AddedWordsContainer {
+  background-color: #f8f9fa;
+  border: 1.5px solid #111111;
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.AddedWordsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.AddedWordsTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.AddedWordsSection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.AddedWordChip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #111111;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.AddedWordChipRemove {
+  color: var(--color-primary);
+  font-weight: 900;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 2px;
+}
+
+.AddedWordChipRemove:hover {
+  color: #ff4d4f;
+}
+
+/* --- Revision Layout & Flashcards --- */
+.RevisionLayout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 16px;
+  align-items: start;
+}
+
+.RevisionMain {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.RevisionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  background-color: #ffffff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+}
+
+.RevisionScore {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.RevisionScoreNumber {
+  color: var(--color-primary);
+  font-weight: 900;
+}
+
+.RevisionButtonGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.RevisionFlip,
+.RevisionNext,
+.RevisionExtra,
+.SelectiveRevisionBtn,
+.RevisionStar {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1.5px solid #111111;
+  background-color: #ffffff;
+  color: #111111;
+  transition: var(--transition-fast);
+}
+
+.RevisionFlip {
+  background-color: #111111;
+  color: #ffffff;
+}
+
+.RevisionFlip:hover {
+  background-color: #262626;
+}
+
+.RevisionNext:hover {
+  background-color: #f3f4f6;
+}
+
+.RevisionStar {
+  border-color: #d97706;
+  color: #d97706;
+}
+
+.RevisionStar:hover {
+  background-color: #fffbeb;
+}
+
+/* Flashcard Box */
+.RevisionCard {
+  background-color: #ffffff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.RevisionPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f3f4f6;
+  text-align: center;
+}
+
+.RevisionKana {
+  font-family: var(--font-jp-body);
+  font-size: clamp(28px, 5vw, 38px);
+  font-weight: 900;
+  color: var(--color-primary);
+}
+
+.RevisionKanji {
+  font-family: var(--font-jp-body);
+  font-size: clamp(32px, 6vw, 44px);
+  font-weight: 900;
+  color: #111111;
+}
+
+/* MCQ Options */
+.RevisionOptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.RevisionOption {
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid #e5e7eb;
+  background-color: #ffffff;
+  color: #111111;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  transition: var(--transition-fast);
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.RevisionOption:hover {
+  border-color: #111111;
+  background-color: #f8f9fa;
+}
+
+/* Sidebar Wrong Answers */
+.RevisionSidebar {
+  background-color: #ffffff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+
+.RevisionSidebarTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid #f3f4f6;
+}
+
+.RevisionWrongList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.RevisionWrongItem {
+  padding: 8px 10px;
+  background-color: #f8f9fa;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-primary);
+}
+
+.RevisionWrongWord {
+  font-family: var(--font-jp-body);
+  font-weight: 700;
+  font-size: 14px;
+  color: #111111;
+}
+
+.RevisionWrongMeta {
+  font-size: 12px;
+  color: #555555;
+  margin-top: 2px;
+}
+
+/* Words Learned Grid Section */
+.WordsSectionCard {
+  background-color: #ffffff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+
+.WordsGridList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0 0;
+}
+
+.WordCardItem {
+  padding: 10px 12px;
+  background-color: #ffffff;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.WordCardItem:hover {
+  border-color: #111111;
+}
+
+.WordCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.WordCardJapanese {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.WordCardLevelBadge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: #111111;
+  color: #ffffff;
+  font-family: var(--font-sans);
+  flex-shrink: 0;
+}
+
+.WordCardMain {
+  font-family: var(--font-jp-body);
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--color-primary);
+}
+
+.WordCardKanji {
+  font-family: var(--font-jp-body);
+  font-size: 14px;
+  color: #555555;
+}
+
+.WordCardMeaning {
+  font-size: 13px;
+  color: #111111;
+}
+
+/* Word Picker Dialog */
+.WordPickerOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 16px;
+}
+
+.WordPickerPanel {
+  background-color: #ffffff;
+  border-radius: var(--radius-md);
+  border: 2px solid #111111;
+  width: min(520px, 100%);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.WordPickerHeader {
+  padding: 14px 16px;
+  background-color: #111111;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.WordPickerTitle {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.WordPickerClose {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.WordPickerList {
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.WordPickerItem {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.WordPickerItem.selected {
+  border-color: var(--color-primary);
+  background-color: #fef2f2;
+}
+
+.WordPickerDone {
+  width: 100%;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .RevisionLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .RevisionOptions {
+    grid-template-columns: 1fr;
+  }
+
+  .WordsGridList {
+    grid-template-columns: 1fr;
+  }
+}
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)

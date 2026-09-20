@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import flask
 from flask_cors import CORS
+<<<<<<< HEAD
 import google.generativeai as genai
 import json
 import random
@@ -13,10 +14,16 @@ from dotenv import load_dotenv
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound, VideoUnavailable
 import pykakasi
 
+=======
+import os
+import requests
+from dotenv import load_dotenv
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
 
 # Load environment variables from .env file
 load_dotenv()
 
+<<<<<<< HEAD
 # Initialize pykakasi converter once at module level (expensive to re-create)
 _kks = pykakasi.kakasi()
 
@@ -222,6 +229,11 @@ Japanese lines:
         traceback.print_exc()
         return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
+=======
+app = flask.Flask(__name__)
+CORS(app)
+
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
 @app.route("/api/jisho-proxy", methods=["GET"])
 def jisho_proxy():
     keyword = request.args.get("keyword")
@@ -237,6 +249,7 @@ def jisho_proxy():
 
 @app.route("/")
 def index():
+<<<<<<< HEAD
     return "Japanese Reading Passage Generator API"
 
 
@@ -667,6 +680,11 @@ Return ONLY valid JSON in this exact format (no markdown, no backticks):
 if __name__ == "__main__":
     # Get configuration from environment variables
     # Render uses PORT environment variable, fallback to FLASK_PORT or 5000
+=======
+    return "Japanese Practice API"
+
+if __name__ == "__main__":
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
     host = os.getenv('FLASK_HOST', '0.0.0.0')
     port = int(os.getenv('PORT', os.getenv('FLASK_PORT', 5000)))
     debug = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'

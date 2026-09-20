@@ -2,11 +2,18 @@ import './Vocab.css'
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { ref, push, update, get, child, onValue, set, remove } from "firebase/database";
 import db from './firebase'
+<<<<<<< HEAD
 import kanjiData from './Kanjis.json';
 import jmdictData from '../data/jmdict.json';
 
 
 const VocabSection = ({user, userName, users = []}) => {
+=======
+import jmdictData from '../data/jmdict.json';
+
+
+const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
     const [inputValue, setInputValue] = useState('');
     const [wordCount, setWordCount] = useState(0);
     const [romanjiBuffer, setRomanjiBuffer] = useState(''); 
@@ -530,6 +537,7 @@ const VocabSection = ({user, userName, users = []}) => {
     };
 
     const getKanjisForLevels = (levels) => {
+<<<<<<< HEAD
         const kanjis = new Set();
         
         levels.forEach(level => {
@@ -544,6 +552,9 @@ const VocabSection = ({user, userName, users = []}) => {
         });
         
         return kanjis;
+=======
+        return new Set();
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
     };
 
     const findKanjisInWord = (word, userId) => {
@@ -772,7 +783,12 @@ const VocabSection = ({user, userName, users = []}) => {
             const vocabObject = {
                 word: finalHiragana,
                 meaning: results[0].meaning,
+<<<<<<< HEAD
                 kanji: results[0].primaryKanji
+=======
+                kanji: results[0].primaryKanji,
+                level: selectedLevel || "N5"
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
             };
 
             setWords(prev => [...prev, vocabObject]);
@@ -789,7 +805,12 @@ const VocabSection = ({user, userName, users = []}) => {
         const vocabObject = {
             word: suggestion.word,
             meaning: suggestion.meaning,
+<<<<<<< HEAD
             kanji: suggestion.primaryKanji
+=======
+            kanji: suggestion.primaryKanji,
+            level: selectedLevel || "N5"
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
         };
 
         setWords(prev => [...prev, vocabObject]);
@@ -916,7 +937,12 @@ const VocabSection = ({user, userName, users = []}) => {
     return(
         <div className='VocabSection'>
             <div className='VocabBanner'>
+<<<<<<< HEAD
                 <h2 className='VocabText'>VOCAB</h2>
+=======
+                <h2 className='VocabText'>語彙 | Vocabulary</h2>
+                <span className='VocabSubtitle'>Master Essential Vocabulary & Interactive Flashcards</span>
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
             </div>
             <div className='VocabContents'>
                 {dictionaryLoaded && (
@@ -978,8 +1004,13 @@ const VocabSection = ({user, userName, users = []}) => {
                                             transition: 'all 0.2s'
                                         }}
                                         onMouseEnter={(e) => {
+<<<<<<< HEAD
                                             e.currentTarget.style.backgroundColor = '#e9ecef';
                                             e.currentTarget.style.borderColor = '#d36cff';
+=======
+                                            e.currentTarget.style.backgroundColor = '#f3f4f6';
+                                            e.currentTarget.style.borderColor = '#c5050c';
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
                                         }}
                                         onMouseLeave={(e) => {
                                             e.currentTarget.style.backgroundColor = '#f8f9fa';
@@ -990,7 +1021,11 @@ const VocabSection = ({user, userName, users = []}) => {
                                             fontSize: '20px', 
                                             fontWeight: 'bold',
                                             marginBottom: '5px',
+<<<<<<< HEAD
                                             color: '#d36cff'
+=======
+                                            color: '#c5050c'
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
                                         }}>
                                             {suggestion.word} ({suggestion.kanjiVariants.map(k => k.text).join(' / ')})
                                         </div>
@@ -1040,6 +1075,7 @@ const VocabSection = ({user, userName, users = []}) => {
                     </div>
                 )}
 
+<<<<<<< HEAD
                 <p>Add New Japanese Word</p>
                 <div className='VocabInput'>
                     <input 
@@ -1073,12 +1109,48 @@ const VocabSection = ({user, userName, users = []}) => {
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
                                 e.preventDefault();
+=======
+                <div className='VocabInputCard'>
+                    <h3 className='VocabInputCardTitle'>Add New Japanese Word</h3>
+                    
+                    <div className='VocabInputRow'>
+                        <input 
+                            className='VocabInputField'
+                            type='text' 
+                            placeholder='Type word in Romaji (e.g. taberu)...' 
+                            value={inputValue} 
+                            onChange={toggle ? handleInputChangeH : handleInputChangeK} 
+                            onKeyPress={handleKeyPress}
+                            disabled={!dictionaryLoaded}
+                        />
+                        <button 
+                            className='LanguageChange' 
+                            onClick={() => setToggle(!toggle)}
+                            title="Toggle Hiragana / Katakana input mode"
+                        >
+                            {toggle ? "あ" : "ア"}
+                        </button>
+                        <button 
+                            className='AddWordBtn' 
+                            onClick={handleAdd}
+                            disabled={!romanjiBuffer.trim()}
+                        >
+                            + Add Word
+                        </button>
+                    </div>
+
+                    <div className='VocabToolsRow'>
+                        <button
+                            className='ModeToggleBtn'
+                            onClick={() => {
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
                                 setIsSelectiveMode(false);
                                 setIsRevisionMode(prev => !prev);
                                 setRevisionQuestion(null);
                                 setRevisionLocked(false);
                                 setWrongAnswers([]);
                                 setCorrectCount(0);
+<<<<<<< HEAD
                             }
                         }}
                     >
@@ -1112,6 +1184,49 @@ const VocabSection = ({user, userName, users = []}) => {
                         ))}
                     </ul>
                 </div>
+=======
+                            }}
+                        >
+                            {isRevisionMode ? '← Back to Vocab List' : '📖 Vocab Revision Session'}
+                        </button>
+                        <button
+                            className='SelectiveModeBtn'
+                            onClick={enterSelectiveMode}
+                            title="Practice MCQ on hand-picked words"
+                        >
+                            🎯 Selective Practice {selectiveIds.length > 0 ? `(${selectiveIds.length})` : ''}
+                        </button>
+                    </div>
+                </div>
+
+                {words.length > 0 && (
+                    <div className='AddedWordsContainer'>
+                        <div className='AddedWordsHeader'>
+                            <span className='AddedWordsTitle'>Pending Words to Save ({words.length})</span>
+                            <button 
+                                className='SubmitButton' 
+                                onClick={() => handleSubmitArray(words)}
+                            >
+                                Save {words.length} Word{words.length > 1 ? 's' : ''} to Account
+                            </button>
+                        </div>
+                        <ul className='AddedWordsSection'>
+                            {words.map((w, index) => (
+                                <li key={index} className='AddedWordChip'>
+                                    <span>{w.word} ({w.kanji}) — {w.meaning}</span>
+                                    <span 
+                                        className='AddedWordChipRemove' 
+                                        onClick={() => removeElement(index)}
+                                        title="Remove word"
+                                    >
+                                        ✕
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
 
                 {isSelectiveMode && (
                     <>
@@ -1154,7 +1269,11 @@ const VocabSection = ({user, userName, users = []}) => {
                             <div className="RevisionMain">
                                 <div className="RevisionHeader">
                                     <div className="RevisionScore">
+<<<<<<< HEAD
                                         <span style={{ color: '#1a7f5a', fontWeight: 900 }}>🎯 Selective</span>
+=======
+                                        <span style={{ color: '#c5050c', fontWeight: 900 }}>🎯 Selective</span>
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
                                         <span style={{ marginLeft: '12px' }}>Correct: <span className="RevisionScoreNumber">{selectiveCorrectCount}</span></span>
                                     </div>
                                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
@@ -1163,7 +1282,11 @@ const VocabSection = ({user, userName, users = []}) => {
                                         </button>
                                         <button className="RevisionFlip" onClick={flipSelectiveRevisionMode} disabled={selectiveRevisionLocked || selectiveRevisionPool.length === 0}>Flip</button>
                                         <button className="RevisionNext" onClick={() => { if (!selectiveRevisionLocked) startNextSelectiveQuestion(); }} disabled={selectiveRevisionLocked}>Skip</button>
+<<<<<<< HEAD
                                         <button className="RevisionNext" style={{ borderColor: '#c0392b', color: '#c0392b' }} onClick={exitSelectiveMode}>← Back</button>
+=======
+                                        <button className="RevisionNext" style={{ borderColor: '#c5050c', color: '#c5050c' }} onClick={exitSelectiveMode}>← Back</button>
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
                                     </div>
                                 </div>
 
@@ -1238,6 +1361,7 @@ const VocabSection = ({user, userName, users = []}) => {
                 )}
 
                 {!isSelectiveMode && !isRevisionMode && (
+<<<<<<< HEAD
                     <>
                         <p>{wordCount + 2} Words Learned</p>
                         <div className="words">
@@ -1253,6 +1377,40 @@ const VocabSection = ({user, userName, users = []}) => {
                             </ul>
                         </div>
                     </>
+=======
+                    <div className="WordsSectionCard">
+                        <div className="SectionCardHeader">
+                            <span className="SectionCardIcon">📚</span>
+                            <h3>{uploadedWord.length > 0 ? uploadedWord.length : wordCount} Words Learned</h3>
+                        </div>
+                        <ul className="WordsGridList">
+                            {uploadedWord.map((w, index) => (
+                                <li key={index} className="WordCardItem">
+                                    <div className="WordCardHeader">
+                                        <div className="WordCardJapanese">
+                                            <span className="WordCardMain">{w.word}</span>
+                                            {w.kanji && <span className="WordCardKanji">({w.kanji})</span>}
+                                        </div>
+                                        <span className="WordCardLevelBadge">{w.level || 'N5'}</span>
+                                    </div>
+                                    <div className="WordCardMeaning">{w.meaning}</div>
+                                </li>
+                            ))}
+                            <li className="WordCardItem">
+                                <div className="WordCardJapanese">
+                                    <span className="WordCardMain">ようこそ</span>
+                                </div>
+                                <div className="WordCardMeaning">Welcome</div>
+                            </li>
+                            <li className="WordCardItem">
+                                <div className="WordCardJapanese">
+                                    <span className="WordCardMain">ありがとうございます</span>
+                                </div>
+                                <div className="WordCardMeaning">Thank you very much</div>
+                            </li>
+                        </ul>
+                    </div>
+>>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
                 )}
 
                 {!isSelectiveMode && isRevisionMode && (
