@@ -8,3 +8,4 @@ protobuf==4.25.0
 youtube-transcript-api==1.2.4
 requests==2.32.3
 pykakasi==2.3.0
+weaviate-client==4.23.1
