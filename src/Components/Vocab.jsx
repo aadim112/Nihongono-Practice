@@ -22,7 +22,7 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
     const [isQuestionLoading, setIsQuestionLoading] = useState(false);
     const revisionSessionRef = useRef({ sig: '', remainingIds: [], asked: new Set() });
 
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://127.0.0.1:5000';
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://nihongono-practice.onrender.com/';
     const [maxScoresByUser, setMaxScoresByUser] = useState({});
     
     const [suggestions, setSuggestions] = useState([]);
