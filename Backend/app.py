@@ -36,7 +36,6 @@ def index():
     return jsonify({
         "status": "running",
         "message": "Server is Running",
-        "Weaviate Running":(get_weaviate_client())
     })
 
 @app.route("/api/generate-vocab-question", methods=["POST"])
