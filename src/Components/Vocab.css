@@ -1,659 +1,3 @@
-<<<<<<< HEAD
-.VocabSection {
-  width: 100%;
-  height: auto;
-}
-.VocabBanner {
-  width: 100%;
-  height: 120px;
-  border-top-left-radius: 18px;
-  border-top-right-radius: 18px;
-  text-align: center;
-  display: flex;
-  background-color: #6a4a73;
-  align-items: center;
-  justify-content: center;
-}
-.VocabText {
-  font-size: clamp(44px, 9vw, 80px);
-  font-weight: bold;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-image: url("../Assets/banner2.jpg");
-  background-size: contain;
-}
-.VocabContents {
-  font-family: "Short Stack", cursive;
-  font-weight: bold;
-  font-size: 20px;
-  padding-inline: 10px;
-  padding-bottom: 40px;
-}
-.VocabInput {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.VocabInput input {
-  width: 250px;
-  max-width: 100%;
-  flex: 1 1 260px;
-  height: 35px;
-  border-radius: 8px;
-  border: 2px solid #6a4a73;
-  font-family: "Zen Kaku Gothic Antique", sans-serif;
-  font-weight: bold;
-  padding-left: 10px;
-}
-.SubmitButton {
-  width: 80px;
-  height: 40px;
-  border-radius: 8px;
-  border: 0px;
-  font-family: poppins;
-  font-weight: bold;
-}
-.words {
-  display: flex;
-  width: 100%;
-  position: relative;
-  height: auto;
-}
-.list {
-  width: 100%;
-  max-height: 500px;
-  overflow: scroll;
-  color: #555;
-  padding: 0 !important;
-  border: 1px solid #dedede;
-  border-radius: 12px;
-  margin: 0px;
-}
-.list::-webkit-scrollbar {
-  display: none;
-}
-.list li {
-  list-style: none;
-  border-bottom: 1px dotted #ccc;
-  text-indent: 40px;
-  height: auto;
-  padding: 10px;
-  font-size: 12px;
-  text-transform: capitalize;
-  font-size: 15px;
-  overflow-wrap: anywhere;
-}
-.list li:last-child {
-  border-bottom: none;
-}
-.list li:hover {
-  background-color: #f0f0f0;
-  border-radius: 12px;
-  transition: all 0.2s;
-  -webkit-transition: all 0.2s;
-  -moz-transition: all 0.2s;
-  -ms-transition: all 0.2s;
-  -o-transition: all 0.2s;
-}
-.lines {
-  border-left: 1px solid #ffaa9f;
-  border-right: 1px solid #ffaa9f;
-  width: 2px;
-  height: auto;
-  margin-left: 3%;
-  position: absolute;
-  width: 2px;
-  top: 0;
-  bottom: 0;
-}
-.AddedWordsSection {
-  display: flex;
-  flex-wrap: wrap;
-  list-style: none;
-  gap: 15px;
-  padding: 0px;
-}
-.LanguageChange{
-  border: 0px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-}
-.changeSection{
-  width: 150px;
- border: 1px solid #6a4a73;
- border-radius: 8px;
- padding: 10px;
- text-align: center;
- font-family: poppins;
- font-weight: bold;
- font-size: 15px;
- cursor: pointer;
-}
-
-.RevisionLayout {
-  margin-top: 14px;
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 16px;
-  align-items: start;
-}
-
-.RevisionMain {
-  min-width: 0;
-}
-
-.RevisionHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.RevisionScore {
-  font-family: poppins;
-  font-size: 16px;
-  color: #333;
-}
-
-.RevisionScoreNumber {
-  color: #6a4a73;
-  font-weight: 900;
-}
-
-.RevisionNext {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #6a4a73;
-  background: #fff;
-  font-family: poppins;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.RevisionFlip {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #6a4a73;
-  background: #6a4a73;
-  color: #fff;
-  font-family: poppins;
-  font-weight: 800;
-  cursor: pointer;
-  margin-right: 8px;
-}
-
-.RevisionExtra {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #dedede;
-  background: #fafafa;
-  color: #333;
-  font-family: poppins;
-  font-weight: 800;
-  cursor: pointer;
-  margin-right: 8px;
-}
-
-.RevisionStar {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #f0c14b;
-  background: #fff6d6;
-  color: #8a6d00;
-  font-family: poppins;
-  font-weight: 900;
-  cursor: pointer;
-  margin-right: 8px;
-  min-width: 44px;
-}
-
-.RevisionFlip:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.RevisionExtra:disabled,
-.RevisionStar:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.RevisionNext:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.RevisionCard {
-  border: 1px solid #dedede;
-  border-radius: 14px;
-  padding: 16px;
-  background: white;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-}
-
-.RevisionPrompt {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 14px;
-  padding-bottom: 12px;
-  margin-bottom: 12px;
-  border-bottom: 1px dashed #ddd;
-}
-
-.RevisionKana {
-  font-family: "Zen Kaku Gothic Antique", sans-serif;
-  font-size: 34px;
-  font-weight: 900;
-  color: #6a4a73;
-  letter-spacing: 0.5px;
-}
-
-.RevisionKanji {
-  font-family: "Zen Kaku Gothic Antique", sans-serif;
-  font-size: 40px;
-  font-weight: 900;
-  color: #222;
-}
-
-.RevisionOptions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.RevisionOption {
-  text-align: left;
-  padding: 12px 12px;
-  border-radius: 12px;
-  border: 1px solid #dedede;
-  background: #fafafa;
-  cursor: pointer;
-  font-family: poppins;
-  font-weight: 700;
-  font-size: 14px;
-  color: #333;
-  transition: all 0.15s ease;
-}
-
-.RevisionOption:hover {
-  background: #f1e9f4;
-  border-color: #6a4a73;
-}
-
-.RevisionOption:disabled {
-  opacity: 0.75;
-  cursor: not-allowed;
-}
-
-.RevisionSidebar {
-  border: 1px solid #dedede;
-  border-radius: 14px;
-  padding: 14px;
-  background: white;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-}
-
-.RevisionSidebarTitle {
-  font-family: poppins;
-  font-weight: 900;
-  font-size: 16px;
-  color: #222;
-  margin-bottom: 10px;
-}
-
-.RevisionSidebarEmpty {
-  font-family: poppins;
-  font-size: 13px;
-  color: #666;
-}
-
-.RevisionWrongList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  max-height: 460px;
-  overflow: auto;
-}
-
-.RevisionWrongList::-webkit-scrollbar {
-  display: none;
-}
-
-.RevisionWrongItem {
-  border-bottom: 1px dotted #ddd;
-  padding: 10px 0;
-}
-
-.RevisionWrongItem:last-child {
-  border-bottom: none;
-}
-
-.RevisionWrongWord {
-  font-family: "Zen Kaku Gothic Antique", sans-serif;
-  font-weight: 900;
-  font-size: 16px;
-  color: #d36cff;
-  margin-bottom: 4px;
-}
-
-.RevisionWrongMeta {
-  font-family: poppins;
-  font-size: 12px;
-  color: #555;
-}
-
-@media (max-width: 900px) {
-  .RevisionLayout {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 700px) {
-  .VocabBanner {
-    height: 96px;
-  }
-
-  .VocabContents {
-    font-size: 18px;
-    padding-inline: 8px;
-  }
-
-  .VocabInput {
-    gap: 10px;
-  }
-
-  .VocabInput input {
-    flex-basis: 100%;
-    height: 40px;
-    font-size: 16px;
-  }
-
-  .SubmitButton,
-  .LanguageChange {
-    height: 40px;
-  }
-
-  .changeSection {
-    width: auto;
-    flex: 1 1 100%;
-  }
-
-  .lines {
-    display: none;
-  }
-
-  .list li {
-    text-indent: 0;
-  }
-}
-
-@media (max-width: 520px) {
-  .RevisionPrompt {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .RevisionKana {
-    font-size: 28px;
-  }
-
-  .RevisionKanji {
-    font-size: 34px;
-  }
-
-  .RevisionOptions {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ── Selective Vocab Revision ─────────────────────────────── */
-
-.SelectiveBtn {
-  background: linear-gradient(135deg, #e8f8f2 0%, #d0f0e4 100%);
-  border: 1px solid #1a7f5a !important;
-  color: #1a7f5a;
-  position: relative;
-}
-
-.SelectiveBtn:hover {
-  background: linear-gradient(135deg, #d0f0e4 0%, #b8e8d8 100%);
-  transition: background 0.2s;
-}
-
-.SelectiveRevisionBtn {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #1a7f5a;
-  background: #e8f8f2;
-  color: #1a7f5a;
-  font-family: poppins;
-  font-weight: 800;
-  cursor: pointer;
-  margin-right: 8px;
-  transition: background 0.15s;
-}
-
-.SelectiveRevisionBtn:hover {
-  background: #c5edd9;
-}
-
-.SelectiveManageBtn {
-  padding: 9px 14px;
-  border-radius: 10px;
-  border: 1px solid #1a7f5a;
-  background: #1a7f5a;
-  color: #fff;
-  font-family: poppins;
-  font-weight: 700;
-  font-size: 13px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.SelectiveManageBtn:hover {
-  background: #156647;
-}
-
-.SelectiveEmptyCard {
-  text-align: center;
-  padding: 40px 20px;
-  color: #333;
-}
-
-/* Word Picker Modal */
-.WordPickerOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.52);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1200;
-  animation: wpFadeIn 0.18s ease;
-}
-
-@keyframes wpFadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-.WordPickerPanel {
-  background: #fff;
-  border-radius: 16px;
-  width: min(560px, 94vw);
-  max-height: 82vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.22);
-  overflow: hidden;
-  animation: wpSlideUp 0.2s ease;
-}
-
-@keyframes wpSlideUp {
-  from { transform: translateY(24px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
-
-.WordPickerHeader {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 18px 20px;
-  border-bottom: 1px solid #eee;
-}
-
-.WordPickerTitle {
-  font-family: poppins;
-  font-weight: 800;
-  font-size: 17px;
-  color: #222;
-  flex: 1;
-}
-
-.WordPickerBadge {
-  font-family: poppins;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 20px;
-  background: #1a7f5a;
-  color: #fff;
-}
-
-.WordPickerClose {
-  border: none;
-  background: #f0f0f0;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: #555;
-  transition: background 0.15s;
-}
-
-.WordPickerClose:hover {
-  background: #e0e0e0;
-}
-
-.WordPickerList {
-  flex: 1;
-  overflow-y: auto;
-  padding: 8px 0;
-}
-
-.WordPickerList::-webkit-scrollbar {
-  width: 5px;
-}
-.WordPickerList::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 4px;
-}
-
-.WordPickerItem {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 20px;
-  cursor: pointer;
-  border-bottom: 1px solid #f5f5f5;
-  transition: background 0.12s;
-}
-
-.WordPickerItem:last-child {
-  border-bottom: none;
-}
-
-.WordPickerItem:hover {
-  background: #f7fdf9;
-}
-
-.WordPickerItem.selected {
-  background: #eaf8f2;
-}
-
-.WordPickerItemInfo {
-  flex: 1;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 6px;
-  min-width: 0;
-}
-
-.WordPickerWord {
-  font-family: "Zen Kaku Gothic Antique", sans-serif;
-  font-size: 18px;
-  font-weight: 900;
-  color: #1a7f5a;
-}
-
-.WordPickerKanji {
-  font-family: "Zen Kaku Gothic Antique", sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: #333;
-}
-
-.WordPickerMeaning {
-  font-family: poppins;
-  font-size: 13px;
-  color: #666;
-  flex: 1 1 100%;
-}
-
-.WordPickerCheck {
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  border: 2px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 900;
-  color: #fff;
-  flex-shrink: 0;
-  transition: all 0.15s;
-  background: transparent;
-}
-
-.WordPickerCheck.checked {
-  background: #1a7f5a;
-  border-color: #1a7f5a;
-}
-
-.WordPickerFooter {
-  padding: 14px 20px;
-  border-top: 1px solid #eee;
-}
-
-.WordPickerDone {
-  width: 100%;
-  padding: 13px;
-  border-radius: 10px;
-  border: none;
-  background: linear-gradient(135deg, #1a7f5a, #23a876);
-  color: #fff;
-  font-family: poppins;
-  font-weight: 800;
-  font-size: 15px;
-  cursor: pointer;
-  transition: opacity 0.15s;
-}
-
-.WordPickerDone:hover {
-  opacity: 0.9;
-}
-=======
 .VocabSection {
   width: 100%;
   display: flex;
@@ -834,22 +178,7 @@
   color: #ffffff;
 }
 
-.SelectiveModeBtn {
-  padding: 10px 16px;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid var(--color-primary);
-  background-color: #ffffff;
-  color: var(--color-primary);
-  font-weight: 700;
-  font-size: 13px;
-  cursor: pointer;
-  transition: var(--transition-fast);
-}
 
-.SelectiveModeBtn:hover {
-  background-color: var(--color-primary);
-  color: #ffffff;
-}
 
 /* --- Added Words Card (Pending Submit) --- */
 .AddedWordsContainer {
@@ -953,10 +282,7 @@
 }
 
 .RevisionFlip,
-.RevisionNext,
-.RevisionExtra,
-.SelectiveRevisionBtn,
-.RevisionStar {
+.RevisionNext {
   padding: 8px 12px;
   border-radius: var(--radius-sm);
   font-weight: 700;
@@ -981,15 +307,6 @@
   background-color: #f3f4f6;
 }
 
-.RevisionStar {
-  border-color: #d97706;
-  color: #d97706;
-}
-
-.RevisionStar:hover {
-  background-color: #fffbeb;
-}
-
 /* Flashcard Box */
 .RevisionCard {
   background-color: #ffffff;
@@ -999,6 +316,33 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.RevisionCardLoading {
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  gap: 16px;
+}
+
+.RevisionSpinner {
+  width: 44px;
+  height: 44px;
+  border: 4px solid #f3f4f6;
+  border-top-color: #c5050c;
+  border-radius: 50%;
+  animation: revisionSpin 0.8s linear infinite;
+}
+
+@keyframes revisionSpin {
+  to { transform: rotate(360deg); }
+}
+
+.RevisionLoadingText {
+  font-size: 13px;
+  color: #888;
+  font-weight: 500;
+  margin: 0;
 }
 
 .RevisionPrompt {
@@ -1120,17 +464,29 @@
 }
 
 .WordCardItem {
-  padding: 10px 12px;
+  position: relative;
+  padding: 12px 12px 10px 12px;
   background-color: #ffffff;
   border-radius: var(--radius-sm);
   border: 1.5px solid #e5e7eb;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  overflow: hidden;
 }
 
 .WordCardItem:hover {
   border-color: #111111;
+}
+
+.WordCardConfidenceBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3.5px;
+  background: #e53935;
+  transition: width 0.3s ease;
+  border-top-left-radius: var(--radius-sm);
 }
 
 .WordCardHeader {
@@ -1270,4 +626,3 @@
     grid-template-columns: 1fr;
   }
 }
->>>>>>> dc280be (Big Update: Removed Sections other than Vocab, Grammar, Changed the UI of the wbiste. Updated data on the firebase by adding level of the vocab.)
