@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/Nihongono-Practice/static/css/main.b04796c0.css",
-    "main.js": "/Nihongono-Practice/static/js/main.f0263b4d.js",
+    "main.js": "/Nihongono-Practice/static/js/main.2e6a47a2.js",
     "static/js/453.31eb9d1a.chunk.js": "/Nihongono-Practice/static/js/453.31eb9d1a.chunk.js",
     "static/media/banner2.jpg": "/Nihongono-Practice/static/media/banner2.1494426ed3175eabba7b.jpg",
     "static/media/banner1.jpg": "/Nihongono-Practice/static/media/banner1.1241207fa1d95d47ea5c.jpg",
     "index.html": "/Nihongono-Practice/index.html",
     "main.b04796c0.css.map": "/Nihongono-Practice/static/css/main.b04796c0.css.map",
-    "main.f0263b4d.js.map": "/Nihongono-Practice/static/js/main.f0263b4d.js.map",
+    "main.2e6a47a2.js.map": "/Nihongono-Practice/static/js/main.2e6a47a2.js.map",
     "453.31eb9d1a.chunk.js.map": "/Nihongono-Practice/static/js/453.31eb9d1a.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b04796c0.css",
-    "static/js/main.f0263b4d.js"
+    "static/js/main.2e6a47a2.js"
   ]
 }
