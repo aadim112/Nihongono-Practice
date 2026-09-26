@@ -21,6 +21,9 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
     const [revisionMode, setRevisionMode] = useState('jp_to_en'); // 'jp_to_en' | 'en_to_jp'
     const [isQuestionLoading, setIsQuestionLoading] = useState(false);
     const revisionSessionRef = useRef({ sig: '', remainingIds: [], asked: new Set() });
+    const revisionAutoStartedRef = useRef(false);
+    const revisionPickInFlightRef = useRef(false);
+    const vocabCleanupRef = useRef(false);
 
     const BACKEND_URL = 'https://nihongono-practice.onrender.com/';
     const [maxScoresByUser, setMaxScoresByUser] = useState({});
@@ -35,20 +38,35 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
         setCorrectCount(0);
         setWrongAnswers([]);
         revisionSessionRef.current = { sig: '', remainingIds: [], asked: new Set() };
+        revisionAutoStartedRef.current = false;
+        revisionPickInFlightRef.current = false;
+        vocabCleanupRef.current = false;
 
         const vocabRef = ref(db, `${user}/vocab`);
 
         const unsubscribe = onValue(vocabRef, (snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val();
-                if (Array.isArray(data)) {
-                    setUploadedWords(data);
-                    setWordCount(data.length);
-                    setMaxScoresByUser(prev => ({ ...prev, [user]: 0 }));
-                } else {
-                    setUploadedWords(data.words ?? []);
-                    setWordCount(data.totalCount ?? 0);
-                    setMaxScoresByUser(prev => ({ ...prev, [user]: Number(data.revisionMaxScore ?? 0) }));
+                const rawWords = Array.isArray(data) ? data : (data.words ?? data);
+                const wordList = toWordArray(rawWords);
+                const uniqueWords = dedupeVocabWords(wordList);
+
+                setUploadedWords(uniqueWords);
+                setWordCount(uniqueWords.length);
+                setMaxScoresByUser(prev => ({
+                    ...prev,
+                    [user]: Number((!Array.isArray(data) && data.revisionMaxScore) ?? 0)
+                }));
+
+                if (!vocabCleanupRef.current && uniqueWords.length < wordList.length) {
+                    vocabCleanupRef.current = true;
+                    update(vocabRef, {
+                        words: uniqueWords,
+                        totalCount: uniqueWords.length
+                    }).catch((e) => {
+                        console.error("Failed to remove duplicate vocab words:", e);
+                        vocabCleanupRef.current = false;
+                    });
                 }
             } else {
                 setUploadedWords([]);
@@ -111,25 +129,84 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
         return copy;
     };
 
+    const getWordConfidence = (w) => {
+        const n = Number(w?.confidence);
+        return Number.isFinite(n) ? n : 0;
+    };
+
+    const toWordArray = (raw) => {
+        if (!raw) return [];
+        if (Array.isArray(raw)) return raw.filter((w) => w && typeof w === 'object');
+        if (typeof raw === 'object') {
+            return Object.values(raw).filter((w) => w && typeof w === 'object' && (w.word || w.meaning));
+        }
+        return [];
+    };
+
+    const vocabIdentityKey = (w) => [
+        String(w?.word || '').trim(),
+        String(w?.kanji || '').trim(),
+        String(w?.meaning || '').trim().toLowerCase(),
+    ].join('|');
+
+    const mergeVocabCopies = (a, b) => {
+        const keep = getWordConfidence(b) > getWordConfidence(a) ? b : a;
+        const other = keep === a ? b : a;
+        return {
+            ...other,
+            ...keep,
+            word: keep.word || other.word,
+            kanji: keep.kanji || other.kanji,
+            meaning: keep.meaning || other.meaning,
+            level: keep.level || other.level,
+            confidence: Math.max(getWordConfidence(a), getWordConfidence(b)),
+        };
+    };
+
+    const dedupeVocabWords = (words) => {
+        const byKey = new Map();
+        for (const word of words || []) {
+            if (!word?.word) continue;
+            const key = vocabIdentityKey(word);
+            if (!byKey.has(key)) {
+                byKey.set(key, word);
+            } else {
+                byKey.set(key, mergeVocabCopies(byKey.get(key), word));
+            }
+        }
+        return Array.from(byKey.values());
+    };
+
     const validRevisionPool = useMemo(() => {
         return (uploadedWord || [])
             .map((w, idx) => ({ ...w, id: w.id ?? idx }))
-            .filter(w => w.word && w.meaning);
+            .filter(w => w.word && w.meaning)
+            .sort((a, b) => {
+                const confDiff = getWordConfidence(a) - getWordConfidence(b);
+                if (confDiff !== 0) return confDiff;
+                return Number(a.id) - Number(b.id);
+            });
     }, [uploadedWord]);
 
     const overallConfidence = useMemo(() => {
         if (!uploadedWord || uploadedWord.length === 0) return 100;
-        const totalConf = uploadedWord.reduce((sum, w) => sum + (w.confidence ?? 50), 0);
+        const totalConf = uploadedWord.reduce((sum, w) => sum + getWordConfidence(w), 0);
         return Math.round(totalConf / uploadedWord.length);
     }, [uploadedWord]);
 
     const updateWordConfidence = (wordId, wordText, wordMeaning, isCorrect) => {
         if (user === undefined || user === null || user === '') return;
 
-        let targetIndex = uploadedWord.findIndex(w =>
-            w && wordText && w.word && w.word.trim() === wordText.trim() &&
-            w.meaning && wordMeaning && w.meaning.trim() === wordMeaning.trim()
+        let targetIndex = uploadedWord.findIndex((w, idx) =>
+            (w.id !== undefined && w.id === wordId) || idx === wordId
         );
+
+        if (targetIndex === -1) {
+            targetIndex = uploadedWord.findIndex(w =>
+                w && wordText && w.word && w.word.trim() === wordText.trim() &&
+                w.meaning && wordMeaning && w.meaning.trim() === wordMeaning.trim()
+            );
+        }
 
         if (targetIndex === -1) {
             targetIndex = uploadedWord.findIndex(w =>
@@ -137,16 +214,10 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
             );
         }
 
-        if (targetIndex === -1) {
-            targetIndex = uploadedWord.findIndex((w, idx) =>
-                (w.id !== undefined && w.id === wordId) || idx === wordId
-            );
-        }
-
         if (targetIndex === -1) return;
 
         const currentWord = uploadedWord[targetIndex];
-        const currentConfidence = Number(currentWord?.confidence ?? 0);
+        const currentConfidence = getWordConfidence(currentWord);
 
         // Boost +25% on correct answer, decrease by -15% on wrong answer (clamped between 0 and 100)
         const delta = isCorrect ? 25 : -15;
@@ -164,17 +235,8 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
             return updated;
         });
 
-        // 2. Persist to Firebase Realtime Database across all root structure variations
-        const pathsToUpdate = [
-            `${user}/words/${targetIndex}/confidence`,
-            `${user}/vocab/words/${targetIndex}/confidence`,
-            `${user}/vocab/${targetIndex}/confidence`
-        ];
-
-        pathsToUpdate.forEach(path => {
-            const nodeRef = ref(db, path);
-            set(nodeRef, newConfidence).catch(() => {});
-        });
+        // 2. Persist only to the canonical vocab words path
+        update(ref(db, `${user}/vocab/words/${targetIndex}`), { confidence: newConfidence }).catch(() => {});
 
         // 3. Persist to Weaviate database via Flask backend
         fetch(`${BACKEND_URL}/api/update-vocab-confidence`, {
@@ -239,11 +301,10 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
         const sig = validRevisionPool.map(v => v.id).join('||');
         if (!forceReset && revisionSessionRef.current.sig === sig && (revisionSessionRef.current.remainingIds?.length ?? 0) > 0) return;
 
-        // Sort pool by confidence ascending (lowest confidence score words first)
         const sortedPool = [...validRevisionPool].sort((a, b) => {
-            const confA = Number(a.confidence ?? 0);
-            const confB = Number(b.confidence ?? 0);
-            return confA - confB;
+            const confDiff = getWordConfidence(a) - getWordConfidence(b);
+            if (confDiff !== 0) return confDiff;
+            return Number(a.id) - Number(b.id);
         });
 
         revisionSessionRef.current.sig = sig;
@@ -252,10 +313,21 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
     };
 
     const startNextRevisionQuestion = async (overrideMode) => {
+        if (revisionPickInFlightRef.current) return;
+        revisionPickInFlightRef.current = true;
+
         initRevisionSessionIfNeeded();
 
         const asked = revisionSessionRef.current.asked;
         const remaining = revisionSessionRef.current.remainingIds;
+
+        remaining.sort((idA, idB) => {
+            const itemA = validRevisionPool.find(v => v.id === idA);
+            const itemB = validRevisionPool.find(v => v.id === idB);
+            const confDiff = getWordConfidence(itemA) - getWordConfidence(itemB);
+            if (confDiff !== 0) return confDiff;
+            return Number(idA) - Number(idB);
+        });
 
         while (remaining.length > 0 && asked.has(remaining[0])) {
             remaining.shift();
@@ -263,6 +335,7 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
 
         const nextId = remaining.shift();
         if (nextId === undefined || nextId === null) {
+            revisionPickInFlightRef.current = false;
             setRevisionQuestion(null);
             setRevisionLocked(false);
             return;
@@ -270,6 +343,12 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
 
         asked.add(nextId);
         const item = validRevisionPool.find(v => v.id === nextId);
+        if (!item) {
+            revisionPickInFlightRef.current = false;
+            setRevisionLocked(false);
+            startNextRevisionQuestion(overrideMode);
+            return;
+        }
         const modeToUse = overrideMode || revisionMode;
 
         setIsQuestionLoading(true);
@@ -304,6 +383,7 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
             console.error('Failed to fetch question from backend:', err);
             setRevisionQuestion({ error: err.message });
         } finally {
+            revisionPickInFlightRef.current = false;
             setIsQuestionLoading(false);
             setRevisionLocked(false);
         }
@@ -319,11 +399,16 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
     };
 
     useEffect(() => {
-        if (!isRevisionMode) return;
-        initRevisionSessionIfNeeded();
-        if (!revisionQuestion) {
-            startNextRevisionQuestion();
+        if (!isRevisionMode) {
+            revisionAutoStartedRef.current = false;
+            revisionPickInFlightRef.current = false;
+            return;
         }
+        if (validRevisionPool.length === 0) return;
+        if (revisionAutoStartedRef.current) return;
+        revisionAutoStartedRef.current = true;
+        initRevisionSessionIfNeeded(true);
+        startNextRevisionQuestion();
     }, [isRevisionMode, validRevisionPool]);
 
 
@@ -763,14 +848,12 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
             const snapshot = await get(vocabRef);
             const data = snapshot.exists() ? snapshot.val() : {};
 
-            const existingWords = data.words || [];
-            const existingCount = data.totalCount || 0;
-
-            const updatedWords = [...existingWords, ...safeArray];
+            const existingWords = toWordArray(data.words || data);
+            const updatedWords = dedupeVocabWords([...existingWords, ...safeArray]);
 
             await update(vocabRef, {
                 words: updatedWords,
-                totalCount: existingCount + safeArray.length
+                totalCount: updatedWords.length
             });
 
             // Also sync newly added words to Weaviate vector database
@@ -1006,6 +1089,8 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
                                 setWrongAnswers([]);
                                 setCorrectCount(0);
                                 revisionSessionRef.current = { sig: '', remainingIds: [], asked: new Set() };
+                                revisionAutoStartedRef.current = false;
+                                revisionPickInFlightRef.current = false;
                             }}
                         >
                             {isRevisionMode ? '← Back to Vocab List' : '📖 Vocab Revision Session'}
@@ -1053,10 +1138,12 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
                             </div>
                         </div>
                         <ul className="WordsGridList">
-                            {uploadedWord.map((w, index) => {
-                                const itemConfidence = Number(w.confidence ?? 0);
+                            {[...uploadedWord]
+                                .sort((a, b) => getWordConfidence(a) - getWordConfidence(b))
+                                .map((w, index) => {
+                                const itemConfidence = getWordConfidence(w);
                                 return (
-                                    <li key={index} className="WordCardItem">
+                                    <li key={`${w.word}-${w.kanji}-${index}`} className="WordCardItem">
                                         <div className="WordCardConfidenceBar" style={{ width: `${itemConfidence}%` }} />
                                         <div className="WordCardHeader">
                                             <div className="WordCardJapanese">
@@ -1165,6 +1252,7 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
                                         className="RevisionNext" 
                                         style={{ margin: '0 auto', display: 'block' }}
                                         onClick={() => {
+                                            revisionPickInFlightRef.current = false;
                                             initRevisionSessionIfNeeded(true);
                                             startNextRevisionQuestion();
                                         }}

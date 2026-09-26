@@ -10,7 +10,6 @@ from weaviate.classes.query import MetadataQuery, Filter
 import random
 import traceback
 
-# Load environment variables from .env file
 load_dotenv()
 
 app = flask.Flask(__name__)
@@ -226,6 +225,8 @@ def update_vocab_confidence():
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
