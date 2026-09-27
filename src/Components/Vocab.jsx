@@ -24,6 +24,9 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
     const revisionAutoStartedRef = useRef(false);
     const revisionPickInFlightRef = useRef(false);
     const vocabCleanupRef = useRef(false);
+    const revisionPoolRef = useRef([]);
+    const revisionQuestionRef = useRef(null);
+    const revisionModeRef = useRef('jp_to_en');
 
     const BACKEND_URL = 'https://nihongono-practice.onrender.com/';
     const [maxScoresByUser, setMaxScoresByUser] = useState({});
@@ -41,6 +44,7 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
         revisionAutoStartedRef.current = false;
         revisionPickInFlightRef.current = false;
         vocabCleanupRef.current = false;
+        revisionQuestionRef.current = null;
 
         const vocabRef = ref(db, `${user}/vocab`);
 
@@ -179,14 +183,13 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
 
     const validRevisionPool = useMemo(() => {
         return (uploadedWord || [])
-            .map((w, idx) => ({ ...w, id: w.id ?? idx }))
-            .filter(w => w.word && w.meaning)
-            .sort((a, b) => {
-                const confDiff = getWordConfidence(a) - getWordConfidence(b);
-                if (confDiff !== 0) return confDiff;
-                return Number(a.id) - Number(b.id);
-            });
+            .map((w, idx) => ({ ...w, id: vocabIdentityKey(w) || String(idx) }))
+            .filter(w => w.word && w.meaning);
     }, [uploadedWord]);
+
+    revisionPoolRef.current = validRevisionPool;
+    revisionQuestionRef.current = revisionQuestion;
+    revisionModeRef.current = revisionMode;
 
     const overallConfidence = useMemo(() => {
         if (!uploadedWord || uploadedWord.length === 0) return 100;
@@ -198,7 +201,7 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
         if (user === undefined || user === null || user === '') return;
 
         let targetIndex = uploadedWord.findIndex((w, idx) =>
-            (w.id !== undefined && w.id === wordId) || idx === wordId
+            vocabIdentityKey(w) === wordId || (w.id !== undefined && w.id === wordId) || idx === wordId
         );
 
         if (targetIndex === -1) {
@@ -264,7 +267,7 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
             const distractorPool = (pool || [])
                 .filter(p => p.id !== item.id)
                 .map(p => `${p.word} | ${p.kanji}`);
-            const distractors = shuffle(Array.from(new Set(distractorPool))).slice(0, 5);
+            const distractors = shuffle(Array.from(new Set(distractorPool))).slice(0, 3);
             const options = shuffle([correct, ...distractors]);
             return {
                 id: item.id,
@@ -282,7 +285,7 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
         const distractorPool = (pool || [])
             .filter(p => p.id !== item.id)
             .map(p => p.meaning);
-        const distractors = shuffle(Array.from(new Set(distractorPool))).slice(0, 5);
+        const distractors = shuffle(Array.from(new Set(distractorPool))).slice(0, 3);
         const options = shuffle([correct, ...distractors]);
         return {
             id: item.id,
@@ -296,106 +299,96 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
         };
     };
 
-    const initRevisionSessionIfNeeded = (forceReset = false) => {
-        // Base signature strictly on word IDs so live confidence updates mid-session don't reset the asked set
-        const sig = validRevisionPool.map(v => v.id).join('||');
-        if (!forceReset && revisionSessionRef.current.sig === sig && (revisionSessionRef.current.remainingIds?.length ?? 0) > 0) return;
-
-        const sortedPool = [...validRevisionPool].sort((a, b) => {
-            const confDiff = getWordConfidence(a) - getWordConfidence(b);
-            if (confDiff !== 0) return confDiff;
-            return Number(a.id) - Number(b.id);
-        });
-
-        revisionSessionRef.current.sig = sig;
-        revisionSessionRef.current.asked = new Set();
-        revisionSessionRef.current.remainingIds = sortedPool.map(v => v.id);
+    const compareByConfidence = (a, b) => {
+        const confDiff = getWordConfidence(a) - getWordConfidence(b);
+        if (confDiff !== 0) return confDiff;
+        return String(a?.id || '').localeCompare(String(b?.id || ''));
     };
 
-    const startNextRevisionQuestion = async (overrideMode) => {
-        if (revisionPickInFlightRef.current) return;
-        revisionPickInFlightRef.current = true;
+    const initRevisionSessionIfNeeded = (forceReset = false) => {
+        const pool = revisionPoolRef.current || [];
+        // Order-independent signature: confidence re-sorts must not restart the session
+        const sig = [...pool.map(v => v.id)].sort().join('||');
+        const session = revisionSessionRef.current;
 
-        initRevisionSessionIfNeeded();
-
-        const asked = revisionSessionRef.current.asked;
-        const remaining = revisionSessionRef.current.remainingIds;
-
-        remaining.sort((idA, idB) => {
-            const itemA = validRevisionPool.find(v => v.id === idA);
-            const itemB = validRevisionPool.find(v => v.id === idB);
-            const confDiff = getWordConfidence(itemA) - getWordConfidence(itemB);
-            if (confDiff !== 0) return confDiff;
-            return Number(idA) - Number(idB);
-        });
-
-        while (remaining.length > 0 && asked.has(remaining[0])) {
-            remaining.shift();
+        if (forceReset) {
+            session.sig = sig;
+            session.asked = new Set();
+            session.remainingIds = [...pool].sort(compareByConfidence).map(v => v.id);
+            return;
         }
 
+        if (session.sig === sig) return;
+
+        session.sig = sig;
+        const asked = session.asked instanceof Set ? session.asked : new Set();
+        session.asked = asked;
+        session.remainingIds = pool
+            .map(v => v.id)
+            .filter(id => !asked.has(id));
+    };
+
+    const startNextRevisionQuestion = (overrideMode) => {
+        initRevisionSessionIfNeeded();
+
+        const pool = revisionPoolRef.current || [];
+        const asked = revisionSessionRef.current.asked;
+        const currentId = revisionQuestionRef.current?.id;
+        if (currentId !== undefined && currentId !== null) {
+            asked.add(currentId);
+        }
+
+        let remaining = (revisionSessionRef.current.remainingIds || [])
+            .filter(id => !asked.has(id) && id !== currentId);
+
+        remaining.sort((idA, idB) => {
+            const itemA = pool.find(v => v.id === idA);
+            const itemB = pool.find(v => v.id === idB);
+            return compareByConfidence(itemA, itemB);
+        });
+
         const nextId = remaining.shift();
+        revisionSessionRef.current.remainingIds = remaining;
+
         if (nextId === undefined || nextId === null) {
-            revisionPickInFlightRef.current = false;
+            setIsQuestionLoading(false);
             setRevisionQuestion(null);
             setRevisionLocked(false);
+            revisionPickInFlightRef.current = false;
             return;
         }
 
         asked.add(nextId);
-        const item = validRevisionPool.find(v => v.id === nextId);
+        const item = pool.find(v => v.id === nextId);
         if (!item) {
-            revisionPickInFlightRef.current = false;
-            setRevisionLocked(false);
             startNextRevisionQuestion(overrideMode);
             return;
         }
-        const modeToUse = overrideMode || revisionMode;
 
-        setIsQuestionLoading(true);
-        setRevisionLocked(true);
-
-        try {
-            const res = await fetch(`${BACKEND_URL}/api/generate-vocab-question`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    word: item.word,
-                    kanji: item.kanji,
-                    meaning: item.meaning,
-                    level: item.level,
-                    mode: modeToUse,
-                }),
-            });
-
-            if (!res.ok) throw new Error(`Backend error: ${res.status}`);
-            const data = await res.json();
-
-            setRevisionQuestion({
-                id: nextId,
-                mode: modeToUse,
-                word: data.word,
-                kanji: data.kanji,
-                meaning: data.meaning ?? item.meaning,
-                correctAnswer: data.correctAnswer,
-                options: data.options,
-            });
-        } catch (err) {
-            console.error('Failed to fetch question from backend:', err);
-            setRevisionQuestion({ error: err.message });
-        } finally {
-            revisionPickInFlightRef.current = false;
-            setIsQuestionLoading(false);
-            setRevisionLocked(false);
-        }
+        const modeToUse = overrideMode || revisionModeRef.current;
+        const question = buildRevisionQuestionForItem(item, modeToUse, pool);
+        revisionQuestionRef.current = question;
+        setRevisionQuestion(question);
+        setIsQuestionLoading(false);
+        setRevisionLocked(false);
+        revisionPickInFlightRef.current = false;
     };
 
     const flipRevisionMode = () => {
         const nextMode = revisionMode === 'jp_to_en' ? 'en_to_jp' : 'jp_to_en';
         setRevisionMode(nextMode);
+        const current = revisionQuestion;
+        if (current && !current.error) {
+            const item = validRevisionPool.find(v => v.id === current.id)
+                || validRevisionPool.find(v => vocabIdentityKey(v) === vocabIdentityKey(current));
+            if (item) {
+                setRevisionQuestion(buildRevisionQuestionForItem(item, nextMode, validRevisionPool));
+                setRevisionLocked(false);
+                return;
+            }
+        }
         setRevisionLocked(false);
-        setRevisionQuestion(null);
-        // fetch a fresh question in the new mode
-        setTimeout(() => startNextRevisionQuestion(nextMode), 0);
+        startNextRevisionQuestion(nextMode);
     };
 
     useEffect(() => {
@@ -409,7 +402,7 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
         revisionAutoStartedRef.current = true;
         initRevisionSessionIfNeeded(true);
         startNextRevisionQuestion();
-    }, [isRevisionMode, validRevisionPool]);
+    }, [isRevisionMode, validRevisionPool.length]);
 
 
     const normalize = (str) => str.trim().normalize("NFKC");
@@ -1091,6 +1084,7 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
                                 revisionSessionRef.current = { sig: '', remainingIds: [], asked: new Set() };
                                 revisionAutoStartedRef.current = false;
                                 revisionPickInFlightRef.current = false;
+                                revisionQuestionRef.current = null;
                             }}
                         >
                             {isRevisionMode ? '← Back to Vocab List' : '📖 Vocab Revision Session'}
@@ -1235,7 +1229,7 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
                             ) : isQuestionLoading ? (
                                 <div className="RevisionCard RevisionCardLoading">
                                     <div className="RevisionSpinner"></div>
-                                    <p className="RevisionLoadingText">Fetching question from Weaviate...</p>
+                                    <p className="RevisionLoadingText">Preparing your next question...</p>
                                 </div>
                             ) : revisionQuestion?.error ? (
                                 <div className="RevisionCard">
@@ -1261,7 +1255,7 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
                                     </button>
                                 </div>
                             ) : (
-                                <div className="RevisionCard">
+                                <div className="RevisionCard" key={revisionQuestion.id}>
                                     <div className="RevisionPrompt">
                                         {revisionQuestion?.mode === 'en_to_jp' ? (
                                             <div className="RevisionKana" style={{ width: '100%' }}>
@@ -1288,12 +1282,9 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
                                                     const isCorrect = revisionQuestion.mode === 'en_to_jp'
                                                         ? (opt.includes(revisionQuestion.word) || (revisionQuestion.kanji && opt.includes(revisionQuestion.kanji)) || String(opt).trim().toLowerCase() === String(revisionQuestion.correctAnswer).trim().toLowerCase())
                                                         : String(opt).trim().toLowerCase() === String(revisionQuestion.correctAnswer).trim().toLowerCase();
-                                                    updateWordConfidence(
-                                                        revisionQuestion.id,
-                                                        revisionQuestion.word,
-                                                        revisionQuestion.meaning,
-                                                        isCorrect
-                                                    );
+
+                                                    revisionQuestionRef.current = revisionQuestion;
+                                                    revisionSessionRef.current.asked.add(revisionQuestion.id);
 
                                                     if (isCorrect) {
                                                         setCorrectCount(c => c + 1);
@@ -1312,9 +1303,13 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
                                                         ]));
                                                     }
 
-                                                    window.setTimeout(() => {
-                                                        startNextRevisionQuestion();
-                                                    }, 450);
+                                                    startNextRevisionQuestion();
+                                                    updateWordConfidence(
+                                                        revisionQuestion.id,
+                                                        revisionQuestion.word,
+                                                        revisionQuestion.meaning,
+                                                        isCorrect
+                                                    );
                                                 }}
                                             >
                                                 {opt}
