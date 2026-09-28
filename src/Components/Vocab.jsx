@@ -20,6 +20,7 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
     const [wrongAnswers, setWrongAnswers] = useState([]); // { prompt, correctAnswer, chosenAnswer, mode, word, kanji, meaning }
     const [revisionMode, setRevisionMode] = useState('jp_to_en'); // 'jp_to_en' | 'en_to_jp'
     const [isQuestionLoading, setIsQuestionLoading] = useState(false);
+    const [listLevelFilter, setListLevelFilter] = useState('ALL'); // 'ALL' | 'N5' | 'N4' | 'N3'
     const revisionSessionRef = useRef({ sig: '', remainingIds: [], asked: new Set() });
     const revisionAutoStartedRef = useRef(false);
     const revisionPickInFlightRef = useRef(false);
@@ -187,6 +188,15 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
             .filter(w => w.word && w.meaning);
     }, [uploadedWord]);
 
+    const filteredWords = useMemo(() => {
+        if (!uploadedWord) return [];
+        if (listLevelFilter === 'ALL') return uploadedWord;
+        return uploadedWord.filter(w => {
+            const itemLvl = (w.level || selectedLevel || 'N5').toUpperCase();
+            return itemLvl === listLevelFilter.toUpperCase();
+        });
+    }, [uploadedWord, listLevelFilter, selectedLevel]);
+
     revisionPoolRef.current = validRevisionPool;
     revisionQuestionRef.current = revisionQuestion;
     revisionModeRef.current = revisionMode;
@@ -323,7 +333,8 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
         session.sig = sig;
         const asked = session.asked instanceof Set ? session.asked : new Set();
         session.asked = asked;
-        session.remainingIds = pool
+        const sortedPool = [...pool].sort(compareByConfidence);
+        session.remainingIds = sortedPool
             .map(v => v.id)
             .filter(id => !asked.has(id));
     };
@@ -1122,52 +1133,84 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
 
                 {!isRevisionMode && (
                     <div className="WordsSectionCard">
-                        <div className="SectionCardHeader" style={{ justifyContent: 'space-between', width: '100%' }}>
+                        <div className="SectionCardHeader" style={{ justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 <span className="SectionCardIcon">📚</span>
-                                <h3>{uploadedWord.length > 0 ? uploadedWord.length : wordCount} Words Learned</h3>
+                                <h3>{filteredWords.length} Words Learned {listLevelFilter !== 'ALL' && `(${listLevelFilter})`}</h3>
                             </div>
-                            <div className="ConfidenceScoreBadge">
-                                🎯 Confidence: <strong>{overallConfidence}%</strong>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                                <div className="LevelFilterBar" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    <span style={{ fontSize: '12px', fontWeight: 700, color: '#555', marginRight: '4px' }}>Filter:</span>
+                                    {['ALL', 'N5', 'N4', 'N3'].map(lvl => (
+                                        <button
+                                            key={lvl}
+                                            className={`LevelFilterChip ${listLevelFilter === lvl ? 'active' : ''}`}
+                                            onClick={() => setListLevelFilter(lvl)}
+                                            style={{
+                                                padding: '4px 10px',
+                                                borderRadius: '14px',
+                                                border: listLevelFilter === lvl ? '1.5px solid #111111' : '1px solid #d1d5db',
+                                                backgroundColor: listLevelFilter === lvl ? '#111111' : '#ffffff',
+                                                color: listLevelFilter === lvl ? '#ffffff' : '#333333',
+                                                fontWeight: 700,
+                                                fontSize: '12px',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.2s ease'
+                                            }}
+                                        >
+                                            {lvl}
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="ConfidenceScoreBadge">
+                                    🎯 Confidence: <strong>{overallConfidence}%</strong>
+                                </div>
                             </div>
                         </div>
-                        <ul className="WordsGridList">
-                            {[...uploadedWord]
-                                .sort((a, b) => getWordConfidence(a) - getWordConfidence(b))
-                                .map((w, index) => {
-                                const itemConfidence = getWordConfidence(w);
-                                return (
-                                    <li key={`${w.word}-${w.kanji}-${index}`} className="WordCardItem">
-                                        <div className="WordCardConfidenceBar" style={{ width: `${itemConfidence}%` }} />
-                                        <div className="WordCardHeader">
-                                            <div className="WordCardJapanese">
-                                                <span className="WordCardMain">{w.word}</span>
-                                                {w.kanji && <span className="WordCardKanji">({w.kanji})</span>}
+
+                        {filteredWords.length === 0 ? (
+                            <div style={{ padding: '30px', textAlign: 'center', color: '#666', fontSize: '14px' }}>
+                                No {listLevelFilter} vocabulary words found in your account.
+                            </div>
+                        ) : (
+                            <ul className="WordsGridList">
+                                {[...filteredWords]
+                                    .sort((a, b) => getWordConfidence(a) - getWordConfidence(b))
+                                    .map((w, index) => {
+                                    const itemConfidence = getWordConfidence(w);
+                                    return (
+                                        <li key={`${w.word}-${w.kanji}-${index}`} className="WordCardItem">
+                                            <div className="WordCardConfidenceBar" style={{ width: `${itemConfidence}%` }} />
+                                            <div className="WordCardHeader">
+                                                <div className="WordCardJapanese">
+                                                    <span className="WordCardMain">{w.word}</span>
+                                                    {w.kanji && <span className="WordCardKanji">({w.kanji})</span>}
+                                                </div>
+                                                <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                                                    <span className="WordCardLevelBadge">{w.level || selectedLevel || 'N5'}</span>
+                                                    <span className="WordCardConfidenceTag">{itemConfidence}%</span>
+                                                </div>
                                             </div>
-                                            <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-                                                <span className="WordCardLevelBadge">{w.level || selectedLevel || 'N5'}</span>
-                                                <span className="WordCardConfidenceTag">{itemConfidence}%</span>
-                                            </div>
-                                        </div>
-                                        <div className="WordCardMeaning">{w.meaning}</div>
-                                    </li>
-                                );
-                            })}
-                            <li className="WordCardItem">
-                                <div className="WordCardConfidenceBar" style={{ width: '100%' }} />
-                                <div className="WordCardJapanese">
-                                    <span className="WordCardMain">ようこそ</span>
-                                </div>
-                                <div className="WordCardMeaning">Welcome</div>
-                            </li>
-                            <li className="WordCardItem">
-                                <div className="WordCardConfidenceBar" style={{ width: '100%' }} />
-                                <div className="WordCardJapanese">
-                                    <span className="WordCardMain">ありがとうございます</span>
-                                </div>
-                                <div className="WordCardMeaning">Thank you very much</div>
-                            </li>
-                        </ul>
+                                            <div className="WordCardMeaning">{w.meaning}</div>
+                                        </li>
+                                    );
+                                })}
+                                <li className="WordCardItem">
+                                    <div className="WordCardConfidenceBar" style={{ width: '100%' }} />
+                                    <div className="WordCardJapanese">
+                                        <span className="WordCardMain">ようこそ</span>
+                                    </div>
+                                    <div className="WordCardMeaning">Welcome</div>
+                                </li>
+                                <li className="WordCardItem">
+                                    <div className="WordCardConfidenceBar" style={{ width: '100%' }} />
+                                    <div className="WordCardJapanese">
+                                        <span className="WordCardMain">ありがとうございます</span>
+                                    </div>
+                                    <div className="WordCardMeaning">Thank you very much</div>
+                                </li>
+                            </ul>
+                        )}
                     </div>
                 )}
 
