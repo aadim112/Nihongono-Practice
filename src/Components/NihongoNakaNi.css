@@ -1,0 +1,426 @@
+/* ─────────────────────────────────────────────────────────────
+   NihongoNakaNi.css — Daily translation practice, matches site
+   ───────────────────────────────────────────────────────────── */
+
+.nnk-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Banner ──────────────────────────────────────────────────── */
+.nnk-banner {
+  width: 100%;
+  padding: 24px 20px;
+  border-radius: var(--radius-md);
+  background-color: #111111;
+  border-bottom: 3px solid var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.nnk-banner__jp {
+  font-family: var(--font-jp-heading);
+  font-size: clamp(26px, 5vw, 36px);
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.nnk-banner__en {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: #aaaaaa;
+  margin: 4px 0 0;
+}
+
+/* ── Date row ────────────────────────────────────────────────── */
+.nnk-date-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.nnk-date-chip {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555555;
+  background: #f3f4f6;
+  border: 1.5px solid #e5e7eb;
+  border-radius: var(--radius-pill);
+  padding: 5px 14px;
+}
+
+.nnk-cache-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.nnk-cache-badge--cached {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1.5px solid #bbf7d0;
+}
+
+.nnk-cache-badge--new {
+  background: #fef2f2;
+  color: var(--color-primary);
+  border: 1.5px solid #fecaca;
+}
+
+.nnk-refresh-btn {
+  margin-left: auto;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  background: #ffffff;
+  color: #333333;
+  border: 1.5px solid #e5e7eb;
+  border-radius: var(--radius-pill);
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.nnk-refresh-btn:hover:not(:disabled) {
+  border-color: #111111;
+  background: #f8f9fa;
+  color: var(--color-primary);
+}
+
+.nnk-refresh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Card base ───────────────────────────────────────────────── */
+.nnk-card {
+  background: #ffffff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.nnk-card--error {
+  border-color: var(--color-primary);
+  background: #fef2f2;
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.nnk-loading-card {
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #555555;
+  font-size: 14px;
+  gap: 14px;
+  text-align: center;
+}
+
+/* ── Card label row ──────────────────────────────────────────── */
+.nnk-card__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #555555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nnk-label-icon {
+  font-size: 16px;
+}
+
+.nnk-level-tag {
+  margin-left: auto;
+  background: #111111;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.nnk-char-count {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 500;
+  color: #888888;
+  text-transform: none;
+}
+
+/* ── English passage ─────────────────────────────────────────── */
+.nnk-passage-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nnk-passage-p {
+  font-size: 16px;
+  line-height: 1.85;
+  color: #111111;
+  margin: 0;
+  font-family: var(--font-sans);
+}
+
+/* ── Grammar & Vocab hints accordion ─────────────────────────── */
+.nnk-hints-header-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.nnk-hints-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+  padding: 4px 0;
+  text-align: left;
+}
+
+.nnk-hints-toggle:hover {
+  color: var(--color-primary);
+}
+
+.nnk-chevron {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+  color: #888888;
+}
+
+.nnk-chevron--open {
+  transform: rotate(180deg);
+}
+
+.nnk-hints-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.nnk-hint-chip {
+  display: flex;
+  flex-direction: column;
+  background: #f8f9fa;
+  border: 1.5px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  gap: 2px;
+  min-width: 140px;
+  max-width: 240px;
+}
+
+.nnk-hint-chip--vocab {
+  background: #fffdf5;
+  border-color: #fef08a;
+}
+
+.nnk-hint-pattern {
+  font-family: var(--font-jp-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.nnk-hint-reading {
+  font-size: 12px;
+  color: #666666;
+  font-weight: 400;
+}
+
+.nnk-hint-meaning {
+  font-size: 11px;
+  color: #666666;
+  line-height: 1.4;
+}
+
+/* ── Textarea ────────────────────────────────────────────────── */
+.nnk-textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 180px;
+  font-family: var(--font-jp-heading);
+  font-size: 16px;
+  line-height: 1.85;
+  color: #111111;
+  background: #f8f9fa;
+  border: 1.5px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  outline: none;
+  transition: border-color 0.15s, background-color 0.15s;
+  box-sizing: border-box;
+}
+
+.nnk-textarea:focus {
+  border-color: #111111;
+  background: #ffffff;
+}
+
+.nnk-textarea::placeholder {
+  color: #aaaaaa;
+}
+
+/* ── Action row ──────────────────────────────────────────────── */
+.nnk-action-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.nnk-action-card {
+  background: #f8f9fa;
+}
+
+.nnk-self-assess-label {
+  font-size: 13px;
+  color: #555555;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Side-by-side comparison ─────────────────────────────────── */
+.nnk-compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .nnk-compare-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.nnk-compare-card {
+  border-radius: var(--radius-md);
+}
+
+.nnk-compare-card--user {
+  border-color: #d1d5db;
+}
+
+.nnk-compare-card--ref {
+  border-color: #16a34a;
+  background: #f0fdf4;
+}
+
+.nnk-compare-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nnk-compare-p {
+  font-family: var(--font-jp-heading);
+  font-size: 15px;
+  line-height: 1.9;
+  color: #111111;
+  margin: 0;
+}
+
+.nnk-ref-p {
+  color: #14532d;
+}
+
+/* ── Chips for used grammar & vocab ───────────────────────────── */
+.nnk-used-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nnk-used-chip {
+  font-family: var(--font-jp-heading);
+  font-size: 13px;
+  background: #111111;
+  color: #ffffff;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.nnk-used-chip--vocab {
+  background: #f3f4f6;
+  color: #1f2937;
+  border: 1px solid #d1d5db;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────── */
+.nnk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.nnk-btn--primary {
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+}
+
+.nnk-btn--primary:hover:not(:disabled) {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.nnk-btn--primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.nnk-btn--ghost {
+  background: transparent;
+  color: #333333;
+  border-color: #e5e7eb;
+}
+
+.nnk-btn--ghost:hover {
+  border-color: #111111;
+  background: #f8f9fa;
+}
+
+/* ── Spinner ─────────────────────────────────────────────────── */
+.nnk-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #111111;
+  border-radius: 50%;
+  animation: nnk-spin 0.7s linear infinite;
+}
+
+@keyframes nnk-spin {
+  to { transform: rotate(360deg); }
+}

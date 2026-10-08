@@ -3,8 +3,11 @@ import './App.css';
 import ConsistencyGraph from './Components/ConsistencyGraph';
 import banner1 from './Assets/banner1.jpg';
 import banner2 from './Assets/banner2.jpg';
+import listeningBanner from './Assets/listening.png';
 import VocabSection from './Components/Vocab';
 import GrammerSection from './Components/GrammerSection';
+import ListeningSection from './Components/ListeningSection';
+import NihongoNakaNi from './Components/NihongoNakaNi';
 import db from './Components/firebase';
 import { get, ref } from 'firebase/database';
 
@@ -37,7 +40,7 @@ function App() {
     fetchConsistency();
   }, [user]);
 
-  const [activeTab, setActiveTab] = useState(1); // 1: Vocab, 2: Grammar
+  const [activeTab, setActiveTab] = useState(1); // 1: Vocab, 2: Grammar, 3: Listening
 
   return (
     <div className="AppContainer">
@@ -112,6 +115,32 @@ function App() {
             </div>
           </button>
 
+          <button
+            className={`NavTabBtn ${activeTab === 3 ? 'active' : ''}`}
+            onClick={() => setActiveTab(3)}
+          >
+            <div className="NavBtnImageWrap">
+              <img alt="Listening" src={listeningBanner} />
+            </div>
+            <div className="NavBtnLabel">
+              <span className="NavBtnMain">Listening</span>
+              <span className="NavBtnSub">聴解</span>
+            </div>
+          </button>
+
+          <button
+            className={`NavTabBtn ${activeTab === 4 ? 'active' : ''}`}
+            onClick={() => setActiveTab(4)}
+          >
+            <div className="NavBtnImageWrap" style={{ background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>
+              ✍️
+            </div>
+            <div className="NavBtnLabel">
+              <span className="NavBtnMain">Translate</span>
+              <span className="NavBtnSub">日本語の中に</span>
+            </div>
+          </button>
+
           {/* GitHub-style Consistency Heatmap inside Sidebar */}
           <div className="SidebarConsistencyWrapper">
             <ConsistencyGraph activityData={ConsistentDays} user={user} />
@@ -143,6 +172,20 @@ function App() {
                 selectedLevel={selectedLevel}
               />
             )}
+            {activeTab === 3 && (
+              <ListeningSection
+                key={`${user}-${selectedLevel}`}
+                user={user}
+                selectedLevel={selectedLevel}
+              />
+            )}
+            {activeTab === 4 && (
+              <NihongoNakaNi
+                key={`${user}-${selectedLevel}`}
+                user={user}
+                selectedLevel={selectedLevel}
+              />
+            )}
           </div>
         </section>
       </main>
@@ -164,9 +207,26 @@ function App() {
           <span className="BottomNavIcon">⛩️</span>
           <span className="BottomNavText">Grammar | 文法</span>
         </button>
+
+        <button
+          className={`BottomNavTab ${activeTab === 3 ? 'active' : ''}`}
+          onClick={() => setActiveTab(3)}
+        >
+          <span className="BottomNavIcon">🎧</span>
+          <span className="BottomNavText">Listening | 聴解</span>
+        </button>
+
+        <button
+          className={`BottomNavTab ${activeTab === 4 ? 'active' : ''}`}
+          onClick={() => setActiveTab(4)}
+        >
+          <span className="BottomNavIcon">✍️</span>
+          <span className="BottomNavText">Translate</span>
+        </button>
       </nav>
     </div>
   );
 }
 
 export default App;
+
