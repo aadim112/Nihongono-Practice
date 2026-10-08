@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./NihongoNakaNi.css";
 
-const API = "http://localhost:5000";
+const API = "https://nihongono-practice.onrender.com";
 
 export default function NihongoNakaNi({ user, selectedLevel }) {
   const [passage, setPassage] = useState(null);
