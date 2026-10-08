@@ -1,17 +1,18 @@
 {
   "files": {
-    "main.css": "/Nihongono-Practice/static/css/main.b04796c0.css",
-    "main.js": "/Nihongono-Practice/static/js/main.a6b0c29d.js",
+    "main.css": "/Nihongono-Practice/static/css/main.d760a738.css",
+    "main.js": "/Nihongono-Practice/static/js/main.44fb000a.js",
     "static/js/453.31eb9d1a.chunk.js": "/Nihongono-Practice/static/js/453.31eb9d1a.chunk.js",
     "static/media/banner2.jpg": "/Nihongono-Practice/static/media/banner2.1494426ed3175eabba7b.jpg",
     "static/media/banner1.jpg": "/Nihongono-Practice/static/media/banner1.1241207fa1d95d47ea5c.jpg",
+    "static/media/listening.png": "/Nihongono-Practice/static/media/listening.2bdd777bc6a93408032a.png",
     "index.html": "/Nihongono-Practice/index.html",
-    "main.b04796c0.css.map": "/Nihongono-Practice/static/css/main.b04796c0.css.map",
-    "main.a6b0c29d.js.map": "/Nihongono-Practice/static/js/main.a6b0c29d.js.map",
+    "main.d760a738.css.map": "/Nihongono-Practice/static/css/main.d760a738.css.map",
+    "main.44fb000a.js.map": "/Nihongono-Practice/static/js/main.44fb000a.js.map",
     "453.31eb9d1a.chunk.js.map": "/Nihongono-Practice/static/js/453.31eb9d1a.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b04796c0.css",
-    "static/js/main.a6b0c29d.js"
+    "static/css/main.d760a738.css",
+    "static/js/main.44fb000a.js"
   ]
 }
