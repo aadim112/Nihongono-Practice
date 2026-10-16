@@ -3,8 +3,10 @@ import './App.css';
 import ConsistencyGraph from './Components/ConsistencyGraph';
 import banner1 from './Assets/banner1.jpg';
 import banner2 from './Assets/banner2.jpg';
+import banner3 from './Assets/banner3.jpg';
 import listeningBanner from './Assets/listening.png';
 import VocabSection from './Components/Vocab';
+import Kanji from './Components/Kanji';
 import GrammerSection from './Components/GrammerSection';
 import ListeningSection from './Components/ListeningSection';
 import NihongoNakaNi from './Components/NihongoNakaNi';
@@ -103,6 +105,19 @@ function App() {
           </button>
 
           <button
+            className={`NavTabBtn ${activeTab === 5 ? 'active' : ''}`}
+            onClick={() => setActiveTab(5)}
+          >
+            <div className="NavBtnImageWrap">
+              <img alt="Kanji" src={banner3} />
+            </div>
+            <div className="NavBtnLabel">
+              <span className="NavBtnMain">Kanji</span>
+              <span className="NavBtnSub">漢字</span>
+            </div>
+          </button>
+
+          <button
             className={`NavTabBtn ${activeTab === 2 ? 'active' : ''}`}
             onClick={() => setActiveTab(2)}
           >
@@ -186,6 +201,13 @@ function App() {
                 selectedLevel={selectedLevel}
               />
             )}
+            {activeTab === 5 && (
+              <Kanji
+                key={`${user}-${selectedLevel}`}
+                user={user}
+                selectedLevel={selectedLevel}
+              />
+            )}
           </div>
         </section>
       </main>
@@ -197,7 +219,15 @@ function App() {
           onClick={() => setActiveTab(1)}
         >
           <span className="BottomNavIcon">📖</span>
-          <span className="BottomNavText">Vocab | 語彙</span>
+          <span className="BottomNavText">Vocab</span>
+        </button>
+
+        <button
+          className={`BottomNavTab ${activeTab === 5 ? 'active' : ''}`}
+          onClick={() => setActiveTab(5)}
+        >
+          <span className="BottomNavIcon">🈸</span>
+          <span className="BottomNavText">Kanji</span>
         </button>
 
         <button
@@ -205,7 +235,7 @@ function App() {
           onClick={() => setActiveTab(2)}
         >
           <span className="BottomNavIcon">⛩️</span>
-          <span className="BottomNavText">Grammar | 文法</span>
+          <span className="BottomNavText">Grammar</span>
         </button>
 
         <button
@@ -213,7 +243,7 @@ function App() {
           onClick={() => setActiveTab(3)}
         >
           <span className="BottomNavIcon">🎧</span>
-          <span className="BottomNavText">Listening | 聴解</span>
+          <span className="BottomNavText">Listening</span>
         </button>
 
         <button

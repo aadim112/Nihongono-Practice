@@ -1,0 +1,2104 @@
+{
+  "N5": [
+    {
+      "character": "一",
+      "meaning": "one",
+      "onyomi": "イチ, イツ",
+      "kunyomi": "ひと, ひとつ",
+      "strokes": 1,
+      "level": "N5"
+    },
+    {
+      "character": "二",
+      "meaning": "two",
+      "onyomi": "ニ",
+      "kunyomi": "ふた, ふたつ",
+      "strokes": 2,
+      "level": "N5"
+    },
+    {
+      "character": "三",
+      "meaning": "three",
+      "onyomi": "サン",
+      "kunyomi": "み, みっつ",
+      "strokes": 3,
+      "level": "N5"
+    },
+    {
+      "character": "四",
+      "meaning": "four",
+      "onyomi": "シ",
+      "kunyomi": "よ, よっつ, よん",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "五",
+      "meaning": "five",
+      "onyomi": "ゴ",
+      "kunyomi": "いつ, いつつ",
+      "strokes": 5,
+      "level": "N5"
+    },
+    {
+      "character": "六",
+      "meaning": "six",
+      "onyomi": "ロク",
+      "kunyomi": "む, むっつ",
+      "strokes": 6,
+      "level": "N5"
+    },
+    {
+      "character": "七",
+      "meaning": "seven",
+      "onyomi": "シチ",
+      "kunyomi": "なな, ななつ",
+      "strokes": 2,
+      "level": "N5"
+    },
+    {
+      "character": "八",
+      "meaning": "eight",
+      "onyomi": "ハチ",
+      "kunyomi": "や, やっつ",
+      "strokes": 2,
+      "level": "N5"
+    },
+    {
+      "character": "九",
+      "meaning": "nine",
+      "onyomi": "キュウ, ク",
+      "kunyomi": "ここの, ここのつ",
+      "strokes": 2,
+      "level": "N5"
+    },
+    {
+      "character": "十",
+      "meaning": "ten",
+      "onyomi": "ジュウ",
+      "kunyomi": "とお, と",
+      "strokes": 2,
+      "level": "N5"
+    },
+    {
+      "character": "百",
+      "meaning": "hundred",
+      "onyomi": "ヒャク",
+      "kunyomi": "もも",
+      "strokes": 6,
+      "level": "N5"
+    },
+    {
+      "character": "千",
+      "meaning": "thousand",
+      "onyomi": "セン",
+      "kunyomi": "ち",
+      "strokes": 3,
+      "level": "N5"
+    },
+    {
+      "character": "万",
+      "meaning": "ten thousand",
+      "onyomi": "マン, バン",
+      "kunyomi": "よろず",
+      "strokes": 3,
+      "level": "N5"
+    },
+    {
+      "character": "円",
+      "meaning": "yen, circle, round",
+      "onyomi": "エン",
+      "kunyomi": "まるい",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "人",
+      "meaning": "person, human",
+      "onyomi": "ジン, ニン",
+      "kunyomi": "ひと",
+      "strokes": 2,
+      "level": "N5"
+    },
+    {
+      "character": "男",
+      "meaning": "man, male",
+      "onyomi": "ダン, ナン",
+      "kunyomi": "おとこ",
+      "strokes": 7,
+      "level": "N5"
+    },
+    {
+      "character": "女",
+      "meaning": "woman, female",
+      "onyomi": "ジョ, ニョ",
+      "kunyomi": "おんな, め",
+      "strokes": 3,
+      "level": "N5"
+    },
+    {
+      "character": "子",
+      "meaning": "child",
+      "onyomi": "シ, ス",
+      "kunyomi": "こ",
+      "strokes": 3,
+      "level": "N5"
+    },
+    {
+      "character": "母",
+      "meaning": "mother",
+      "onyomi": "ボ",
+      "kunyomi": "はは",
+      "strokes": 5,
+      "level": "N5"
+    },
+    {
+      "character": "父",
+      "meaning": "father",
+      "onyomi": "フ",
+      "kunyomi": "ちち",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "友",
+      "meaning": "friend",
+      "onyomi": "ユウ",
+      "kunyomi": "とも",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "日",
+      "meaning": "day, sun, Japan",
+      "onyomi": "ニチ, ジツ",
+      "kunyomi": "ひ, -び, -か",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "月",
+      "meaning": "month, moon",
+      "onyomi": "ゲツ, ガツ",
+      "kunyomi": "つき",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "火",
+      "meaning": "fire",
+      "onyomi": "カ",
+      "kunyomi": "ひ",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "水",
+      "meaning": "water",
+      "onyomi": "スイ",
+      "kunyomi": "みず",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "木",
+      "meaning": "tree, wood",
+      "onyomi": "ボク, モク",
+      "kunyomi": "き, こ-",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "金",
+      "meaning": "gold, money, metal",
+      "onyomi": "キン, コン",
+      "kunyomi": "かね",
+      "strokes": 8,
+      "level": "N5"
+    },
+    {
+      "character": "土",
+      "meaning": "earth, soil, ground",
+      "onyomi": "ド, ト",
+      "kunyomi": "つち",
+      "strokes": 3,
+      "level": "N5"
+    },
+    {
+      "character": "年",
+      "meaning": "year",
+      "onyomi": "ネン",
+      "kunyomi": "とし",
+      "strokes": 6,
+      "level": "N5"
+    },
+    {
+      "character": "時",
+      "meaning": "time, hour",
+      "onyomi": "ジ",
+      "kunyomi": "とき",
+      "strokes": 10,
+      "level": "N5"
+    },
+    {
+      "character": "分",
+      "meaning": "minute, part, understand",
+      "onyomi": "ブン, フン, ブ",
+      "kunyomi": "わける, わかる",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "今",
+      "meaning": "now",
+      "onyomi": "コン, キン",
+      "kunyomi": "いま",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "先",
+      "meaning": "before, ahead, previous",
+      "onyomi": "セン",
+      "kunyomi": "さき",
+      "strokes": 6,
+      "level": "N5"
+    },
+    {
+      "character": "毎",
+      "meaning": "every",
+      "onyomi": "マイ",
+      "kunyomi": "ごと",
+      "strokes": 6,
+      "level": "N5"
+    },
+    {
+      "character": "週",
+      "meaning": "week",
+      "onyomi": "シュウ",
+      "kunyomi": "",
+      "strokes": 11,
+      "level": "N5"
+    },
+    {
+      "character": "半",
+      "meaning": "half, middle",
+      "onyomi": "ハン",
+      "kunyomi": "なかば",
+      "strokes": 5,
+      "level": "N5"
+    },
+    {
+      "character": "午",
+      "meaning": "noon",
+      "onyomi": "ゴ",
+      "kunyomi": "うま",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "後",
+      "meaning": "after, behind, later",
+      "onyomi": "ゴ, コウ",
+      "kunyomi": "のち, うしろ, あと",
+      "strokes": 9,
+      "level": "N5"
+    },
+    {
+      "character": "前",
+      "meaning": "before, front, in front of",
+      "onyomi": "ゼン",
+      "kunyomi": "まえ",
+      "strokes": 9,
+      "level": "N5"
+    },
+    {
+      "character": "上",
+      "meaning": "up, above",
+      "onyomi": "ジョウ, ショウ",
+      "kunyomi": "うえ, あがる",
+      "strokes": 3,
+      "level": "N5"
+    },
+    {
+      "character": "下",
+      "meaning": "down, below",
+      "onyomi": "カ, ゲ",
+      "kunyomi": "した, さがる, くだる",
+      "strokes": 3,
+      "level": "N5"
+    },
+    {
+      "character": "中",
+      "meaning": "inside, middle, China",
+      "onyomi": "チュウ",
+      "kunyomi": "なか",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "外",
+      "meaning": "outside",
+      "onyomi": "ガイ, ゲ",
+      "kunyomi": "そと, ほか, はずす",
+      "strokes": 5,
+      "level": "N5"
+    },
+    {
+      "character": "左",
+      "meaning": "left",
+      "onyomi": "サ",
+      "kunyomi": "ひだり",
+      "strokes": 5,
+      "level": "N5"
+    },
+    {
+      "character": "右",
+      "meaning": "right",
+      "onyomi": "ウ, ユウ",
+      "kunyomi": "みぎ",
+      "strokes": 5,
+      "level": "N5"
+    },
+    {
+      "character": "東",
+      "meaning": "east",
+      "onyomi": "トウ",
+      "kunyomi": "ひがし",
+      "strokes": 8,
+      "level": "N5"
+    },
+    {
+      "character": "西",
+      "meaning": "west",
+      "onyomi": "セイ, サイ",
+      "kunyomi": "にし",
+      "strokes": 6,
+      "level": "N5"
+    },
+    {
+      "character": "南",
+      "meaning": "south",
+      "onyomi": "ナン",
+      "kunyomi": "みなみ",
+      "strokes": 9,
+      "level": "N5"
+    },
+    {
+      "character": "北",
+      "meaning": "north",
+      "onyomi": "ホク",
+      "kunyomi": "きた",
+      "strokes": 5,
+      "level": "N5"
+    },
+    {
+      "character": "間",
+      "meaning": "interval, space, between",
+      "onyomi": "カン, ケン",
+      "kunyomi": "あいだ, ま",
+      "strokes": 12,
+      "level": "N5"
+    },
+    {
+      "character": "山",
+      "meaning": "mountain",
+      "onyomi": "サン, セン",
+      "kunyomi": "やま",
+      "strokes": 3,
+      "level": "N5"
+    },
+    {
+      "character": "川",
+      "meaning": "river",
+      "onyomi": "セン",
+      "kunyomi": "かわ",
+      "strokes": 3,
+      "level": "N5"
+    },
+    {
+      "character": "天",
+      "meaning": "sky, heaven",
+      "onyomi": "テン",
+      "kunyomi": "あまつ, あめ",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "気",
+      "meaning": "spirit, mind, energy, air",
+      "onyomi": "キ, ケ",
+      "kunyomi": "いき",
+      "strokes": 6,
+      "level": "N5"
+    },
+    {
+      "character": "雨",
+      "meaning": "rain",
+      "onyomi": "ウ",
+      "kunyomi": "あめ, あま-",
+      "strokes": 8,
+      "level": "N5"
+    },
+    {
+      "character": "空",
+      "meaning": "sky, empty",
+      "onyomi": "クウ",
+      "kunyomi": "そら, から, あく",
+      "strokes": 8,
+      "level": "N5"
+    },
+    {
+      "character": "花",
+      "meaning": "flower",
+      "onyomi": "カ, ケ",
+      "kunyomi": "はな",
+      "strokes": 7,
+      "level": "N5"
+    },
+    {
+      "character": "魚",
+      "meaning": "fish",
+      "onyomi": "ギョ",
+      "kunyomi": "うお, さかな",
+      "strokes": 11,
+      "level": "N5"
+    },
+    {
+      "character": "国",
+      "meaning": "country, nation",
+      "onyomi": "コク",
+      "kunyomi": "くに",
+      "strokes": 8,
+      "level": "N5"
+    },
+    {
+      "character": "道",
+      "meaning": "road, way, path",
+      "onyomi": "ドウ, トウ",
+      "kunyomi": "みち",
+      "strokes": 12,
+      "level": "N5"
+    },
+    {
+      "character": "駅",
+      "meaning": "station",
+      "onyomi": "エキ",
+      "kunyomi": "",
+      "strokes": 14,
+      "level": "N5"
+    },
+    {
+      "character": "店",
+      "meaning": "shop, store",
+      "onyomi": "テン",
+      "kunyomi": "みせ",
+      "strokes": 8,
+      "level": "N5"
+    },
+    {
+      "character": "社",
+      "meaning": "company, society, shrine",
+      "onyomi": "シャ",
+      "kunyomi": "やしろ",
+      "strokes": 7,
+      "level": "N5"
+    },
+    {
+      "character": "校",
+      "meaning": "school, exam",
+      "onyomi": "コウ",
+      "kunyomi": "",
+      "strokes": 10,
+      "level": "N5"
+    },
+    {
+      "character": "口",
+      "meaning": "mouth, entrance",
+      "onyomi": "コウ, ク",
+      "kunyomi": "くち",
+      "strokes": 3,
+      "level": "N5"
+    },
+    {
+      "character": "目",
+      "meaning": "eye, look",
+      "onyomi": "モク, ボク",
+      "kunyomi": "め",
+      "strokes": 5,
+      "level": "N5"
+    },
+    {
+      "character": "耳",
+      "meaning": "ear",
+      "onyomi": "ジ",
+      "kunyomi": "みみ",
+      "strokes": 6,
+      "level": "N5"
+    },
+    {
+      "character": "手",
+      "meaning": "hand",
+      "onyomi": "シュ",
+      "kunyomi": "て",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "足",
+      "meaning": "foot, leg, sufficient",
+      "onyomi": "ソク",
+      "kunyomi": "あし, たす",
+      "strokes": 7,
+      "level": "N5"
+    },
+    {
+      "character": "本",
+      "meaning": "book, origin, main",
+      "onyomi": "ホン",
+      "kunyomi": "もと",
+      "strokes": 5,
+      "level": "N5"
+    },
+    {
+      "character": "名",
+      "meaning": "name, fame",
+      "onyomi": "メイ, ミョウ",
+      "kunyomi": "な",
+      "strokes": 6,
+      "level": "N5"
+    },
+    {
+      "character": "車",
+      "meaning": "car, vehicle, wheel",
+      "onyomi": "シャ",
+      "kunyomi": "くるま",
+      "strokes": 7,
+      "level": "N5"
+    },
+    {
+      "character": "電",
+      "meaning": "electricity",
+      "onyomi": "デン",
+      "kunyomi": "",
+      "strokes": 13,
+      "level": "N5"
+    },
+    {
+      "character": "白",
+      "meaning": "white",
+      "onyomi": "ハク, ビャク",
+      "kunyomi": "しろ, しろい",
+      "strokes": 5,
+      "level": "N5"
+    },
+    {
+      "character": "黒",
+      "meaning": "black",
+      "onyomi": "コク",
+      "kunyomi": "くろ, くろい",
+      "strokes": 11,
+      "level": "N5"
+    },
+    {
+      "character": "何",
+      "meaning": "what",
+      "onyomi": "カ",
+      "kunyomi": "なに, なん",
+      "strokes": 7,
+      "level": "N5"
+    },
+    {
+      "character": "大",
+      "meaning": "big, large",
+      "onyomi": "ダイ, タイ",
+      "kunyomi": "おお, おおきい",
+      "strokes": 3,
+      "level": "N5"
+    },
+    {
+      "character": "小",
+      "meaning": "small, little",
+      "onyomi": "ショウ",
+      "kunyomi": "ちいさい, こ-, お-",
+      "strokes": 3,
+      "level": "N5"
+    },
+    {
+      "character": "高",
+      "meaning": "tall, high, expensive",
+      "onyomi": "コウ",
+      "kunyomi": "たかい",
+      "strokes": 10,
+      "level": "N5"
+    },
+    {
+      "character": "安",
+      "meaning": "cheap, peaceful, safe",
+      "onyomi": "アン",
+      "kunyomi": "やすい",
+      "strokes": 6,
+      "level": "N5"
+    },
+    {
+      "character": "新",
+      "meaning": "new",
+      "onyomi": "シン",
+      "kunyomi": "あたらしい, あらた",
+      "strokes": 13,
+      "level": "N5"
+    },
+    {
+      "character": "古",
+      "meaning": "old",
+      "onyomi": "コ",
+      "kunyomi": "ふるい",
+      "strokes": 5,
+      "level": "N5"
+    },
+    {
+      "character": "長",
+      "meaning": "long, leader",
+      "onyomi": "チョウ",
+      "kunyomi": "ながい",
+      "strokes": 8,
+      "level": "N5"
+    },
+    {
+      "character": "多",
+      "meaning": "many, much",
+      "onyomi": "タ",
+      "kunyomi": "おおい",
+      "strokes": 6,
+      "level": "N5"
+    },
+    {
+      "character": "少",
+      "meaning": "few, little",
+      "onyomi": "ショウ",
+      "kunyomi": "すくない, すこし",
+      "strokes": 4,
+      "level": "N5"
+    },
+    {
+      "character": "行",
+      "meaning": "go, conduct, line",
+      "onyomi": "コウ, ギョウ, アン",
+      "kunyomi": "いく, ゆく, おこなう",
+      "strokes": 6,
+      "level": "N5"
+    },
+    {
+      "character": "来",
+      "meaning": "come, next",
+      "onyomi": "ライ",
+      "kunyomi": "くる, きたる",
+      "strokes": 7,
+      "level": "N5"
+    },
+    {
+      "character": "見",
+      "meaning": "see, look, visible",
+      "onyomi": "ケン",
+      "kunyomi": "みる, みえる, みせる",
+      "strokes": 7,
+      "level": "N5"
+    },
+    {
+      "character": "食",
+      "meaning": "eat, food",
+      "onyomi": "ショク, ジキ",
+      "kunyomi": "たべる, くらう",
+      "strokes": 9,
+      "level": "N5"
+    },
+    {
+      "character": "飲",
+      "meaning": "drink",
+      "onyomi": "イン",
+      "kunyomi": "のむ",
+      "strokes": 12,
+      "level": "N5"
+    },
+    {
+      "character": "会",
+      "meaning": "meet, society, association",
+      "onyomi": "カイ, エ",
+      "kunyomi": "あう",
+      "strokes": 6,
+      "level": "N5"
+    },
+    {
+      "character": "話",
+      "meaning": "speak, talk, conversation",
+      "onyomi": "ワ",
+      "kunyomi": "はなす, はなし",
+      "strokes": 13,
+      "level": "N5"
+    },
+    {
+      "character": "聞",
+      "meaning": "hear, listen, ask",
+      "onyomi": "ブン, モン",
+      "kunyomi": "きく, きこえる",
+      "strokes": 14,
+      "level": "N5"
+    },
+    {
+      "character": "読",
+      "meaning": "read",
+      "onyomi": "ドク, トク",
+      "kunyomi": "よむ",
+      "strokes": 14,
+      "level": "N5"
+    },
+    {
+      "character": "書",
+      "meaning": "write, document",
+      "onyomi": "ショ",
+      "kunyomi": "かく",
+      "strokes": 10,
+      "level": "N5"
+    },
+    {
+      "character": "買",
+      "meaning": "buy",
+      "onyomi": "バイ",
+      "kunyomi": "かう",
+      "strokes": 12,
+      "level": "N5"
+    },
+    {
+      "character": "休",
+      "meaning": "rest, vacation",
+      "onyomi": "キュウ",
+      "kunyomi": "やすむ",
+      "strokes": 6,
+      "level": "N5"
+    },
+    {
+      "character": "学",
+      "meaning": "study, learn, science",
+      "onyomi": "ガク",
+      "kunyomi": "まなぶ",
+      "strokes": 8,
+      "level": "N5"
+    },
+    {
+      "character": "生",
+      "meaning": "life, birth, live, student",
+      "onyomi": "セイ, ショウ",
+      "kunyomi": "いきる, うまれる, なま",
+      "strokes": 5,
+      "level": "N5"
+    },
+    {
+      "character": "出",
+      "meaning": "exit, leave, take out",
+      "onyomi": "シュツ, スイ",
+      "kunyomi": "でる, だす",
+      "strokes": 5,
+      "level": "N5"
+    },
+    {
+      "character": "入",
+      "meaning": "enter, insert",
+      "onyomi": "ニュウ",
+      "kunyomi": "いる, はいる, いれる",
+      "strokes": 2,
+      "level": "N5"
+    },
+    {
+      "character": "立",
+      "meaning": "stand, establish",
+      "onyomi": "リツ, リュウ",
+      "kunyomi": "たつ, たてる",
+      "strokes": 5,
+      "level": "N5"
+    },
+    {
+      "character": "座",
+      "meaning": "sit, seat",
+      "onyomi": "ザ",
+      "kunyomi": "すわる",
+      "strokes": 10,
+      "level": "N5"
+    },
+    {
+      "character": "歩",
+      "meaning": "walk, step",
+      "onyomi": "ホ, ブ",
+      "kunyomi": "あるく, あゆむ",
+      "strokes": 8,
+      "level": "N5"
+    },
+    {
+      "character": "言",
+      "meaning": "say, word",
+      "onyomi": "ゲン, ゴン",
+      "kunyomi": "いう, こと",
+      "strokes": 7,
+      "level": "N5"
+    },
+    {
+      "character": "作",
+      "meaning": "make, produce",
+      "onyomi": "サク, サ",
+      "kunyomi": "つくる",
+      "strokes": 7,
+      "level": "N5"
+    },
+    {
+      "character": "使",
+      "meaning": "use, messenger",
+      "onyomi": "シ",
+      "kunyomi": "つかう",
+      "strokes": 8,
+      "level": "N5"
+    },
+    {
+      "character": "持",
+      "meaning": "hold, have",
+      "onyomi": "ジ",
+      "kunyomi": "もつ",
+      "strokes": 9,
+      "level": "N5"
+    }
+  ],
+  "N4": [
+    {
+      "character": "同",
+      "meaning": "same, agree",
+      "onyomi": "ドウ",
+      "kunyomi": "おなじ",
+      "strokes": 6,
+      "level": "N4"
+    },
+    {
+      "character": "事",
+      "meaning": "thing, matter, business",
+      "onyomi": "ジ",
+      "kunyomi": "こと",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "自",
+      "meaning": "oneself",
+      "onyomi": "ジ, シ",
+      "kunyomi": "みずから",
+      "strokes": 6,
+      "level": "N4"
+    },
+    {
+      "character": "発",
+      "meaning": "depart, emit, start",
+      "onyomi": "ハツ, ホツ",
+      "kunyomi": "たつ",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "者",
+      "meaning": "someone, person",
+      "onyomi": "シャ",
+      "kunyomi": "もの",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "地",
+      "meaning": "ground, earth",
+      "onyomi": "チ, ジ",
+      "kunyomi": "",
+      "strokes": 6,
+      "level": "N4"
+    },
+    {
+      "character": "業",
+      "meaning": "business, vocation, industry",
+      "onyomi": "ギョウ, ゴウ",
+      "kunyomi": "わざ",
+      "strokes": 13,
+      "level": "N4"
+    },
+    {
+      "character": "方",
+      "meaning": "direction, person, method",
+      "onyomi": "ホウ",
+      "kunyomi": "かた",
+      "strokes": 4,
+      "level": "N4"
+    },
+    {
+      "character": "場",
+      "meaning": "place, location",
+      "onyomi": "ジョウ",
+      "kunyomi": "ば",
+      "strokes": 12,
+      "level": "N4"
+    },
+    {
+      "character": "員",
+      "meaning": "employee, member",
+      "onyomi": "イン",
+      "kunyomi": "",
+      "strokes": 10,
+      "level": "N4"
+    },
+    {
+      "character": "開",
+      "meaning": "open, unfold",
+      "onyomi": "カイ",
+      "kunyomi": "ひらく, あける",
+      "strokes": 12,
+      "level": "N4"
+    },
+    {
+      "character": "力",
+      "meaning": "power, strength",
+      "onyomi": "リョク, リキ",
+      "kunyomi": "ちから",
+      "strokes": 2,
+      "level": "N4"
+    },
+    {
+      "character": "問",
+      "meaning": "question, ask",
+      "onyomi": "モン",
+      "kunyomi": "とう, とい",
+      "strokes": 11,
+      "level": "N4"
+    },
+    {
+      "character": "代",
+      "meaning": "generation, replace, period",
+      "onyomi": "ダイ, タイ",
+      "kunyomi": "かわる, よ",
+      "strokes": 5,
+      "level": "N4"
+    },
+    {
+      "character": "明",
+      "meaning": "bright, light, clear",
+      "onyomi": "メイ, ミョウ",
+      "kunyomi": "あかるい, あきらか",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "動",
+      "meaning": "move, motion",
+      "onyomi": "ドウ",
+      "kunyomi": "うごく, うごかす",
+      "strokes": 11,
+      "level": "N4"
+    },
+    {
+      "character": "京",
+      "meaning": "capital",
+      "onyomi": "キョウ, ケイ",
+      "kunyomi": "みやこ",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "通",
+      "meaning": "pass through, commute",
+      "onyomi": "ツウ",
+      "kunyomi": "とおる, かよう",
+      "strokes": 10,
+      "level": "N4"
+    },
+    {
+      "character": "理",
+      "meaning": "logic, reason, truth",
+      "onyomi": "リ",
+      "kunyomi": "ことわり",
+      "strokes": 11,
+      "level": "N4"
+    },
+    {
+      "character": "体",
+      "meaning": "body, physique",
+      "onyomi": "タイ, テイ",
+      "kunyomi": "からだ",
+      "strokes": 7,
+      "level": "N4"
+    },
+    {
+      "character": "田",
+      "meaning": "rice field",
+      "onyomi": "デン",
+      "kunyomi": "た",
+      "strokes": 5,
+      "level": "N4"
+    },
+    {
+      "character": "主",
+      "meaning": "master, main",
+      "onyomi": "シュ, ス",
+      "kunyomi": "おも, ぬし",
+      "strokes": 5,
+      "level": "N4"
+    },
+    {
+      "character": "題",
+      "meaning": "topic, subject",
+      "onyomi": "ダイ",
+      "kunyomi": "",
+      "strokes": 18,
+      "level": "N4"
+    },
+    {
+      "character": "意",
+      "meaning": "idea, mind, intention",
+      "onyomi": "イ",
+      "kunyomi": "",
+      "strokes": 13,
+      "level": "N4"
+    },
+    {
+      "character": "不",
+      "meaning": "negative, non-, bad",
+      "onyomi": "フ, ブ",
+      "kunyomi": "",
+      "strokes": 4,
+      "level": "N4"
+    },
+    {
+      "character": "用",
+      "meaning": "use, utilize, service",
+      "onyomi": "ヨウ",
+      "kunyomi": "もちいる",
+      "strokes": 5,
+      "level": "N4"
+    },
+    {
+      "character": "度",
+      "meaning": "degrees, occurrence, time",
+      "onyomi": "ド, ト",
+      "kunyomi": "たび",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "強",
+      "meaning": "strong",
+      "onyomi": "キョウ, ゴウ",
+      "kunyomi": "つよい",
+      "strokes": 11,
+      "level": "N4"
+    },
+    {
+      "character": "公",
+      "meaning": "public, official",
+      "onyomi": "コウ",
+      "kunyomi": "おおやけ",
+      "strokes": 4,
+      "level": "N4"
+    },
+    {
+      "character": "野",
+      "meaning": "field, civilian",
+      "onyomi": "ヤ, ショ",
+      "kunyomi": "の",
+      "strokes": 11,
+      "level": "N4"
+    },
+    {
+      "character": "以",
+      "meaning": "by means of, because, with",
+      "onyomi": "イ",
+      "kunyomi": "もって",
+      "strokes": 5,
+      "level": "N4"
+    },
+    {
+      "character": "思",
+      "meaning": "think, believe",
+      "onyomi": "シ",
+      "kunyomi": "おもう",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "家",
+      "meaning": "house, home, family",
+      "onyomi": "カ, ケ",
+      "kunyomi": "いえ, や",
+      "strokes": 10,
+      "level": "N4"
+    },
+    {
+      "character": "世",
+      "meaning": "generation, world, society",
+      "onyomi": "セイ, セ",
+      "kunyomi": "よ",
+      "strokes": 5,
+      "level": "N4"
+    },
+    {
+      "character": "正",
+      "meaning": "correct, justice",
+      "onyomi": "セイ, ショウ",
+      "kunyomi": "ただしい, まさ",
+      "strokes": 5,
+      "level": "N4"
+    },
+    {
+      "character": "院",
+      "meaning": "institution, temple, hospital",
+      "onyomi": "イン",
+      "kunyomi": "",
+      "strokes": 10,
+      "level": "N4"
+    },
+    {
+      "character": "心",
+      "meaning": "heart, mind, spirit",
+      "onyomi": "シン",
+      "kunyomi": "こころ",
+      "strokes": 4,
+      "level": "N4"
+    },
+    {
+      "character": "界",
+      "meaning": "world, boundary",
+      "onyomi": "カイ",
+      "kunyomi": "",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "教",
+      "meaning": "teach, faith, doctrine",
+      "onyomi": "キョウ",
+      "kunyomi": "おしえる, そそわる",
+      "strokes": 11,
+      "level": "N4"
+    },
+    {
+      "character": "文",
+      "meaning": "sentence, literature, writing",
+      "onyomi": "ブン, モン",
+      "kunyomi": "ふみ",
+      "strokes": 4,
+      "level": "N4"
+    },
+    {
+      "character": "元",
+      "meaning": "origin, beginning, former",
+      "onyomi": "ゲン, ガン",
+      "kunyomi": "もと",
+      "strokes": 4,
+      "level": "N4"
+    },
+    {
+      "character": "重",
+      "meaning": "heavy, important, pile up",
+      "onyomi": "ジュウ, チョウ",
+      "kunyomi": "おもい, かさなる",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "近",
+      "meaning": "near, early",
+      "onyomi": "キン",
+      "kunyomi": "ちかい",
+      "strokes": 7,
+      "level": "N4"
+    },
+    {
+      "character": "画",
+      "meaning": "picture, drawing, plan",
+      "onyomi": "ガ, カク",
+      "kunyomi": "えがく",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "海",
+      "meaning": "sea, ocean",
+      "onyomi": "カイ",
+      "kunyomi": "うみ",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "売",
+      "meaning": "sell",
+      "onyomi": "バイ",
+      "kunyomi": "うる, うれる",
+      "strokes": 7,
+      "level": "N4"
+    },
+    {
+      "character": "知",
+      "meaning": "know, wisdom",
+      "onyomi": "チ",
+      "kunyomi": "しる",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "集",
+      "meaning": "gather, collect",
+      "onyomi": "シュウ",
+      "kunyomi": "あつまる, あつめる",
+      "strokes": 12,
+      "level": "N4"
+    },
+    {
+      "character": "別",
+      "meaning": "separate, another, special",
+      "onyomi": "ベツ",
+      "kunyomi": "わかれる",
+      "strokes": 7,
+      "level": "N4"
+    },
+    {
+      "character": "物",
+      "meaning": "thing, object, matter",
+      "onyomi": "ブツ, モツ",
+      "kunyomi": "もの",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "品",
+      "meaning": "goods, article, dignity",
+      "onyomi": "ヒン",
+      "kunyomi": "しな",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "計",
+      "meaning": "plan, measure, plot",
+      "onyomi": "ケイ",
+      "kunyomi": "はかる",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "死",
+      "meaning": "death, die",
+      "onyomi": "シ",
+      "kunyomi": "しぬ",
+      "strokes": 6,
+      "level": "N4"
+    },
+    {
+      "character": "特",
+      "meaning": "special",
+      "onyomi": "トク",
+      "kunyomi": "",
+      "strokes": 10,
+      "level": "N4"
+    },
+    {
+      "character": "私",
+      "meaning": "I, me, private",
+      "onyomi": "シ",
+      "kunyomi": "わたくし, わたし",
+      "strokes": 7,
+      "level": "N4"
+    },
+    {
+      "character": "始",
+      "meaning": "commence, begin",
+      "onyomi": "シ",
+      "kunyomi": "はじまる, はじめる",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "朝",
+      "meaning": "morning, dynasty",
+      "onyomi": "チョウ",
+      "kunyomi": "あさ",
+      "strokes": 12,
+      "level": "N4"
+    },
+    {
+      "character": "運",
+      "meaning": "carry, luck, destiny",
+      "onyomi": "ウン",
+      "kunyomi": "はこぶ",
+      "strokes": 12,
+      "level": "N4"
+    },
+    {
+      "character": "終",
+      "meaning": "end, finish",
+      "onyomi": "シュウ",
+      "kunyomi": "おわる, おえる",
+      "strokes": 11,
+      "level": "N4"
+    },
+    {
+      "character": "台",
+      "meaning": "pedestal, counter for machines",
+      "onyomi": "ダイ, タイ",
+      "kunyomi": "",
+      "strokes": 5,
+      "level": "N4"
+    },
+    {
+      "character": "広",
+      "meaning": "wide, broad, spacious",
+      "onyomi": "コウ",
+      "kunyomi": "ひろい, ひろげる",
+      "strokes": 5,
+      "level": "N4"
+    },
+    {
+      "character": "住",
+      "meaning": "dwell, reside, live",
+      "onyomi": "ジュウ",
+      "kunyomi": "すむ, すまう",
+      "strokes": 7,
+      "level": "N4"
+    },
+    {
+      "character": "真",
+      "meaning": "true, reality, pure",
+      "onyomi": "シン",
+      "kunyomi": "ま, まこと",
+      "strokes": 10,
+      "level": "N4"
+    },
+    {
+      "character": "有",
+      "meaning": "possess, exist, have",
+      "onyomi": "ユウ, ウ",
+      "kunyomi": "ある",
+      "strokes": 6,
+      "level": "N4"
+    },
+    {
+      "character": "町",
+      "meaning": "town, village",
+      "onyomi": "チョウ",
+      "kunyomi": "まち",
+      "strokes": 7,
+      "level": "N4"
+    },
+    {
+      "character": "料",
+      "meaning": "fee, materials",
+      "onyomi": "リョウ",
+      "kunyomi": "",
+      "strokes": 10,
+      "level": "N4"
+    },
+    {
+      "character": "工",
+      "meaning": "craft, construction",
+      "onyomi": "コウ, ク",
+      "kunyomi": "",
+      "strokes": 3,
+      "level": "N4"
+    },
+    {
+      "character": "建",
+      "meaning": "build, construct",
+      "onyomi": "ケン, コン",
+      "kunyomi": "たてる, たつ",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "急",
+      "meaning": "hurry, urgent, steep",
+      "onyomi": "キュウ",
+      "kunyomi": "いそぐ",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "送",
+      "meaning": "send, escort",
+      "onyomi": "ソウ",
+      "kunyomi": "おくる",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "切",
+      "meaning": "cut, sharp, disconnect",
+      "onyomi": "セツ, サイ",
+      "kunyomi": "きる, きれる",
+      "strokes": 4,
+      "level": "N4"
+    },
+    {
+      "character": "転",
+      "meaning": "revolve, turn, fall",
+      "onyomi": "テン",
+      "kunyomi": "ころがる, ころぶ",
+      "strokes": 11,
+      "level": "N4"
+    },
+    {
+      "character": "研",
+      "meaning": "polish, study of, sharpen",
+      "onyomi": "ケン",
+      "kunyomi": "とぐ",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "究",
+      "meaning": "research, study deeply",
+      "onyomi": "キュウ",
+      "kunyomi": "きわめる",
+      "strokes": 7,
+      "level": "N4"
+    },
+    {
+      "character": "楽",
+      "meaning": "music, comfort, ease",
+      "onyomi": "ガク, ラク",
+      "kunyomi": "たのしい, たのしむ",
+      "strokes": 13,
+      "level": "N4"
+    },
+    {
+      "character": "起",
+      "meaning": "wake up, rise, awaken",
+      "onyomi": "キ",
+      "kunyomi": "おきる, おこす",
+      "strokes": 10,
+      "level": "N4"
+    },
+    {
+      "character": "着",
+      "meaning": "arrive, wear",
+      "onyomi": "チャク, ジャク",
+      "kunyomi": "きる, つく",
+      "strokes": 12,
+      "level": "N4"
+    },
+    {
+      "character": "病",
+      "meaning": "ill, sick",
+      "onyomi": "ビョウ, ヘイ",
+      "kunyomi": "やまい",
+      "strokes": 10,
+      "level": "N4"
+    },
+    {
+      "character": "質",
+      "meaning": "substance, quality, matter",
+      "onyomi": "シツ, シチ",
+      "kunyomi": "たち",
+      "strokes": 15,
+      "level": "N4"
+    },
+    {
+      "character": "待",
+      "meaning": "wait, depend on",
+      "onyomi": "タイ",
+      "kunyomi": "まつ",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "夜",
+      "meaning": "night, evening",
+      "onyomi": "ヤ",
+      "kunyomi": "よ, よる",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "音",
+      "meaning": "sound, noise",
+      "onyomi": "オン, イン",
+      "kunyomi": "おと, ね",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "注",
+      "meaning": "pour, focus, notes",
+      "onyomi": "チュウ",
+      "kunyomi": "そそぐ",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "親",
+      "meaning": "parent, intimacy, familiar",
+      "onyomi": "シン",
+      "kunyomi": "おや, したしい",
+      "strokes": 16,
+      "level": "N4"
+    },
+    {
+      "character": "風",
+      "meaning": "wind, air, style",
+      "onyomi": "フウ, フ",
+      "kunyomi": "かぜ",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "洋",
+      "meaning": "ocean, western style",
+      "onyomi": "ヨウ",
+      "kunyomi": "",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "声",
+      "meaning": "voice",
+      "onyomi": "セイ, ショウ",
+      "kunyomi": "こえ",
+      "strokes": 7,
+      "level": "N4"
+    },
+    {
+      "character": "青",
+      "meaning": "blue, green",
+      "onyomi": "セイ, ショウ",
+      "kunyomi": "あお, あおい",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "色",
+      "meaning": "color",
+      "onyomi": "ショク, シキ",
+      "kunyomi": "いろ",
+      "strokes": 6,
+      "level": "N4"
+    },
+    {
+      "character": "茶",
+      "meaning": "tea",
+      "onyomi": "チャ, サ",
+      "kunyomi": "",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "答",
+      "meaning": "answer, reply",
+      "onyomi": "トウ",
+      "kunyomi": "こたえる, こたえ",
+      "strokes": 12,
+      "level": "N4"
+    },
+    {
+      "character": "味",
+      "meaning": "flavor, taste",
+      "onyomi": "ミ",
+      "kunyomi": "あじ, あじわう",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "飯",
+      "meaning": "meal, boiled rice",
+      "onyomi": "ハン",
+      "kunyomi": "めし",
+      "strokes": 12,
+      "level": "N4"
+    },
+    {
+      "character": "漢",
+      "meaning": "Sino-, Chinese, man",
+      "onyomi": "カン",
+      "kunyomi": "",
+      "strokes": 13,
+      "level": "N4"
+    },
+    {
+      "character": "字",
+      "meaning": "character, letter",
+      "onyomi": "ジ",
+      "kunyomi": "あざ",
+      "strokes": 6,
+      "level": "N4"
+    },
+    {
+      "character": "旅",
+      "meaning": "trip, travel",
+      "onyomi": "リョ",
+      "kunyomi": "たび",
+      "strokes": 10,
+      "level": "N4"
+    },
+    {
+      "character": "屋",
+      "meaning": "roof, shop, house",
+      "onyomi": "オク",
+      "kunyomi": "や",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "映",
+      "meaning": "reflect, project",
+      "onyomi": "エイ",
+      "kunyomi": "うつる, うつす",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "試",
+      "meaning": "test, try, attempt",
+      "onyomi": "シ",
+      "kunyomi": "ためす, こころみる",
+      "strokes": 13,
+      "level": "N4"
+    },
+    {
+      "character": "験",
+      "meaning": "verification, effect, test",
+      "onyomi": "ケン, ゲン",
+      "kunyomi": "",
+      "strokes": 18,
+      "level": "N4"
+    },
+    {
+      "character": "銀",
+      "meaning": "silver",
+      "onyomi": "ギン",
+      "kunyomi": "しろがね",
+      "strokes": 14,
+      "level": "N4"
+    },
+    {
+      "character": "借",
+      "meaning": "borrow, rent",
+      "onyomi": "シャク",
+      "kunyomi": "かりる",
+      "strokes": 10,
+      "level": "N4"
+    },
+    {
+      "character": "貸",
+      "meaning": "lend",
+      "onyomi": "タイ",
+      "kunyomi": "かす",
+      "strokes": 12,
+      "level": "N4"
+    },
+    {
+      "character": "習",
+      "meaning": "learn, practice",
+      "onyomi": "シュウ",
+      "kunyomi": "ならう",
+      "strokes": 11,
+      "level": "N4"
+    },
+    {
+      "character": "昼",
+      "meaning": "daytime, noon",
+      "onyomi": "チュウ",
+      "kunyomi": "ひる",
+      "strokes": 9,
+      "level": "N4"
+    },
+    {
+      "character": "帰",
+      "meaning": "return, come back",
+      "onyomi": "キ",
+      "kunyomi": "かえる, かえす",
+      "strokes": 10,
+      "level": "N4"
+    },
+    {
+      "character": "歌",
+      "meaning": "song, sing",
+      "onyomi": "カ",
+      "kunyomi": "うた, うたう",
+      "strokes": 14,
+      "level": "N4"
+    },
+    {
+      "character": "曜",
+      "meaning": "weekday, day of week",
+      "onyomi": "ヨウ",
+      "kunyomi": "",
+      "strokes": 18,
+      "level": "N4"
+    },
+    {
+      "character": "服",
+      "meaning": "clothing, obey",
+      "onyomi": "フク",
+      "kunyomi": "",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "弟",
+      "meaning": "younger brother",
+      "onyomi": "テイ, ダイ",
+      "kunyomi": "おとうと",
+      "strokes": 7,
+      "level": "N4"
+    },
+    {
+      "character": "妹",
+      "meaning": "younger sister",
+      "onyomi": "マイ",
+      "kunyomi": "いもうと",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "兄",
+      "meaning": "elder brother",
+      "onyomi": "ケイ, キョウ",
+      "kunyomi": "あに",
+      "strokes": 5,
+      "level": "N4"
+    },
+    {
+      "character": "姉",
+      "meaning": "elder sister",
+      "onyomi": "シ",
+      "kunyomi": "あね",
+      "strokes": 8,
+      "level": "N4"
+    },
+    {
+      "character": "止",
+      "meaning": "stop, halt",
+      "onyomi": "シ",
+      "kunyomi": "とまる, とめる",
+      "strokes": 4,
+      "level": "N4"
+    },
+    {
+      "character": "走",
+      "meaning": "run",
+      "onyomi": "ソウ",
+      "kunyomi": "はしる",
+      "strokes": 7,
+      "level": "N4"
+    },
+    {
+      "character": "悪",
+      "meaning": "bad, evil, wrong",
+      "onyomi": "アク, オ",
+      "kunyomi": "わるい",
+      "strokes": 11,
+      "level": "N4"
+    },
+    {
+      "character": "暑",
+      "meaning": "hot (weather)",
+      "onyomi": "ショ",
+      "kunyomi": "あつい",
+      "strokes": 12,
+      "level": "N4"
+    },
+    {
+      "character": "寒",
+      "meaning": "cold (weather)",
+      "onyomi": "カン",
+      "kunyomi": "さむい",
+      "strokes": 12,
+      "level": "N4"
+    },
+    {
+      "character": "暖",
+      "meaning": "warm",
+      "onyomi": "ダン",
+      "kunyomi": "あたたかい",
+      "strokes": 13,
+      "level": "N4"
+    },
+    {
+      "character": "暗",
+      "meaning": "dark, gloom",
+      "onyomi": "アン",
+      "kunyomi": "くらい",
+      "strokes": 13,
+      "level": "N4"
+    },
+    {
+      "character": "軽",
+      "meaning": "light (weight)",
+      "onyomi": "ケイ",
+      "kunyomi": "かるい",
+      "strokes": 12,
+      "level": "N4"
+    },
+    {
+      "character": "遠",
+      "meaning": "distant, far",
+      "onyomi": "エン, オン",
+      "kunyomi": "とおい",
+      "strokes": 13,
+      "level": "N4"
+    },
+    {
+      "character": "早",
+      "meaning": "early, fast",
+      "onyomi": "ソウ, サッ",
+      "kunyomi": "はやい",
+      "strokes": 6,
+      "level": "N4"
+    },
+    {
+      "character": "忙",
+      "meaning": "busy",
+      "onyomi": "ボウ",
+      "kunyomi": "いそがしい",
+      "strokes": 6,
+      "level": "N4"
+    },
+    {
+      "character": "弱",
+      "meaning": "weak, frail",
+      "onyomi": "ジャク",
+      "kunyomi": "よわい",
+      "strokes": 10,
+      "level": "N4"
+    },
+    {
+      "character": "低",
+      "meaning": "low, short",
+      "onyomi": "テイ",
+      "kunyomi": "ひくい",
+      "strokes": 7,
+      "level": "N4"
+    },
+    {
+      "character": "短",
+      "meaning": "short, brevity",
+      "onyomi": "タン",
+      "kunyomi": "みじかい",
+      "strokes": 12,
+      "level": "N4"
+    }
+  ],
+  "N3": [
+    {
+      "character": "政",
+      "meaning": "politics, government",
+      "onyomi": "セイ, ショウ",
+      "kunyomi": "まつりごと",
+      "strokes": 9,
+      "level": "N3"
+    },
+    {
+      "character": "治",
+      "meaning": "reign, cure, heal",
+      "onyomi": "ジ, チ",
+      "kunyomi": "おさめる, なおる",
+      "strokes": 8,
+      "level": "N3"
+    },
+    {
+      "character": "経",
+      "meaning": "pass through, manage, longitude",
+      "onyomi": "ケイ, キョウ",
+      "kunyomi": "へる",
+      "strokes": 11,
+      "level": "N3"
+    },
+    {
+      "character": "済",
+      "meaning": "settle, relieve, finish",
+      "onyomi": "サイ, セイ",
+      "kunyomi": "すむ, すます",
+      "strokes": 11,
+      "level": "N3"
+    },
+    {
+      "character": "法",
+      "meaning": "law, rule, method",
+      "onyomi": "ホウ, ハッ",
+      "kunyomi": "",
+      "strokes": 8,
+      "level": "N3"
+    },
+    {
+      "character": "律",
+      "meaning": "law, regulation",
+      "onyomi": "リツ, リチ",
+      "kunyomi": "",
+      "strokes": 9,
+      "level": "N3"
+    },
+    {
+      "character": "際",
+      "meaning": "occasion, edge, border",
+      "onyomi": "サイ",
+      "kunyomi": "きわ",
+      "strokes": 14,
+      "level": "N3"
+    },
+    {
+      "character": "関",
+      "meaning": "connection, barrier, gateway",
+      "onyomi": "カン",
+      "kunyomi": "せき, かかわる",
+      "strokes": 14,
+      "level": "N3"
+    },
+    {
+      "character": "係",
+      "meaning": "person in charge, connection",
+      "onyomi": "ケイ",
+      "kunyomi": "かかり, かかわる",
+      "strokes": 9,
+      "level": "N3"
+    },
+    {
+      "character": "情",
+      "meaning": "feelings, emotion, condition",
+      "onyomi": "ジョウ, セイ",
+      "kunyomi": "なさけ",
+      "strokes": 11,
+      "level": "N3"
+    },
+    {
+      "character": "報",
+      "meaning": "report, news, reward",
+      "onyomi": "ホウ",
+      "kunyomi": "むくいる",
+      "strokes": 12,
+      "level": "N3"
+    },
+    {
+      "character": "告",
+      "meaning": "tell, announce, inform",
+      "onyomi": "コク",
+      "kunyomi": "つげる",
+      "strokes": 7,
+      "level": "N3"
+    },
+    {
+      "character": "感",
+      "meaning": "feeling, sensation, emotion",
+      "onyomi": "カン",
+      "kunyomi": "",
+      "strokes": 13,
+      "level": "N3"
+    },
+    {
+      "character": "想",
+      "meaning": "concept, think, idea",
+      "onyomi": "ソウ, ソ",
+      "kunyomi": "おもう",
+      "strokes": 13,
+      "level": "N3"
+    },
+    {
+      "character": "連",
+      "meaning": "take along, connect, join",
+      "onyomi": "レン",
+      "kunyomi": "つらなる, つれる",
+      "strokes": 10,
+      "level": "N3"
+    },
+    {
+      "character": "絡",
+      "meaning": "entangle, coil around, contact",
+      "onyomi": "ラク",
+      "kunyomi": "からむ",
+      "strokes": 12,
+      "level": "N3"
+    },
+    {
+      "character": "相",
+      "meaning": "mutual, aspect, minister",
+      "onyomi": "ソウ, ショウ",
+      "kunyomi": "あい",
+      "strokes": 9,
+      "level": "N3"
+    },
+    {
+      "character": "談",
+      "meaning": "discuss, talk",
+      "onyomi": "ダン",
+      "kunyomi": "",
+      "strokes": 15,
+      "level": "N3"
+    },
+    {
+      "character": "受",
+      "meaning": "accept, receive, take",
+      "onyomi": "ジュ",
+      "kunyomi": "うける",
+      "strokes": 8,
+      "level": "N3"
+    },
+    {
+      "character": "付",
+      "meaning": "adhere, attach, refer",
+      "onyomi": "フ",
+      "kunyomi": "つく, つける",
+      "strokes": 5,
+      "level": "N3"
+    },
+    {
+      "character": "決",
+      "meaning": "decide, fix, determine",
+      "onyomi": "ケツ",
+      "kunyomi": "きめる, きまる",
+      "strokes": 7,
+      "level": "N3"
+    },
+    {
+      "character": "定",
+      "meaning": "determine, fix, establish",
+      "onyomi": "テイ, ジョウ",
+      "kunyomi": "さだめる",
+      "strokes": 8,
+      "level": "N3"
+    },
+    {
+      "character": "比",
+      "meaning": "compare, ratio",
+      "onyomi": "ヒ",
+      "kunyomi": "くらべる",
+      "strokes": 4,
+      "level": "N3"
+    },
+    {
+      "character": "較",
+      "meaning": "contrast, compare",
+      "onyomi": "カク",
+      "kunyomi": "",
+      "strokes": 13,
+      "level": "N3"
+    },
+    {
+      "character": "直",
+      "meaning": "straight, fix, direct",
+      "onyomi": "チョク, ジキ",
+      "kunyomi": "ただちに, なおす",
+      "strokes": 8,
+      "level": "N3"
+    },
+    {
+      "character": "変",
+      "meaning": "unusual, change, strange",
+      "onyomi": "ヘン",
+      "kunyomi": "かわる, かえる",
+      "strokes": 9,
+      "level": "N3"
+    },
+    {
+      "character": "化",
+      "meaning": "change, take the form of",
+      "onyomi": "カ, ケ",
+      "kunyomi": "ばける",
+      "strokes": 4,
+      "level": "N3"
+    }
+  ]
+}

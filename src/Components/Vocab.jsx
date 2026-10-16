@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { ref, push, update, get, child, onValue, set, remove } from "firebase/database";
 import db from './firebase'
 import jmdictData from '../data/jmdict.json';
+import kanjiCatalog from '../data/kanjiCatalog.json';
 
 
 const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
@@ -537,7 +538,12 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
     };
 
     const getKanjisForLevels = (levels) => {
-        return new Set();
+        const set = new Set();
+        (levels || []).forEach(lvl => {
+            const list = kanjiCatalog[lvl.toUpperCase()] || [];
+            list.forEach(k => set.add(k.character));
+        });
+        return set;
     };
 
     const findKanjisInWord = (word, userId) => {
