@@ -1,73 +1,101 @@
+/* ==========================================================================
+   Vocab.css — Apple HIG Redesign for Japanese Vocabulary Module
+   ========================================================================== */
+
 .VocabSection {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
-/* Banner */
+/* --- Hero Banner Card --- */
 .VocabBanner {
   width: 100%;
-  padding: 24px 20px;
-  border-radius: var(--radius-md);
-  background-color: #111111;
-  border-bottom: 3px solid var(--color-primary);
+  padding: 24px 28px;
+  border-radius: var(--radius-lg);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.VocabBanner::before {
+  content: '語';
+  position: absolute;
+  right: 16px;
+  bottom: -10px;
+  font-family: var(--font-jp-heading);
+  font-size: 110px;
+  font-weight: 900;
+  color: rgba(197, 5, 12, 0.04);
+  pointer-events: none;
+  line-height: 1;
 }
 
 .VocabText {
   font-family: var(--font-jp-heading);
-  font-size: clamp(26px, 5vw, 36px);
+  font-size: clamp(24px, 4vw, 32px);
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 0;
-  letter-spacing: 0.5px;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .VocabSubtitle {
   font-family: var(--font-sans);
-  font-size: 13px;
-  color: #aaaaaa;
+  font-size: 13.5px;
+  color: var(--text-secondary);
   margin-top: 4px;
+  font-weight: 400;
 }
 
 .VocabContents {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
-/* Dictionary Loaded Banner */
+/* Dictionary Status Banner */
 .DictStatusBanner {
-  padding: 10px 14px;
-  background-color: #f3f4f6;
-  border: 1px solid #d1d5db;
-  border-radius: var(--radius-sm);
-  color: #111111;
+  padding: 11px 16px;
+  background-color: var(--bg-surface-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* --- Clean Vocab Input Card --- */
 .VocabInputCard {
-  background-color: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: var(--radius-md);
-  padding: 16px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
 }
 
 .VocabInputCardTitle {
-  font-size: 14px;
+  font-size: 14.5px;
   font-weight: 700;
-  color: #111111;
+  color: var(--text-primary);
   margin: 0;
+  letter-spacing: -0.2px;
 }
 
 /* Row 1: Word Input + Kana Toggle + Add Button */
@@ -79,76 +107,98 @@
 }
 
 .VocabInputField {
-  flex: 1 1 200px;
-  height: 42px;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid #d1d5db;
-  background-color: #ffffff;
+  flex: 1 1 220px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background-color: var(--bg-surface-secondary);
   font-family: var(--font-jp-body);
   font-size: 15px;
-  font-weight: 700;
-  padding: 0 12px;
+  font-weight: 600;
+  padding: 0 14px;
   outline: none;
-  color: #111111;
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
 }
 
 .VocabInputField:focus {
+  background-color: var(--bg-surface);
   border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-glow);
 }
 
 .LanguageChange {
-  height: 42px;
+  height: 44px;
   min-width: 48px;
-  padding: 0 14px;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid #111111;
-  background-color: #111111;
+  padding: 0 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid #1d1d1f;
+  background-color: #1d1d1f;
   color: #ffffff;
   font-family: var(--font-jp-body);
-  font-weight: 900;
-  font-size: 16px;
+  font-weight: 700;
+  font-size: 15px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all var(--transition-fast);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .LanguageChange:hover {
-  background-color: #262626;
+  background-color: #000000;
+  transform: translateY(-0.5px);
 }
 
 .AddWordBtn {
-  height: 42px;
-  padding: 0 18px;
-  border-radius: var(--radius-sm);
+  height: 44px;
+  padding: 0 20px;
+  border-radius: var(--radius-md);
   border: none;
   background-color: var(--color-primary);
   color: #ffffff;
-  font-weight: 700;
-  font-size: 13px;
+  font-weight: 600;
+  font-size: 13.5px;
   cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 6px rgba(197, 5, 12, 0.2);
 }
 
 .AddWordBtn:hover {
   background-color: var(--color-primary-hover);
+  transform: translateY(-0.5px);
+  box-shadow: 0 4px 10px rgba(197, 5, 12, 0.28);
+}
+
+.AddWordBtn:active {
+  transform: scale(0.98);
 }
 
 .SubmitButton {
-  height: 42px;
-  padding: 0 18px;
-  border-radius: var(--radius-sm);
+  height: 44px;
+  padding: 0 20px;
+  border-radius: var(--radius-md);
   border: none;
-  background-color: var(--color-primary);
+  background-color: #1d1d1f;
   color: #ffffff;
-  font-weight: 700;
-  font-size: 13px;
+  font-weight: 600;
+  font-size: 13.5px;
   cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.SubmitButton:hover:not(:disabled) {
+  background-color: #000000;
+  transform: translateY(-0.5px);
+  box-shadow: var(--shadow-sm);
 }
 
 .SubmitButton:disabled {
-  background-color: #e5e7eb;
-  color: #9ca3af;
+  background-color: var(--bg-surface-tertiary);
+  color: var(--text-quaternary);
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* Row 2: Mode Toggle & Selective Buttons */
@@ -157,35 +207,34 @@
   gap: 10px;
   flex-wrap: wrap;
   align-items: center;
-  padding-top: 10px;
-  border-top: 1px solid #f3f4f6;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .ModeToggleBtn {
-  padding: 10px 16px;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid #111111;
-  background-color: #ffffff;
-  color: #111111;
-  font-weight: 700;
+  padding: 9px 18px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-default);
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  font-weight: 600;
   font-size: 13px;
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-xs);
 }
 
 .ModeToggleBtn:hover {
-  background-color: #111111;
-  color: #ffffff;
+  background-color: var(--bg-surface-secondary);
+  border-color: var(--border-strong);
 }
-
-
 
 /* --- Added Words Card (Pending Submit) --- */
 .AddedWordsContainer {
-  background-color: #f8f9fa;
-  border: 1.5px solid #111111;
+  background-color: var(--bg-surface-secondary);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
-  padding: 14px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -200,7 +249,7 @@
 .AddedWordsTitle {
   font-size: 13px;
   font-weight: 700;
-  color: #111111;
+  color: var(--text-primary);
 }
 
 .AddedWordsSection {
@@ -216,38 +265,40 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #111111;
+  background-color: #1d1d1f;
   color: #ffffff;
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .AddedWordChipRemove {
-  color: var(--color-primary);
-  font-weight: 900;
+  color: #fca5a5;
+  font-weight: 800;
   cursor: pointer;
   font-size: 14px;
   padding: 0 2px;
+  transition: color var(--transition-fast);
 }
 
 .AddedWordChipRemove:hover {
-  color: #ff4d4f;
+  color: #ffffff;
 }
 
 /* --- Revision Layout & Flashcards --- */
 .RevisionLayout {
   display: grid;
   grid-template-columns: 1fr 280px;
-  gap: 16px;
+  gap: 20px;
   align-items: start;
 }
 
 .RevisionMain {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   min-width: 0;
 }
 
@@ -257,21 +308,23 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 10px;
-  background-color: #ffffff;
-  border: 1.5px solid #e5e7eb;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
-  padding: 12px 14px;
+  padding: 14px 18px;
+  box-shadow: var(--shadow-xs);
 }
 
 .RevisionScore {
-  font-size: 13px;
-  font-weight: 700;
-  color: #111111;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
 .RevisionScoreNumber {
   color: var(--color-primary);
-  font-weight: 900;
+  font-weight: 800;
+  font-feature-settings: "tnum";
 }
 
 .RevisionButtonGroup {
@@ -283,53 +336,57 @@
 
 .RevisionFlip,
 .RevisionNext {
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
-  font-weight: 700;
-  font-size: 12px;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 12.5px;
   cursor: pointer;
-  border: 1.5px solid #111111;
-  background-color: #ffffff;
-  color: #111111;
-  transition: var(--transition-fast);
+  border: 1px solid var(--border-default);
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+  min-height: 34px;
 }
 
 .RevisionFlip {
-  background-color: #111111;
+  background-color: #1d1d1f;
   color: #ffffff;
+  border-color: #1d1d1f;
 }
 
 .RevisionFlip:hover {
-  background-color: #262626;
+  background-color: #000000;
 }
 
 .RevisionNext:hover {
-  background-color: #f3f4f6;
+  background-color: var(--bg-surface-secondary);
+  border-color: var(--border-strong);
 }
 
 /* Flashcard Box */
 .RevisionCard {
-  background-color: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: var(--radius-md);
-  padding: 24px 20px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+  box-shadow: var(--shadow-sm);
 }
 
 .RevisionCardLoading {
   align-items: center;
   justify-content: center;
-  min-height: 180px;
+  min-height: 200px;
   gap: 16px;
 }
 
 .RevisionSpinner {
-  width: 44px;
-  height: 44px;
-  border: 4px solid #f3f4f6;
-  border-top-color: #c5050c;
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-subtle);
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: revisionSpin 0.8s linear infinite;
 }
@@ -339,8 +396,8 @@
 }
 
 .RevisionLoadingText {
-  font-size: 13px;
-  color: #888;
+  font-size: 13.5px;
+  color: var(--text-tertiary);
   font-weight: 500;
   margin: 0;
 }
@@ -350,69 +407,76 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #f3f4f6;
+  gap: 8px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-subtle);
   text-align: center;
 }
 
 .RevisionKana {
   font-family: var(--font-jp-body);
-  font-size: clamp(28px, 5vw, 38px);
-  font-weight: 900;
+  font-size: clamp(26px, 4.5vw, 36px);
+  font-weight: 800;
   color: var(--color-primary);
 }
 
 .RevisionKanji {
   font-family: var(--font-jp-body);
-  font-size: clamp(32px, 6vw, 44px);
-  font-weight: 900;
-  color: #111111;
+  font-size: clamp(32px, 5.5vw, 44px);
+  font-weight: 800;
+  color: var(--text-primary);
 }
 
 /* MCQ Options */
 .RevisionOptions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 12px;
 }
 
 .RevisionOption {
-  padding: 14px;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid #e5e7eb;
-  background-color: #ffffff;
-  color: #111111;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background-color: var(--bg-surface-secondary);
+  color: var(--text-primary);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   text-align: left;
-  transition: var(--transition-fast);
-  min-height: 48px;
+  transition: all var(--transition-fast);
+  min-height: 52px;
   display: flex;
   align-items: center;
 }
 
 .RevisionOption:hover {
-  border-color: #111111;
-  background-color: #f8f9fa;
+  border-color: var(--border-strong);
+  background-color: var(--bg-surface);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-xs);
+}
+
+.RevisionOption:active {
+  transform: scale(0.99);
 }
 
 /* Sidebar Wrong Answers */
 .RevisionSidebar {
-  background-color: #ffffff;
-  border: 1.5px solid #e5e7eb;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
-  padding: 14px;
+  padding: 16px;
+  box-shadow: var(--shadow-xs);
 }
 
 .RevisionSidebarTitle {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
-  color: #111111;
+  color: var(--text-primary);
   margin-bottom: 10px;
-  padding-bottom: 6px;
-  border-bottom: 1.5px solid #f3f4f6;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .RevisionWrongList {
@@ -422,13 +486,13 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 360px;
+  max-height: 380px;
   overflow-y: auto;
 }
 
 .RevisionWrongItem {
-  padding: 8px 10px;
-  background-color: #f8f9fa;
+  padding: 10px 12px;
+  background-color: var(--bg-surface-secondary);
   border-radius: var(--radius-sm);
   border-left: 3px solid var(--color-primary);
 }
@@ -437,56 +501,60 @@
   font-family: var(--font-jp-body);
   font-weight: 700;
   font-size: 14px;
-  color: #111111;
+  color: var(--text-primary);
 }
 
 .RevisionWrongMeta {
   font-size: 12px;
-  color: #555555;
+  color: var(--text-secondary);
   margin-top: 2px;
 }
 
 /* Words Learned Grid Section */
 .WordsSectionCard {
-  background-color: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: var(--radius-md);
-  padding: 16px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
 }
 
 .WordsGridList {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 10px;
+  gap: 12px;
   list-style: none;
   padding: 0;
-  margin: 12px 0 0 0;
+  margin: 16px 0 0 0;
 }
 
 .WordCardItem {
   position: relative;
-  padding: 12px 12px 10px 12px;
-  background-color: #ffffff;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid #e5e7eb;
+  padding: 14px 14px 12px 14px;
+  background-color: var(--bg-surface-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   overflow: hidden;
+  transition: all var(--transition-normal);
 }
 
 .WordCardItem:hover {
-  border-color: #111111;
+  border-color: var(--border-strong);
+  background-color: var(--bg-surface);
+  transform: translateY(-1.5px);
+  box-shadow: var(--shadow-sm);
 }
 
 .WordCardConfidenceBar {
   position: absolute;
   top: 0;
   left: 0;
-  height: 3.5px;
-  background: #e53935;
+  height: 3px;
+  background: linear-gradient(90deg, #ef4444, #10b981);
   transition: width 0.3s ease;
-  border-top-left-radius: var(--radius-sm);
 }
 
 .WordCardHeader {
@@ -503,11 +571,11 @@
 }
 
 .WordCardLevelBadge {
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background-color: #111111;
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+  background-color: #1d1d1f;
   color: #ffffff;
   font-family: var(--font-sans);
   flex-shrink: 0;
@@ -516,48 +584,65 @@
 .WordCardMain {
   font-family: var(--font-jp-body);
   font-size: 16px;
-  font-weight: 900;
+  font-weight: 800;
   color: var(--color-primary);
 }
 
 .WordCardKanji {
   font-family: var(--font-jp-body);
   font-size: 14px;
-  color: #555555;
+  color: var(--text-secondary);
 }
 
 .WordCardMeaning {
   font-size: 13px;
-  color: #111111;
+  color: var(--text-primary);
+  line-height: 1.4;
 }
 
 /* Word Picker Dialog */
 .WordPickerOverlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: var(--backdrop-blur-sm);
+  -webkit-backdrop-filter: var(--backdrop-blur-sm);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2000;
-  padding: 16px;
+  padding: 20px;
 }
 
 .WordPickerPanel {
-  background-color: #ffffff;
-  border-radius: var(--radius-md);
-  border: 2px solid #111111;
+  background-color: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-default);
   width: min(520px, 100%);
-  max-height: 80vh;
+  max-height: 82vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  box-shadow: var(--shadow-float);
+  animation: modalScaleIn 0.22s var(--ease-spring);
+}
+
+@keyframes modalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .WordPickerHeader {
-  padding: 14px 16px;
-  background-color: #111111;
-  color: #ffffff;
+  padding: 16px 20px;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -566,49 +651,75 @@
 .WordPickerTitle {
   font-size: 15px;
   font-weight: 700;
+  letter-spacing: -0.2px;
 }
 
 .WordPickerClose {
-  background: transparent;
+  background: var(--bg-surface-tertiary);
   border: none;
-  color: #ffffff;
+  color: var(--text-secondary);
   cursor: pointer;
-  font-size: 16px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all var(--transition-fast);
+}
+
+.WordPickerClose:hover {
+  background: var(--border-default);
+  color: var(--text-primary);
 }
 
 .WordPickerList {
-  padding: 10px;
+  padding: 12px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .WordPickerItem {
-  padding: 10px 14px;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid #e5e7eb;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background-color: var(--bg-surface-secondary);
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.WordPickerItem:hover {
+  border-color: var(--border-strong);
+  background-color: var(--bg-surface);
 }
 
 .WordPickerItem.selected {
   border-color: var(--color-primary);
-  background-color: #fef2f2;
+  background-color: var(--color-primary-subtle);
 }
 
 .WordPickerDone {
   width: 100%;
-  height: 44px;
-  border-radius: var(--radius-sm);
+  height: 46px;
+  border-radius: var(--radius-md);
   border: none;
   background-color: var(--color-primary);
   color: #ffffff;
   font-weight: 700;
   font-size: 14px;
   cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-top: 8px;
+}
+
+.WordPickerDone:hover {
+  background-color: var(--color-primary-hover);
 }
 
 @media (max-width: 900px) {

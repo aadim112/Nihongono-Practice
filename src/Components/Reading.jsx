@@ -2,8 +2,9 @@ import './Reading.css';
 import grammar from './Grammar.json';
 import reading from '../Assets/reading.png';
 import db from './firebase';
-import { ref,get, set,update,runTransaction } from 'firebase/database';
-import { useState,useEffect } from 'react';
+import { ref, get, set, update } from 'firebase/database';
+import { useState, useEffect } from 'react';
+import { recordLearningActivity, getLocalDateKey } from '../utils/activityTracker';
 
 const Reading = ({user}) => {
     const [text,setText] = useState('Loading');
@@ -216,11 +217,16 @@ const Reading = ({user}) => {
             throw new Error("Backend error");
         }
         
-        const today = getTodayDate();
+        const today = getLocalDateKey();
         const resultRef = ref(db, `${user}/Result/${today}`);
-        const consistencyRef = ref(db,`${user}/Consistency/${today}`)
         await update(resultRef, {Reading: 1});
-        await runTransaction(consistencyRef, (currentValue) => {return (currentValue || 0) + 2;});
+        recordLearningActivity(user, {
+            section: 'reading',
+            action: 'reading_submitted',
+            itemId: `reading_${today}`,
+            effort: 5,
+            metadata: { score: results?.score }
+        }).catch(() => {});
 
         return await response.json();
     }

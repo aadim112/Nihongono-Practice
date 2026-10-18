@@ -11,7 +11,7 @@ import GrammerSection from './Components/GrammerSection';
 import ListeningSection from './Components/ListeningSection';
 import NihongoNakaNi from './Components/NihongoNakaNi';
 import db from './Components/firebase';
-import { get, ref } from 'firebase/database';
+import { onValue, ref } from 'firebase/database';
 
 function App() {
   const [ConsistentDays, setConsistentDays] = useState({});
@@ -24,22 +24,22 @@ function App() {
   const selectedUserName = users.find(u => u.id === user)?.name ?? String(user);
 
   useEffect(() => {
-    const fetchConsistency = async () => {
-      try {
-        const consistencyRef = ref(db, `${user}/Consistency`);
-        const snapshot = await get(consistencyRef);
-
+    const consistencyRef = ref(db, `${user}/Consistency`);
+    const unsubscribe = onValue(
+      consistencyRef,
+      (snapshot) => {
         if (snapshot.exists()) {
           setConsistentDays(snapshot.val());
         } else {
           setConsistentDays({});
         }
-      } catch (error) {
-        console.error("Error fetching consistency:", error);
+      },
+      (error) => {
+        console.error("Error listening to consistency:", error);
       }
-    };
+    );
 
-    fetchConsistency();
+    return () => unsubscribe();
   }, [user]);
 
   const [activeTab, setActiveTab] = useState(1); // 1: Vocab, 2: Grammar, 3: Listening

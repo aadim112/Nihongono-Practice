@@ -1,49 +1,73 @@
+/* ==========================================================================
+   GrammerSection.css — Apple HIG Redesign for Grammar Module
+   ========================================================================== */
+
 .GrammarSection {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
-/* Banner */
+/* --- Hero Banner Card --- */
 .GrammarBanner {
   width: 100%;
-  padding: 24px 20px;
-  border-radius: var(--radius-md);
-  background-color: #111111;
-  border-bottom: 3px solid var(--color-primary);
+  padding: 24px 28px;
+  border-radius: var(--radius-lg);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.GrammarBanner::before {
+  content: '文';
+  position: absolute;
+  right: 16px;
+  bottom: -10px;
+  font-family: var(--font-jp-heading);
+  font-size: 110px;
+  font-weight: 900;
+  color: rgba(197, 5, 12, 0.04);
+  pointer-events: none;
+  line-height: 1;
 }
 
 .GrammarText {
   font-family: var(--font-jp-heading);
-  font-size: clamp(26px, 5vw, 36px);
+  font-size: clamp(24px, 4vw, 32px);
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 0;
-  letter-spacing: 0.5px;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .GrammarSubtitle {
   font-family: var(--font-sans);
-  font-size: 13px;
-  color: #aaaaaa;
+  font-size: 13.5px;
+  color: var(--text-secondary);
   margin-top: 4px;
+  font-weight: 400;
 }
 
-/* Add Custom Grammar Form Card */
+/* --- Add Custom Grammar Form Card --- */
 .GrammarAddCard {
-  background-color: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: var(--radius-md);
-  padding: 16px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
 }
 
 .GrammarFormHeader {
@@ -53,20 +77,21 @@
 }
 
 .FormCardIcon {
-  font-size: 16px;
+  font-size: 17px;
 }
 
 .GrammarFormHeader h3 {
   margin: 0;
   font-size: 15px;
   font-weight: 700;
-  color: #111111;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
 }
 
 .GrammarAddForm {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .GrammarInputRow {
@@ -78,36 +103,40 @@
 
 .GrammarInputField {
   flex: 1 1 200px;
-  height: 42px;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid #d1d5db;
-  background-color: #ffffff;
+  height: 44px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background-color: var(--bg-surface-secondary);
   font-family: var(--font-jp-body);
-  font-size: 14px;
-  font-weight: 700;
-  padding: 0 12px;
+  font-size: 14.5px;
+  font-weight: 600;
+  padding: 0 14px;
   outline: none;
-  color: #111111;
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
 }
 
 .GrammarInputField:focus {
+  background-color: var(--bg-surface);
   border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-glow);
 }
 
 .GrammarLevelSelectGroup {
   display: flex;
   align-items: center;
-  gap: 6px;
-  height: 42px;
-  background-color: #111111;
-  padding: 0 12px;
-  border-radius: var(--radius-sm);
+  gap: 7px;
+  height: 44px;
+  background-color: #1d1d1f;
+  padding: 0 14px;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .GrammarLevelLabel {
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .GrammarLevelSelect {
@@ -121,97 +150,117 @@
 }
 
 .GrammarLevelSelect option {
-  background-color: #111111;
+  background-color: #1d1d1f;
   color: #ffffff;
 }
 
 .GrammarSubmitBtn {
-  height: 42px;
-  padding: 0 20px;
-  border-radius: var(--radius-sm);
+  height: 44px;
+  padding: 0 22px;
+  border-radius: var(--radius-md);
   border: none;
   background-color: var(--color-primary);
   color: #ffffff;
-  font-weight: 700;
-  font-size: 13px;
+  font-weight: 600;
+  font-size: 13.5px;
   cursor: pointer;
   white-space: nowrap;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 6px rgba(197, 5, 12, 0.2);
 }
 
-.GrammarSubmitBtn:hover {
+.GrammarSubmitBtn:hover:not(:disabled) {
   background-color: var(--color-primary-hover);
+  transform: translateY(-0.5px);
+  box-shadow: 0 4px 10px rgba(197, 5, 12, 0.28);
 }
 
 .GrammarSubmitBtn:disabled {
-  background-color: #e5e7eb;
-  color: #9ca3af;
+  background-color: var(--bg-surface-tertiary);
+  color: var(--text-quaternary);
   cursor: not-allowed;
+  box-shadow: none;
 }
 
-/* Search Bar Card */
+/* --- Search Bar Card --- */
 .GrammarSearchCard {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
-  background-color: #ffffff;
-  border: 1.5px solid #e5e7eb;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
-  padding: 12px 16px;
+  padding: 12px 18px;
+  box-shadow: var(--shadow-xs);
 }
 
 .GrammarSearchInputWrapper {
-  flex: 1 1 240px;
+  flex: 1 1 260px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  background-color: #f8f9fa;
-  border: 1.5px solid #d1d5db;
-  border-radius: var(--radius-sm);
-  padding: 0 10px;
+  gap: 10px;
+  background-color: var(--bg-surface-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  padding: 0 14px;
   height: 40px;
+  transition: all var(--transition-fast);
 }
 
 .GrammarSearchInputWrapper:focus-within {
-  border-color: #111111;
-  background-color: #ffffff;
+  border-color: var(--color-primary);
+  background-color: var(--bg-surface);
+  box-shadow: 0 0 0 3px var(--color-primary-glow);
 }
 
 .GrammarSearchIcon {
-  font-size: 14px;
+  font-size: 15px;
+  color: var(--text-tertiary);
 }
 
 .GrammarSearchInput {
   flex: 1;
   border: none;
   background: transparent;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 13.5px;
+  font-weight: 500;
   outline: none;
-  color: #111111;
+  color: var(--text-primary);
 }
 
 .GrammarSearchClearBtn {
   background: transparent;
   border: none;
   cursor: pointer;
-  color: #777777;
+  color: var(--text-tertiary);
   font-size: 13px;
   font-weight: 700;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.GrammarSearchClearBtn:hover {
+  color: var(--text-primary);
 }
 
 .GrammarSearchStats {
   font-size: 13px;
-  color: #555555;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-feature-settings: "tnum";
 }
 
-/* Cards Grid */
+/* --- Grammar Pattern Cards Grid --- */
 .GrammarListContainer {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 14px;
 }
 
 .GrammarList {
@@ -220,121 +269,136 @@
 
 .GrammarDiv {
   width: 100%;
-  background-color: #ffffff;
+  background-color: var(--bg-surface);
   border-radius: var(--radius-md);
-  border: 1.5px solid #e5e7eb;
+  border: 1px solid var(--border-default);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: var(--transition-fast);
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-xs);
 }
 
 .GrammarDiv:hover {
-  border-color: #111111;
+  border-color: var(--border-strong);
+  transform: translateY(-1.5px);
+  box-shadow: var(--shadow-sm);
 }
 
 .GrammarDiv.is-learned {
-  border-color: #10b981;
+  border-color: rgba(16, 185, 129, 0.4);
+  background-color: #fbfdfc;
 }
 
 .GrammarDivHeading {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px;
-  border-bottom: 1px solid #f3f4f6;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-subtle);
   gap: 10px;
 }
 
 .GrammarCheckGroup {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .GrammarCheckbox {
   width: 20px;
   height: 20px;
   cursor: pointer;
-  border-radius: 4px;
-  border: 2px solid #d1d5db;
-  accent-color: #10b981; /* GREEN tick color */
-}
-
-.GrammarCheckbox:checked {
-  accent-color: #10b981; /* Vibrant GREEN tick */
+  border-radius: 6px;
+  border: 1.5px solid var(--border-strong);
+  accent-color: #10b981;
 }
 
 .GrammarPattern {
   margin: 0;
   font-family: var(--font-jp-body);
   font-size: 17px;
-  font-weight: 900;
-  color: #111111;
+  font-weight: 800;
+  color: var(--text-primary);
   cursor: pointer;
+  letter-spacing: -0.2px;
 }
 
 .GrammarPattern.learned {
   color: #059669;
 }
 
-/* Green Learned Status Badge */
+/* Learned Status Badge */
 .GrammarStatusBadge {
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 700;
   padding: 4px 10px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: var(--transition-fast);
-}
-
-.GrammarStatusBadge.learned {
-  background-color: #10b981; /* Vibrant GREEN background */
-  color: #ffffff;           /* White text */
-  border: 1.5px solid #10b981;
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
-}
-
-.GrammarStatusBadge.unlearned {
-  background-color: #ffffff;
-  color: var(--color-primary);
-  border: 1.5px solid var(--color-primary);
-}
-
-.GrammarDivOtherInfo {
-  padding: 12px 14px;
-  display: flex;
-  flex-direction: column;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
   gap: 4px;
 }
 
+.GrammarStatusBadge.learned {
+  background-color: #10b981;
+  color: #ffffff;
+  border: 1px solid #10b981;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+}
+
+.GrammarStatusBadge.unlearned {
+  background-color: var(--bg-surface-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-default);
+}
+
+.GrammarStatusBadge.unlearned:hover {
+  background-color: var(--color-primary-subtle);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.GrammarDivOtherInfo {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .GrammarInfoRow {
-  font-size: 13px;
-  color: #555555;
-  line-height: 1.4;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
   margin: 0;
 }
 
 .GrammarInfoRow strong {
-  color: #111111;
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 .GrammarExample {
-  margin-top: 4px;
-  padding-top: 4px;
-  border-top: 1px dashed #e5e7eb;
-  color: #333333;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-default);
+  color: var(--text-primary);
+  font-family: var(--font-jp-body);
+  font-size: 13.5px;
+  line-height: 1.6;
 }
 
 .GrammarEmptyState {
   grid-column: 1 / -1;
-  padding: 40px 20px;
+  padding: 48px 24px;
   text-align: center;
-  background-color: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: var(--radius-md);
-  color: #666666;
-  font-size: 14px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+  font-size: 14.5px;
+  box-shadow: var(--shadow-xs);
 }
 
 @media (max-width: 520px) {

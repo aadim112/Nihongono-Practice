@@ -14,6 +14,7 @@ import {
   calculateNextKanjiReview,
   computeKnowledgeAnalytics,
 } from '../utils/kanjiEngine';
+import { recordLearningActivity } from '../utils/activityTracker';
 
 const Kanji = ({ user = 0, selectedLevel = 'N5' }) => {
   // Navigation & View Mode
@@ -36,6 +37,11 @@ const Kanji = ({ user = 0, selectedLevel = 'N5' }) => {
   // Vocab Practice Sub-mode States
   const [vocabCardIndex, setVocabCardIndex] = useState(0);
   const [isVocabFlipped, setIsVocabFlipped] = useState(false);
+  // Vocab practice additional states
+  const [selectedVocabLevel, setSelectedVocabLevel] = useState('N5');
+  const [pendingVocabs, setPendingVocabs] = useState([]);
+  const [newVocabWord, setNewVocabWord] = useState('');
+  const [newVocabMeaning, setNewVocabMeaning] = useState('');
 
   // Catalog / Manage Kanjis States
   const [catalogLevelTab, setCatalogLevelTab] = useState(selectedLevel || 'N5');
@@ -250,12 +256,14 @@ const Kanji = ({ user = 0, selectedLevel = 'N5' }) => {
         const kanjiPath = `${user}/kanjiLearning/learnedKanjis/${currentCard.character}`;
         await update(ref(db, kanjiPath), updatedData);
 
-        // Record consistency activity for today
-        const todayStr = new Date().toISOString().slice(0, 10);
-        const consistencyPath = `${user}/Consistency/${todayStr}`;
-        const consRef = ref(db, consistencyPath);
-        // Fire and forget streak update
-        update(ref(db, `${user}/Consistency`), { [todayStr]: 1 }).catch(() => {});
+        // Record consistency activity for today via shared activity tracker
+        recordLearningActivity(user, {
+          section: 'kanji',
+          action: 'kanji_review',
+          itemId: currentCard.character,
+          effort: 1,
+          metadata: { rating, character: currentCard.character },
+        }).catch(() => {});
 
         // Backward-compatible sync with ${user}/kanji
         if (currentCard.relatedVocabs && currentCard.relatedVocabs.length > 0) {
@@ -387,6 +395,13 @@ const Kanji = ({ user = 0, selectedLevel = 'N5' }) => {
 
       try {
         await update(ref(db, `${user}/kanjiLearning/learnedKanjis/${char}`), entry);
+        recordLearningActivity(user, {
+          section: 'kanji',
+          action: 'kanji_add',
+          itemId: char,
+          effort: 2,
+          metadata: { character: char, meaning: kanjiItem.meaning },
+        }).catch(() => {});
         notify(`Added "${char}" (${kanjiItem.meaning}) to learned kanjis! ✨`, 'success');
       } catch (err) {
         console.error('Error adding kanji:', err);
@@ -426,6 +441,13 @@ const Kanji = ({ user = 0, selectedLevel = 'N5' }) => {
 
     try {
       await update(ref(db), updates);
+      recordLearningActivity(user, {
+        section: 'kanji',
+        action: 'kanji_add',
+        itemId: `custom_${kanjisFound.join('_')}`,
+        effort: Math.min(6, kanjisFound.length * 2),
+        metadata: { kanjis: kanjisFound },
+      }).catch(() => {});
       setLearnedKanjis(updatedLocal);
       setCustomKanjiInput('');
       notify(`Added ${kanjisFound.length} custom kanji to your learned list!`, 'success');
@@ -458,7 +480,6 @@ const Kanji = ({ user = 0, selectedLevel = 'N5' }) => {
       <header className="KanjiHeaderBox">
         <div className="KanjiTitleRow">
           <div className="TitleWithIcon">
-            <span className="HeaderIcon">🈸</span>
             <div>
               <h1 className="KanjiTitleText">Kanji Practice & Vocab Scaffolding</h1>
               <p className="KanjiSubtitleText">
@@ -839,7 +860,22 @@ const Kanji = ({ user = 0, selectedLevel = 'N5' }) => {
               {/* Vocab Flashcard */}
               <div
                 className={`VocabFlashcard ${isVocabFlipped ? 'flipped' : ''}`}
-                onClick={() => setIsVocabFlipped((p) => !p)}
+                onClick={() => {
+                  setIsVocabFlipped((p) => {
+                    if (!p) {
+                      const cur = unlockedVocabList[vocabCardIndex];
+                      if (cur) {
+                        recordLearningActivity(user, {
+                          section: 'kanji',
+                          action: 'kanji_vocab_review',
+                          itemId: cur.kanji || cur.word,
+                          effort: 1,
+                        }).catch(() => {});
+                      }
+                    }
+                    return !p;
+                  });
+                }}
               >
                 <div className="VocabFlashcardInner">
                   {/* Front */}

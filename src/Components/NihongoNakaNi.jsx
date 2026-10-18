@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./NihongoNakaNi.css";
+import { recordLearningActivity } from "../utils/activityTracker";
 
 const API = "https://nihongono-practice.onrender.com";
 
@@ -11,6 +12,9 @@ export default function NihongoNakaNi({ user, selectedLevel }) {
   const [showGrammarHints, setShowGrammarHints] = useState(false);
   const [showVocabHints, setShowVocabHints] = useState(false);
   const [charCount, setCharCount] = useState(0);
+  // New UI states for passage history
+  const [history, setHistory] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
 
   const userId = user ?? 0;
 
@@ -32,6 +36,16 @@ export default function NihongoNakaNi({ user, selectedLevel }) {
       setChecked(false);
       setAnswer("");
       setCharCount(0);
+      // Preserve current passage in history before loading new one
+      setHistory((prev) => {
+        if (passage && !passage.error) {
+          const last = prev[prev.length - 1];
+          if (!last || last.id !== passage.id) {
+            return [...prev, passage];
+          }
+        }
+        return prev;
+      });
       try {
         const res = await fetch(`${API}/api/nihongo-naka-ni/generate`, {
           method: "POST",
@@ -56,7 +70,7 @@ export default function NihongoNakaNi({ user, selectedLevel }) {
         setLoading(false);
       }
     },
-    [userId, selectedLevel]
+    [userId, selectedLevel, passage]
   );
 
   // Load on mount and when user/level changes
@@ -72,6 +86,13 @@ export default function NihongoNakaNi({ user, selectedLevel }) {
   const handleCheck = () => {
     if (!answer.trim()) return;
     setChecked(true);
+    recordLearningActivity(userId, {
+      section: 'translate',
+      action: 'translation_checked',
+      itemId: passage?.id || passage?.level || 'daily_passage',
+      effort: 5,
+      metadata: { level: selectedLevel, charCount: answer.trim().length }
+    }).catch(() => {});
   };
 
   const handleReset = () => {
@@ -122,6 +143,16 @@ export default function NihongoNakaNi({ user, selectedLevel }) {
           title="Regenerate a new passage for today"
         >
           ↻ New Passage
+        </button>
+        {/* History toggle button */}
+        <button
+          className="nnk-btn nnk-btn--ghost"
+          onClick={() => setShowHistory((v) => !v)}
+          disabled={loading || history.length === 0}
+          title="Show previous passages"
+          style={{ marginLeft: '8px' }}
+        >
+          📜 History ({history.length})
         </button>
       </div>
 

@@ -4,6 +4,7 @@ import { ref, push, update, get, child, onValue, set, remove } from "firebase/da
 import db from './firebase'
 import jmdictData from '../data/jmdict.json';
 import kanjiCatalog from '../data/kanjiCatalog.json';
+import { recordLearningActivity } from '../utils/activityTracker';
 
 
 const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
@@ -866,6 +867,14 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
                 totalCount: updatedWords.length
             });
 
+            recordLearningActivity(user, {
+                section: 'vocab',
+                action: 'vocab_add',
+                itemId: safeArray[0]?.word || Date.now(),
+                effort: Math.min(8, safeArray.length * 2),
+                metadata: { wordCount: safeArray.length }
+            }).catch(() => {});
+
             // Also sync newly added words to Weaviate vector database
             fetch(`${BACKEND_URL}/api/add-vocab`, {
                 method: 'POST',
@@ -1359,6 +1368,17 @@ const VocabSection = ({user, userName, users = [], selectedLevel = 'N5'}) => {
                                                         revisionQuestion.meaning,
                                                         isCorrect
                                                     );
+                                                    recordLearningActivity(user, {
+                                                        section: 'vocab',
+                                                        action: 'vocab_quiz',
+                                                        itemId: revisionQuestion.id,
+                                                        effort: 1,
+                                                        metadata: {
+                                                            word: revisionQuestion.word,
+                                                            isCorrect,
+                                                            mode: revisionQuestion.mode
+                                                        }
+                                                    }).catch(() => {});
                                                 }}
                                             >
                                                 {opt}

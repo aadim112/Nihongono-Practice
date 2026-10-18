@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ref, get, set } from "firebase/database";
 import db from './firebase';
 import './YoutubePractice.css';
+import { recordLearningActivity } from '../utils/activityTracker';
 
 const YoutubePractice = ({ user }) => {
     const [url, setUrl] = useState('');
@@ -208,6 +209,14 @@ const YoutubePractice = ({ user }) => {
                 words: updatedWords,
                 totalCount: updatedWords.length,
             });
+
+            recordLearningActivity(user, {
+                section: 'vocab',
+                action: 'vocab_add',
+                itemId: newWord.word,
+                effort: 2,
+                metadata: { source: 'youtube_practice' }
+            }).catch(() => {});
 
             setAddedStatus(true);
             setTimeout(() => setAddedStatus(false), 2000);

@@ -3,6 +3,7 @@ import './GrammerSection.css';
 import grammar from './Grammar.json';
 import db from './firebase';
 import { ref, get, set } from 'firebase/database';
+import { recordLearningActivity } from '../utils/activityTracker';
 
 const GrammerSection = ({ user, selectedLevel = 'N5' }) => {
   const [grammarData, setGrammarData] = useState([]);
@@ -72,13 +73,24 @@ const GrammerSection = ({ user, selectedLevel = 'N5' }) => {
       const learnedArray = snapshot.exists() ? (snapshot.val() || []) : [];
 
       let updatedArray;
-      if (learnedArray.includes(id)) {
+      const isLearning = !learnedArray.includes(id);
+      if (!isLearning) {
         updatedArray = learnedArray.filter(item => item !== id);
       } else {
         updatedArray = [...learnedArray, id];
       }
 
       await set(grammarLearnedRef, updatedArray);
+
+      if (isLearning) {
+        recordLearningActivity(user, {
+          section: 'grammar',
+          action: 'grammar_learned',
+          itemId: id,
+          effort: 3,
+          metadata: { grammarId: id }
+        }).catch(() => {});
+      }
 
       setGrammarData(prev =>
         prev.map(item =>
@@ -114,6 +126,14 @@ const GrammerSection = ({ user, selectedLevel = 'N5' }) => {
 
       const updatedCustom = [...existingCustom, newRule];
       await set(customPatternsRef, updatedCustom);
+
+      recordLearningActivity(user, {
+        section: 'grammar',
+        action: 'grammar_add',
+        itemId: newRule.id,
+        effort: 3,
+        metadata: { pattern: newRule.pattern }
+      }).catch(() => {});
 
       // Update local state
       setGrammarData(prev => [

@@ -1,41 +1,58 @@
+/* ==========================================================================
+   App.css — Apple HIG Layout & Navigation System
+   ========================================================================== */
+
 .AppContainer {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: var(--bg-page);
-  padding-bottom: 80px;
+  color: var(--text-primary);
+  padding-bottom: 84px;
 }
 
 @media (min-width: 769px) {
   .AppContainer {
-    padding-bottom: 24px;
+    padding-bottom: 32px;
   }
 }
 
-/* --- Header / Navbar --- */
+/* --------------------------------------------------------------------------
+   Header / Navigation Bar (Apple Liquid Glass Toolbar)
+   -------------------------------------------------------------------------- */
 .Navbar {
   width: 100%;
   min-height: 64px;
-  background-color: #ffffff;
-  border-bottom: 2px solid #111111;
+  background-color: var(--bg-glass-navbar);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border-bottom: 1px solid var(--border-default);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 24px;
+  padding: 10px 28px;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 200;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
 }
 
 .NavBrand {
   display: flex;
   align-items: center;
   gap: 12px;
+  text-decoration: none;
 }
 
 .NavLogoIcon {
-  font-size: 24px;
+  font-size: 26px;
   line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(197, 5, 12, 0.25));
+  transition: transform var(--transition-spring);
+}
+
+.NavBrand:hover .NavLogoIcon {
+  transform: scale(1.08) rotate(-4deg);
 }
 
 .NavTitleGroup {
@@ -48,17 +65,21 @@
   font-family: var(--font-jp-heading);
   font-size: 20px;
   font-weight: 700;
-  color: var(--color-primary);
-  letter-spacing: -0.2px;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  line-height: 1.15;
 }
 
 .NavSubtitle {
-  font-family: var(--font-jp-heading);
+  font-family: var(--font-jp-body);
   font-size: 11px;
-  color: #555555;
-  margin-top: -2px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  margin-top: 1px;
+  letter-spacing: 0.2px;
 }
 
+/* User & Level Selection Controls */
 .UserSmallInfo {
   display: flex;
   align-items: center;
@@ -68,54 +89,57 @@
 .UserSelectPill {
   display: flex;
   align-items: center;
-  gap: 6px;
-  background-color: #ffffff;
-  border: 1.5px solid #111111;
-  padding: 5px 12px;
-  border-radius: var(--radius-sm);
+  gap: 7px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-xs);
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.UserSelectPill:hover,
+.UserSelectPill:focus-within {
+  border-color: var(--text-tertiary);
+  box-shadow: var(--shadow-sm);
 }
 
 .UserIcon {
-  font-size: 18px;
+  font-size: 17px;
   color: var(--color-primary);
+  line-height: 1;
 }
 
 .UserSelect {
   background: transparent;
   border: none;
-  color: #111111;
-  font-weight: 700;
+  color: var(--text-primary);
+  font-weight: 600;
   font-size: 13px;
   cursor: pointer;
   outline: none;
+  padding-right: 4px;
 }
 
-.LevelBadge,
 .LevelSelectPill {
   display: flex;
   align-items: center;
-  gap: 6px;
-  background-color: #111111;
+  gap: 7px;
+  background-color: #1d1d1f;
   color: #ffffff;
   font-size: 12px;
-  font-weight: 700;
-  padding: 5px 10px;
-  border-radius: var(--radius-sm);
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: all var(--transition-fast);
 }
 
-.LevelSelect {
-  background: transparent;
-  border: none;
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 12px;
-  cursor: pointer;
-  outline: none;
-}
-
-.LevelSelect option {
-  background-color: #111111;
-  color: #ffffff;
+.LevelSelectPill:hover,
+.LevelSelectPill:focus-within {
+  background-color: #000000;
+  transform: translateY(-0.5px);
 }
 
 .BadgeDot {
@@ -123,30 +147,148 @@
   height: 6px;
   border-radius: 50%;
   background-color: var(--color-primary);
+  box-shadow: 0 0 6px var(--color-primary);
 }
 
-/* --- Main Layout Grid --- */
+.LevelSelect {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 12.5px;
+  cursor: pointer;
+  outline: none;
+}
+
+.LevelSelect option {
+  background-color: #1d1d1f;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   Main Layout Grid
+   -------------------------------------------------------------------------- */
 .MainComponent {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1260px;
   margin: 0 auto;
-  padding: 20px 20px;
+  padding: 24px 24px;
   display: flex;
-  gap: 24px;
+  gap: 28px;
   flex: 1;
+  box-sizing: border-box;
 }
 
-/* --- Desktop Sidebar --- */
+/* --------------------------------------------------------------------------
+   Desktop Sidebar Navigation
+   -------------------------------------------------------------------------- */
 .LeftSideDesktop {
-  width: 200px;
+  width: 236px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  gap: 8px;
+}
+
+.NavTabBtn {
+  display: flex;
+  align-items: center;
   gap: 12px;
+  padding: 10px 14px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-align: left;
+  width: 100%;
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
+}
+
+.NavTabBtn:hover {
+  border-color: var(--border-strong);
+  background-color: var(--bg-surface-secondary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.NavTabBtn:active {
+  transform: scale(0.98);
+}
+
+.NavTabBtn.active {
+  background-color: #1d1d1f;
+  border-color: #1d1d1f;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+}
+
+.NavTabBtn.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10%;
+  bottom: 10%;
+  width: 3.5px;
+  background-color: var(--color-primary);
+  border-radius: 0 4px 4px 0;
+}
+
+.NavBtnImageWrap {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-surface-tertiary);
+  font-size: 18px;
+  transition: transform var(--transition-fast);
+}
+
+.NavBtnImageWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.NavTabBtn:hover .NavBtnImageWrap {
+  transform: scale(1.05);
+}
+
+.NavBtnLabel {
+  display: flex;
+  flex-direction: column;
+}
+
+.NavBtnMain {
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  letter-spacing: -0.1px;
+}
+
+.NavTabBtn.active .NavBtnMain {
+  color: #ffffff;
+}
+
+.NavBtnSub {
+  font-family: var(--font-jp-heading);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 1px;
+}
+
+.NavTabBtn.active .NavBtnSub {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .SidebarConsistencyWrapper {
-  margin-top: 6px;
+  margin-top: 8px;
   width: 100%;
 }
 
@@ -158,74 +300,13 @@
   .MobileConsistencySection {
     display: block;
     width: 100%;
+    margin-bottom: 8px;
   }
 }
 
-.NavTabBtn {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  background-color: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: var(--transition-fast);
-  text-align: left;
-  width: 100%;
-}
-
-.NavTabBtn:hover {
-  border-color: #111111;
-  background-color: #f8f9fa;
-}
-
-.NavTabBtn.active {
-  border-color: var(--color-primary);
-  background-color: #111111;
-  color: #ffffff;
-}
-
-.NavBtnImageWrap {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.NavBtnImageWrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.NavBtnLabel {
-  display: flex;
-  flex-direction: column;
-}
-
-.NavBtnMain {
-  font-weight: 700;
-  font-size: 14px;
-  color: #111111;
-}
-
-.NavTabBtn.active .NavBtnMain {
-  color: #ffffff;
-}
-
-.NavBtnSub {
-  font-family: var(--font-jp-heading);
-  font-size: 12px;
-  color: #666666;
-}
-
-.NavTabBtn.active .NavBtnSub {
-  color: #cccccc;
-}
-
-/* --- Right Side Content --- */
+/* --------------------------------------------------------------------------
+   Right Side Content Container
+   -------------------------------------------------------------------------- */
 .RightSide {
   flex: 1;
   min-width: 0;
@@ -234,43 +315,65 @@
   gap: 20px;
 }
 
+.TabContentWrapper {
+  width: 100%;
+  animation: fadeInTab 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInTab {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .DefaultWindow {
-  background-color: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: var(--radius-md);
-  padding: 16px 20px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
 }
 
 .SectionCardHeader {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .SectionCardIcon {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .SectionCardHeader h3 {
   margin: 0;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
-  color: #111111;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
 }
 
-/* --- Mobile Bottom Nav (< 768px) --- */
+/* --------------------------------------------------------------------------
+   Mobile Bottom Navigation Bar (Apple Liquid Glass Tab Bar)
+   -------------------------------------------------------------------------- */
 .MobileBottomNav {
   display: none;
 }
 
 @media (max-width: 768px) {
   .Navbar {
-    padding: 10px 14px;
+    padding: 10px 16px;
   }
 
   .NavTitle {
-    font-size: 17px;
+    font-size: 18px;
   }
 
   .NavSubtitle {
@@ -278,7 +381,7 @@
   }
 
   .MainComponent {
-    padding: 14px 12px;
+    padding: 14px 14px;
   }
 
   .LeftSideDesktop {
@@ -291,10 +394,14 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 60px;
-    background: #ffffff;
-    border-top: 2px solid #111111;
+    height: 64px;
+    background: var(--bg-glass-navbar);
+    backdrop-filter: var(--backdrop-blur);
+    -webkit-backdrop-filter: var(--backdrop-blur);
+    border-top: 1px solid var(--border-default);
     z-index: 1000;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
   }
 
   .BottomNavTab {
@@ -303,27 +410,48 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
+    gap: 3px;
     background: transparent;
     border: none;
-    color: #555555;
+    color: var(--text-tertiary);
     font-family: var(--font-sans);
     cursor: pointer;
     padding: 6px 0;
+    transition: all var(--transition-fast);
+    position: relative;
   }
 
   .BottomNavIcon {
-    font-size: 18px;
+    font-size: 20px;
     line-height: 1;
+    transition: transform var(--transition-spring);
   }
 
   .BottomNavText {
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: -0.1px;
+  }
+
+  .BottomNavTab:active {
+    transform: scale(0.94);
   }
 
   .BottomNavTab.active {
     color: var(--color-primary);
-    background-color: #fef2f2;
+  }
+
+  .BottomNavTab.active .BottomNavIcon {
+    transform: scale(1.12);
+  }
+
+  .BottomNavTab.active::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    width: 20px;
+    height: 3px;
+    background-color: var(--color-primary);
+    border-radius: var(--radius-pill);
   }
 }

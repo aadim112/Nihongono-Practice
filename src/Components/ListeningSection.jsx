@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import "./ListeningSection.css";
+import { recordLearningActivity } from "../utils/activityTracker";
 
 const FIREBASE_URL = "https://japanese-practice-bdcce-default-rtdb.firebaseio.com";
 
@@ -241,7 +242,16 @@ export default function ListeningSection({ user, selectedLevel }) {
     setSelected(idx);
     setAnswered(true);
 
-    const delta      = idx === exercise.correct_option ? 20 : -10;
+    const isCorrect = idx === exercise.correct_option;
+    recordLearningActivity(userId, {
+      section: 'listening',
+      action: 'listening_quiz',
+      itemId: exercise.question_id || exercise.japanese_topic || `${Date.now()}`,
+      effort: 3,
+      metadata: { isCorrect, level: selectedLevel }
+    }).catch(() => {});
+
+    const delta      = isCorrect ? 20 : -10;
     const grammarIds = exercise.grammar_ids_used || [];
     if (grammarIds.length > 0) {
       try {

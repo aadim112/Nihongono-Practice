@@ -1,44 +1,71 @@
 /* ─────────────────────────────────────────────────────────────
-   NihongoNakaNi.css — Daily translation practice, matches site
+   NihongoNakaNi.css — Apple HIG Redesign for Daily Translation Practice
    ───────────────────────────────────────────────────────────── */
 
 .nnk-section {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
+  animation: appleFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── Banner ──────────────────────────────────────────────────── */
+/* ── Hero Banner with Japanese Watermark Seal ────────────────── */
 .nnk-banner {
+  position: relative;
   width: 100%;
-  padding: 24px 20px;
-  border-radius: var(--radius-md);
-  background-color: #111111;
-  border-bottom: 3px solid var(--color-primary);
+  padding: 28px 24px;
+  border-radius: var(--radius-lg, 18px);
+  background: var(--surface-card, #ffffff);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  box-shadow: var(--shadow-card, 0 2px 8px rgba(0, 0, 0, 0.04));
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Subtle Japanese Calligraphy Watermark (訳 = Translation) */
+.nnk-banner::after {
+  content: "訳";
+  position: absolute;
+  right: 20px;
+  bottom: -15px;
+  font-family: var(--font-jp-heading, 'Shippori Antique', serif);
+  font-size: 110px;
+  font-weight: 900;
+  color: var(--color-primary, #c5050c);
+  opacity: 0.04;
+  pointer-events: none;
+  line-height: 1;
+  user-select: none;
 }
 
 .nnk-banner__jp {
-  font-family: var(--font-jp-heading);
-  font-size: clamp(26px, 5vw, 36px);
-  font-weight: 700;
-  color: #ffffff;
+  font-family: var(--font-jp-heading, 'Shippori Antique', serif);
+  font-size: clamp(26px, 4vw, 34px);
+  font-weight: 800;
+  color: var(--text-primary, #111827);
   margin: 0;
-  letter-spacing: 0.5px;
+  letter-spacing: -0.02em;
+  position: relative;
+  z-index: 1;
 }
 
 .nnk-banner__en {
-  font-family: var(--font-sans);
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, sans-serif);
   font-size: 13px;
-  color: #aaaaaa;
-  margin: 4px 0 0;
+  font-weight: 500;
+  color: var(--text-secondary, #6b7280);
+  margin: 6px 0 0;
+  position: relative;
+  z-index: 1;
 }
 
-/* ── Date row ────────────────────────────────────────────────── */
+/* ── Date Row & Control Chips ────────────────────────────────── */
 .nnk-date-row {
   display: flex;
   align-items: center;
@@ -49,96 +76,115 @@
 .nnk-date-chip {
   font-size: 13px;
   font-weight: 600;
-  color: #555555;
-  background: #f3f4f6;
-  border: 1.5px solid #e5e7eb;
-  border-radius: var(--radius-pill);
-  padding: 5px 14px;
+  color: var(--text-secondary, #4b5563);
+  background: var(--surface-card, #ffffff);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-pill, 9999px);
+  padding: 6px 16px;
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.03));
 }
 
 .nnk-cache-badge {
   font-size: 12px;
   font-weight: 700;
-  padding: 5px 12px;
-  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill, 9999px);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .nnk-cache-badge--cached {
-  background: #f0fdf4;
-  color: #16a34a;
-  border: 1.5px solid #bbf7d0;
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1.5px solid #a7f3d0;
 }
 
 .nnk-cache-badge--new {
   background: #fef2f2;
-  color: var(--color-primary);
+  color: var(--color-primary, #c5050c);
   border: 1.5px solid #fecaca;
 }
 
 .nnk-refresh-btn {
   margin-left: auto;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 700;
-  background: #ffffff;
-  color: #333333;
-  border: 1.5px solid #e5e7eb;
-  border-radius: var(--radius-pill);
-  padding: 5px 14px;
+  font-family: var(--font-sans, -apple-system, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  min-height: 36px;
+  background: var(--surface-card, #ffffff);
+  color: var(--text-primary, #111827);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-pill, 9999px);
+  padding: 6px 16px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.03));
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .nnk-refresh-btn:hover:not(:disabled) {
-  border-color: #111111;
-  background: #f8f9fa;
-  color: var(--color-primary);
+  border-color: var(--color-primary, #c5050c);
+  color: var(--color-primary, #c5050c);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md, 0 4px 10px rgba(0, 0, 0, 0.06));
+}
+
+.nnk-refresh-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .nnk-refresh-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
-/* ── Card base ───────────────────────────────────────────────── */
+/* ── Card Base ───────────────────────────────────────────────── */
 .nnk-card {
-  background: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: var(--radius-md);
-  padding: 18px 22px;
+  background: var(--surface-card, #ffffff);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-md, 14px);
+  padding: 22px 26px;
+  box-shadow: var(--shadow-card, 0 1px 3px rgba(0, 0, 0, 0.04));
   display: flex;
   flex-direction: column;
   gap: 14px;
+  box-sizing: border-box;
+  transition: box-shadow var(--transition-fast, 0.15s ease);
+}
+
+.nnk-card:hover {
+  box-shadow: var(--shadow-hover, 0 4px 16px rgba(0, 0, 0, 0.06));
 }
 
 .nnk-card--error {
-  border-color: var(--color-primary);
+  border-color: #fecaca;
   background: #fef2f2;
-  color: var(--color-primary);
+  color: var(--color-primary, #c5050c);
   font-size: 14px;
   font-weight: 600;
+  border-radius: var(--radius-md, 14px);
 }
 
 .nnk-loading-card {
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
-  color: #555555;
+  padding: 48px 24px;
+  color: var(--text-secondary, #6b7280);
   font-size: 14px;
-  gap: 14px;
+  gap: 16px;
   text-align: center;
 }
 
-/* ── Card label row ──────────────────────────────────────────── */
+/* ── Card Header & Badges ────────────────────────────────────── */
 .nnk-card__label {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  color: #555555;
+  color: var(--text-secondary, #4b5563);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.06em;
 }
 
 .nnk-label-icon {
@@ -147,23 +193,25 @@
 
 .nnk-level-tag {
   margin-left: auto;
-  background: #111111;
+  background: var(--color-primary, #c5050c);
   color: #ffffff;
   font-size: 11px;
   font-weight: 700;
-  padding: 2px 8px;
-  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill, 9999px);
+  box-shadow: 0 1px 4px rgba(197, 5, 12, 0.25);
 }
 
 .nnk-char-count {
   margin-left: auto;
   font-size: 12px;
-  font-weight: 500;
-  color: #888888;
+  font-weight: 600;
+  color: var(--text-tertiary, #9ca3af);
   text-transform: none;
+  font-variant-numeric: tabular-nums;
 }
 
-/* ── English passage ─────────────────────────────────────────── */
+/* ── English Passage ─────────────────────────────────────────── */
 .nnk-passage-body {
   display: flex;
   flex-direction: column;
@@ -173,12 +221,12 @@
 .nnk-passage-p {
   font-size: 16px;
   line-height: 1.85;
-  color: #111111;
+  color: var(--text-primary, #111827);
   margin: 0;
-  font-family: var(--font-sans);
+  font-family: var(--font-sans, -apple-system, sans-serif);
 }
 
-/* ── Grammar & Vocab hints accordion ─────────────────────────── */
+/* ── Hints Accordion (Apple Disclosure Rows) ─────────────────── */
 .nnk-hints-header-row {
   display: flex;
   gap: 16px;
@@ -188,26 +236,29 @@
 .nnk-hints-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: transparent;
-  border: none;
+  gap: 8px;
+  background: var(--surface-sunken, #f9fafb);
+  border: 1px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-pill, 9999px);
+  padding: 8px 16px;
   cursor: pointer;
-  font-family: var(--font-sans);
-  font-size: 14px;
+  font-family: var(--font-sans, -apple-system, sans-serif);
+  font-size: 13px;
   font-weight: 600;
-  color: #333333;
-  padding: 4px 0;
-  text-align: left;
+  color: var(--text-secondary, #4b5563);
+  transition: all 0.15s ease;
 }
 
 .nnk-hints-toggle:hover {
-  color: var(--color-primary);
+  background: var(--surface-card, #ffffff);
+  border-color: var(--color-primary, #c5050c);
+  color: var(--color-primary, #c5050c);
 }
 
 .nnk-chevron {
-  font-size: 16px;
-  transition: transform 0.2s ease;
-  color: #888888;
+  font-size: 14px;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-tertiary, #9ca3af);
 }
 
 .nnk-chevron--open {
@@ -217,96 +268,98 @@
 .nnk-hints-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  padding-top: 4px;
+  gap: 10px;
+  padding-top: 8px;
 }
 
 .nnk-hint-chip {
   display: flex;
   flex-direction: column;
-  background: #f8f9fa;
-  border: 1.5px solid #e5e7eb;
-  border-radius: var(--radius-md);
-  padding: 8px 12px;
-  gap: 2px;
-  min-width: 140px;
-  max-width: 240px;
+  background: var(--surface-sunken, #f9fafb);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-sm, 10px);
+  padding: 10px 14px;
+  gap: 3px;
+  min-width: 150px;
+  max-width: 260px;
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.03));
 }
 
 .nnk-hint-chip--vocab {
   background: #fffdf5;
-  border-color: #fef08a;
+  border-color: #fde68a;
 }
 
 .nnk-hint-pattern {
-  font-family: var(--font-jp-heading);
+  font-family: var(--font-jp-heading, 'Shippori Antique', serif);
   font-size: 15px;
   font-weight: 700;
-  color: #111111;
+  color: var(--text-primary, #111827);
 }
 
 .nnk-hint-reading {
   font-size: 12px;
-  color: #666666;
-  font-weight: 400;
+  color: var(--text-secondary, #6b7280);
+  font-weight: 500;
 }
 
 .nnk-hint-meaning {
-  font-size: 11px;
-  color: #666666;
-  line-height: 1.4;
+  font-size: 12px;
+  color: var(--text-secondary, #4b5563);
+  line-height: 1.45;
 }
 
-/* ── Textarea ────────────────────────────────────────────────── */
+/* ── Translation Textarea (Apple Input Style) ────────────────── */
 .nnk-textarea {
   width: 100%;
   resize: vertical;
   min-height: 180px;
-  font-family: var(--font-jp-heading);
+  font-family: var(--font-jp-body, 'Zen Kaku Gothic New', sans-serif);
   font-size: 16px;
   line-height: 1.85;
-  color: #111111;
-  background: #f8f9fa;
-  border: 1.5px solid #e5e7eb;
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
+  color: var(--text-primary, #111827);
+  background: var(--surface-sunken, #f9fafb);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-md, 12px);
+  padding: 16px 18px;
   outline: none;
-  transition: border-color 0.15s, background-color 0.15s;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   box-sizing: border-box;
 }
 
 .nnk-textarea:focus {
-  border-color: #111111;
+  border-color: var(--color-primary, #c5050c);
   background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(197, 5, 12, 0.15);
 }
 
 .nnk-textarea::placeholder {
-  color: #aaaaaa;
+  color: var(--text-tertiary, #9ca3af);
 }
 
-/* ── Action row ──────────────────────────────────────────────── */
+/* ── Action Row ──────────────────────────────────────────────── */
 .nnk-action-row {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .nnk-action-card {
-  background: #f8f9fa;
+  background: var(--surface-sunken, #f9fafb);
 }
 
 .nnk-self-assess-label {
   font-size: 13px;
-  color: #555555;
+  color: var(--text-secondary, #4b5563);
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
-/* ── Side-by-side comparison ─────────────────────────────────── */
+/* ── Side-by-Side Comparison ─────────────────────────────────── */
 .nnk-compare-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 18px;
 }
 
 @media (max-width: 768px) {
@@ -316,15 +369,16 @@
 }
 
 .nnk-compare-card {
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-md, 14px);
 }
 
 .nnk-compare-card--user {
-  border-color: #d1d5db;
+  border-color: var(--border-subtle, #e5e7eb);
+  background: #ffffff;
 }
 
 .nnk-compare-card--ref {
-  border-color: #16a34a;
+  border-color: #86efac;
   background: #f0fdf4;
 }
 
@@ -335,18 +389,19 @@
 }
 
 .nnk-compare-p {
-  font-family: var(--font-jp-heading);
-  font-size: 15px;
+  font-family: var(--font-jp-body, 'Zen Kaku Gothic New', sans-serif);
+  font-size: 16px;
   line-height: 1.9;
-  color: #111111;
+  color: var(--text-primary, #111827);
   margin: 0;
 }
 
 .nnk-ref-p {
   color: #14532d;
+  font-weight: 500;
 }
 
-/* ── Chips for used grammar & vocab ───────────────────────────── */
+/* ── Chips for Used Grammar & Vocab ───────────────────────────── */
 .nnk-used-list {
   display: flex;
   flex-wrap: wrap;
@@ -354,73 +409,118 @@
 }
 
 .nnk-used-chip {
-  font-family: var(--font-jp-heading);
+  font-family: var(--font-jp-body, 'Zen Kaku Gothic New', sans-serif);
   font-size: 13px;
-  background: #111111;
-  color: #ffffff;
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
+  font-weight: 600;
+  background: var(--surface-sunken, #f3f4f6);
+  color: var(--text-primary, #111827);
+  border: 1px solid var(--border-subtle, #e5e7eb);
+  padding: 5px 14px;
+  border-radius: var(--radius-pill, 9999px);
 }
 
 .nnk-used-chip--vocab {
-  background: #f3f4f6;
-  color: #1f2937;
-  border: 1px solid #d1d5db;
+  background: #fffdf5;
+  color: #78350f;
+  border-color: #fde68a;
 }
 
-/* ── Buttons ─────────────────────────────────────────────────── */
+/* ── Buttons (Apple HIG Tactile Buttons) ──────────────────────── */
 .nnk-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  font-family: var(--font-sans);
+  gap: 8px;
+  font-family: var(--font-sans, -apple-system, sans-serif);
   font-size: 14px;
-  font-weight: 700;
-  padding: 10px 20px;
-  border-radius: var(--radius-sm);
+  font-weight: 600;
+  min-height: 44px;
+  padding: 10px 22px;
+  border-radius: var(--radius-pill, 9999px);
   border: 1.5px solid transparent;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  box-sizing: border-box;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .nnk-btn--primary {
-  background: #111111;
+  background: var(--color-primary, #c5050c);
   color: #ffffff;
-  border-color: #111111;
+  border-color: var(--color-primary, #c5050c);
+  box-shadow: 0 2px 8px rgba(197, 5, 12, 0.25);
 }
 
 .nnk-btn--primary:hover:not(:disabled) {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
+  background: var(--color-primary-dark, #a3040a);
+  border-color: var(--color-primary-dark, #a3040a);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(197, 5, 12, 0.35);
+}
+
+.nnk-btn--primary:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .nnk-btn--primary:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 .nnk-btn--ghost {
-  background: transparent;
-  color: #333333;
-  border-color: #e5e7eb;
+  background: var(--surface-card, #ffffff);
+  color: var(--text-secondary, #4b5563);
+  border-color: var(--border-subtle, #e5e7eb);
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.03));
 }
 
-.nnk-btn--ghost:hover {
-  border-color: #111111;
-  background: #f8f9fa;
+.nnk-btn--ghost:hover:not(:disabled) {
+  border-color: var(--border-strong, #9ca3af);
+  color: var(--text-primary, #111827);
+  background: var(--surface-sunken, #f9fafb);
+  transform: translateY(-1px);
 }
 
 /* ── Spinner ─────────────────────────────────────────────────── */
 .nnk-spinner {
-  width: 24px;
-  height: 24px;
-  border: 3px solid #e5e7eb;
-  border-top-color: #111111;
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--border-subtle, #e5e7eb);
+  border-top-color: var(--color-primary, #c5050c);
   border-radius: 50%;
   animation: nnk-spin 0.7s linear infinite;
 }
 
 @keyframes nnk-spin {
   to { transform: rotate(360deg); }
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .nnk-banner {
+    padding: 22px 18px;
+  }
+
+  .nnk-card {
+    padding: 18px 20px;
+  }
+
+  .nnk-passage-p {
+    font-size: 15px;
+  }
+
+  .nnk-textarea {
+    font-size: 15px;
+    padding: 14px 16px;
+  }
+
+  .nnk-btn {
+    width: 100%;
+  }
+
+  .nnk-refresh-btn {
+    margin-left: 0;
+    width: 100%;
+  }
 }

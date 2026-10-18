@@ -1,5 +1,5 @@
 /* ============================================================ */
-/* KANJI & VOCAB SCAFFOLDING STYLES                             */
+/* KANJI & VOCAB SCAFFOLDING STYLES — Apple HIG Redesign        */
 /* ============================================================ */
 
 .KanjiComponentRoot {
@@ -9,62 +9,84 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
-  color: #111111;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif);
+  color: var(--text-primary, #111827);
   box-sizing: border-box;
+  animation: appleFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* --- Toast Notifications --- */
+/* --- Toast Notifications (Apple Floating Pill HUD) --- */
 .KanjiToast {
   position: fixed;
   top: 75px;
   right: 24px;
   z-index: 9999;
   padding: 12px 20px;
-  border-radius: 8px;
+  border-radius: var(--radius-pill, 9999px);
   font-weight: 600;
-  font-size: 14px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-  animation: slideInToast 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-size: 13px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  animation: slideInToast 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
   gap: 8px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 @keyframes slideInToast {
   from {
-    transform: translateY(-15px);
+    transform: translateY(-16px) scale(0.96);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
 }
 
 .notification-success {
-  background-color: #10b981;
+  background-color: rgba(16, 185, 129, 0.95);
   color: #ffffff;
 }
 .notification-info {
-  background-color: #111111;
+  background-color: rgba(17, 24, 39, 0.92);
   color: #ffffff;
 }
 .notification-error {
-  background-color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.95);
   color: #ffffff;
 }
 
-/* --- Top Header Box --- */
+/* --- Top Header Box with Watermark Seal --- */
 .KanjiHeaderBox {
-  background: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 20px 24px;
+  position: relative;
+  background: var(--surface-card, #ffffff);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-lg, 18px);
+  padding: 24px 28px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  gap: 18px;
+  box-shadow: var(--shadow-card, 0 2px 8px rgba(0, 0, 0, 0.04));
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Japanese Calligraphy Watermark (字 = Character / Kanji) */
+.KanjiHeaderBox::after {
+  content: "字";
+  position: absolute;
+  right: 20px;
+  bottom: -20px;
+  font-family: var(--font-jp-heading, 'Shippori Antique', serif);
+  font-size: 130px;
+  font-weight: 900;
+  color: var(--color-primary, #c5050c);
+  opacity: 0.04;
+  pointer-events: none;
+  line-height: 1;
+  user-select: none;
 }
 
 .KanjiTitleRow {
@@ -73,112 +95,118 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 16px;
+  position: relative;
+  z-index: 1;
 }
 
 .TitleWithIcon {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .HeaderIcon {
-  font-size: 32px;
+  font-size: 30px;
   line-height: 1;
 }
 
 .KanjiTitleText {
   margin: 0;
-  font-size: 22px;
+  font-family: var(--font-jp-heading, 'Shippori Antique', serif);
+  font-size: clamp(22px, 3.5vw, 28px);
   font-weight: 800;
-  color: #111111;
-  letter-spacing: -0.3px;
+  color: var(--text-primary, #111827);
+  letter-spacing: -0.02em;
 }
 
 .KanjiSubtitleText {
   margin: 4px 0 0 0;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
+  font-weight: 500;
 }
 
-/* Sub-Tab Navigation */
+/* Sub-Tab Navigation (Apple Segmented Control) */
 .KanjiSubNavTabs {
   display: flex;
-  background: #f3f4f6;
+  background: var(--surface-sunken, #f3f4f6);
   padding: 4px;
-  border-radius: 8px;
+  border-radius: var(--radius-pill, 9999px);
   gap: 4px;
   flex-wrap: wrap;
+  border: 1px solid var(--border-subtle, #e5e7eb);
 }
 
 .SubTabBtn {
   border: none;
   background: transparent;
-  padding: 8px 14px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill, 9999px);
   font-size: 13px;
   font-weight: 600;
-  color: #4b5563;
+  color: var(--text-secondary, #6b7280);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
 }
 
 .SubTabBtn:hover {
-  color: #111111;
+  color: var(--text-primary, #111827);
 }
 
 .SubTabBtn.active {
   background: #ffffff;
-  color: #111111;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: var(--text-primary, #111827);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 /* Live Smart Knowledge Bar */
 .SmartMetricsBar {
   display: flex;
   align-items: center;
-  background: #fafafa;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 12px 18px;
+  border-radius: var(--radius-md, 12px);
+  padding: 14px 20px;
   justify-content: space-around;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
 }
 
 .MetricItem {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
 }
 
 .MetricValue {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 800;
-  color: #111111;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary, #111827);
 }
 
 .MetricValue.highlight-unlocked {
-  color: #059669;
+  color: #10b981;
 }
 
 .MetricValue.highlight-due {
-  color: #ea580c;
+  color: #f97316;
 }
 
 .MetricLabel {
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #6b7280;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary, #9ca3af);
   font-weight: 700;
 }
 
 .MetricDivider {
   width: 1px;
   height: 28px;
-  background-color: #e5e7eb;
+  background-color: var(--border-subtle, #e5e7eb);
 }
 
 /* --- Filter Bar --- */
@@ -188,7 +216,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .FilterButtonGroup {
@@ -198,34 +226,39 @@
 }
 
 .FilterBtn {
-  border: 1px solid #d1d5db;
-  background: #ffffff;
-  padding: 6px 12px;
-  border-radius: 6px;
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  background: var(--surface-card, #ffffff);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill, 9999px);
   font-size: 12px;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-secondary, #4b5563);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.03));
 }
 
 .FilterBtn:hover {
-  background: #f3f4f6;
-  border-color: #9ca3af;
+  background: var(--surface-sunken, #f9fafb);
+  border-color: var(--border-strong, #9ca3af);
+  color: var(--text-primary, #111827);
 }
 
 .FilterBtn.active {
-  background: #111111;
+  background: var(--color-primary, #c5050c);
   color: #ffffff;
-  border-color: #111111;
+  border-color: var(--color-primary, #c5050c);
+  box-shadow: 0 2px 6px rgba(197, 5, 12, 0.25);
 }
 
 .CardCounterPill {
-  font-size: 13px;
-  color: #4b5563;
-  background: #f3f4f6;
-  padding: 4px 10px;
-  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary, #6b7280);
+  background: var(--surface-sunken, #f3f4f6);
+  padding: 6px 12px;
+  border-radius: var(--radius-pill, 9999px);
+  border: 1px solid var(--border-subtle, #e5e7eb);
 }
 
 /* --- 3D Flashcard Container --- */
@@ -233,23 +266,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
   width: 100%;
 }
 
 .DeckProgressBar {
   width: 100%;
   max-width: 620px;
-  height: 5px;
+  height: 6px;
   background: #e5e7eb;
-  border-radius: 999px;
+  border-radius: var(--radius-pill, 9999px);
   overflow: hidden;
 }
 
 .DeckProgressFill {
   height: 100%;
-  background: #111111;
-  transition: width 0.3s ease;
+  background: var(--color-primary, #c5050c);
+  border-radius: var(--radius-pill, 9999px);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .AnkiCardContainer {
@@ -280,21 +314,26 @@
   height: 100%;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  background: #ffffff;
-  border: 2px solid #111111;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  background: var(--surface-card, #ffffff);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-lg, 20px);
+  box-shadow: var(--shadow-card, 0 4px 16px rgba(0, 0, 0, 0.06));
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.AnkiCardFace:hover {
+  box-shadow: var(--shadow-hover, 0 8px 24px rgba(0, 0, 0, 0.08));
 }
 
 /* Card Front */
 .CardFaceFront {
   justify-content: space-between;
   align-items: center;
-  padding: 24px;
+  padding: 28px;
 }
 
 .CardHeaderTags {
@@ -307,20 +346,22 @@
 .Badge {
   font-size: 11px;
   font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill, 9999px);
   text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .LevelBadge {
-  background: #111111;
+  background: var(--color-primary, #c5050c);
   color: #ffffff;
+  box-shadow: 0 1px 4px rgba(197, 5, 12, 0.25);
 }
 
 .StrokeBadge {
-  background: #f3f4f6;
-  color: #4b5563;
-  border: 1px solid #e5e7eb;
+  background: var(--surface-sunken, #f3f4f6);
+  color: var(--text-secondary, #4b5563);
+  border: 1px solid var(--border-subtle, #e5e7eb);
 }
 
 .ScoreBadge {
@@ -328,19 +369,19 @@
 }
 
 .score-mastered {
-  background: #d1fae5;
+  background: #ecfdf5;
   color: #065f46;
   border-color: #a7f3d0;
 }
 
 .score-learning {
-  background: #fef3c7;
+  background: #fffbeb;
   color: #92400e;
   border-color: #fde68a;
 }
 
 .score-struggling {
-  background: #fee2e2;
+  background: #fef2f2;
   color: #991b1b;
   border-color: #fecaca;
 }
@@ -355,12 +396,17 @@
 }
 
 .BigKanjiCharacter {
-  font-size: 120px;
+  font-size: 124px;
   font-weight: 500;
   line-height: 1;
-  color: #111111;
-  font-family: 'Yu Mincho', 'Hiragino Mincho Pro', 'MS Mincho', serif;
+  color: var(--text-primary, #111827);
+  font-family: var(--font-jp-heading, 'Shippori Antique', 'Yu Mincho', serif);
   user-select: none;
+  transition: transform 0.2s ease;
+}
+
+.AnkiCardContainer:hover .BigKanjiCharacter {
+  transform: scale(1.02);
 }
 
 .FlipTapHint {
@@ -368,11 +414,12 @@
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  color: #6b7280;
-  background: #f9fafb;
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px solid #e5e7eb;
+  font-weight: 500;
+  color: var(--text-secondary, #6b7280);
+  background: var(--surface-sunken, #f9fafb);
+  padding: 6px 16px;
+  border-radius: var(--radius-pill, 9999px);
+  border: 1px solid var(--border-subtle, #e5e7eb);
 }
 
 .CardFrontFooter {
@@ -382,13 +429,13 @@
 
 .CardFooterHint {
   font-size: 12px;
-  color: #9ca3af;
+  color: var(--text-tertiary, #9ca3af);
 }
 
 /* Card Back */
 .CardFaceBack {
   transform: rotateY(180deg);
-  padding: 20px 24px;
+  padding: 24px 28px;
   overflow-y: auto;
   gap: 16px;
 }
@@ -397,22 +444,22 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 1.5px solid #f3f4f6;
+  border-bottom: 1.5px solid var(--border-subtle, #f3f4f6);
   padding-bottom: 14px;
 }
 
 .BackKanjiMain {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
 
 .BackKanjiChar {
-  font-size: 56px;
+  font-size: 58px;
   font-weight: 500;
   line-height: 1;
-  color: #111111;
-  font-family: 'Yu Mincho', 'Hiragino Mincho Pro', serif;
+  color: var(--text-primary, #111827);
+  font-family: var(--font-jp-heading, 'Shippori Antique', serif);
 }
 
 .BackKanjiTextInfo {
@@ -425,35 +472,37 @@
   margin: 0;
   font-size: 20px;
   font-weight: 700;
-  color: #111111;
+  color: var(--text-primary, #111827);
   text-transform: capitalize;
 }
 
 .BackReadingsGroup {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .ReadingItem {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   font-size: 13px;
 }
 
 .ReadingType {
   font-weight: 700;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
 }
 
 .ReadingValue.katakana {
   font-weight: 600;
   color: #2563eb;
+  font-family: var(--font-jp-body, sans-serif);
 }
 
 .ReadingValue.hiragana {
   font-weight: 600;
-  color: #059669;
+  color: #10b981;
+  font-family: var(--font-jp-body, sans-serif);
 }
 
 .BackActions {
@@ -463,27 +512,23 @@
 }
 
 .AudioSpeakButton {
-  background: #f3f4f6;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 16px;
+  min-width: 44px;
+  min-height: 44px;
+  background: var(--surface-sunken, #f3f4f6);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: 50%;
+  font-size: 18px;
   cursor: pointer;
-  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
 }
 
 .AudioSpeakButton:hover {
-  background: #e5e7eb;
-  transform: scale(1.05);
-}
-
-.AudioSpeakButton.playing {
-  animation: pulseAudio 1s infinite alternate;
-}
-
-@keyframes pulseAudio {
-  from { transform: scale(1); }
-  to { transform: scale(1.1); background: #dbeafe; }
+  background: #ffffff;
+  border-color: var(--color-primary, #c5050c);
+  transform: scale(1.08);
 }
 
 .ScoreCircle {
@@ -497,11 +542,12 @@
   font-weight: 800;
   font-size: 15px;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .ScoreCircle small {
   font-size: 9px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
 }
 
@@ -524,32 +570,28 @@
   margin: 0;
   font-size: 14px;
   font-weight: 700;
-  color: #111111;
+  color: var(--text-primary, #111827);
 }
 
 .StrictBadge {
   font-size: 11px;
   font-weight: 700;
-  color: #059669;
+  color: #065f46;
   background: #ecfdf5;
-  padding: 3px 8px;
-  border-radius: 4px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill, 9999px);
   border: 1px solid #a7f3d0;
 }
 
 .NoMatchingVocabNotice {
-  background: #f9fafb;
-  border: 1px dashed #d1d5db;
-  border-radius: 8px;
-  padding: 16px;
+  background: var(--surface-sunken, #f9fafb);
+  border: 1.5px dashed var(--border-subtle, #d1d5db);
+  border-radius: var(--radius-md, 12px);
+  padding: 18px;
   text-align: center;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   font-size: 13px;
   line-height: 1.5;
-}
-
-.NoMatchingVocabNotice p {
-  margin: 0 0 6px 0;
 }
 
 .VocabCardList {
@@ -561,28 +603,22 @@
   padding-right: 4px;
 }
 
-.VocabCardList::-webkit-scrollbar {
-  width: 6px;
-}
-.VocabCardList::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 3px;
-}
-
 .VocabCardItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 8px 12px;
+  background: var(--surface-sunken, #f9fafb);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-md, 10px);
+  padding: 10px 14px;
   gap: 12px;
-  transition: background 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .VocabCardItem:hover {
-  background: #f3f4f6;
+  background: #ffffff;
+  border-color: var(--border-strong, #9ca3af);
+  transform: translateY(-1px);
 }
 
 .VocabCardLeft {
@@ -594,18 +630,19 @@
 .VocabKanjiText {
   font-size: 18px;
   font-weight: 700;
-  color: #111111;
+  color: var(--text-primary, #111827);
+  font-family: var(--font-jp-heading, serif);
 }
 
 .VocabReadingText {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
 }
 
 .VocabMeaningText {
   flex: 1;
   font-size: 13px;
-  color: #374151;
+  color: var(--text-secondary, #4b5563);
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -621,15 +658,16 @@
 
 .VocabAudioBtn {
   background: #ffffff;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-subtle, #d1d5db);
   border-radius: 6px;
-  padding: 4px 8px;
+  padding: 5px 10px;
   font-size: 13px;
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .VocabAudioBtn:hover {
-  background: #f3f4f6;
+  background: var(--surface-sunken, #f3f4f6);
 }
 
 .VocabConfidenceBadge {
@@ -637,11 +675,11 @@
   font-weight: 700;
   background: #e0f2fe;
   color: #0369a1;
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill, 9999px);
 }
 
-/* --- Anki Response Bar --- */
+/* --- Anki Response Bar (Apple Tactile Rating Buttons) --- */
 .AnkiResponseBar {
   display: flex;
   gap: 10px;
@@ -651,57 +689,68 @@
 
 .AnkiGradeBtn {
   flex: 1;
+  min-height: 48px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  justify-content: center;
+  gap: 3px;
   padding: 10px 8px;
-  border-radius: 10px;
-  border: 2px solid transparent;
+  border-radius: var(--radius-md, 12px);
+  border: 1.5px solid transparent;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   font-family: inherit;
+  box-sizing: border-box;
 }
 
 .AnkiGradeBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.AnkiGradeBtn:active {
+  transform: translateY(0);
 }
 
 .grade-again {
   background: #fef2f2;
   color: #991b1b;
-  border-color: #fca5a5;
+  border-color: #fecaca;
 }
 .grade-again:hover {
   background: #fee2e2;
+  border-color: #f87171;
 }
 
 .grade-hard {
   background: #fffbeb;
   color: #92400e;
-  border-color: #fcd34d;
+  border-color: #fde68a;
 }
 .grade-hard:hover {
   background: #fef3c7;
+  border-color: #fbbf24;
 }
 
 .grade-good {
   background: #eff6ff;
   color: #1e40af;
-  border-color: #93c5fd;
+  border-color: #bfdbfe;
 }
 .grade-good:hover {
   background: #dbeafe;
+  border-color: #60a5fa;
 }
 
 .grade-easy {
   background: #ecfdf5;
   color: #065f46;
-  border-color: #6ee7b7;
+  border-color: #a7f3d0;
 }
 .grade-easy:hover {
   background: #d1fae5;
+  border-color: #34d399;
 }
 
 .GradeEmoji {
@@ -709,13 +758,15 @@
 }
 
 .GradeLabel {
-  font-weight: 800;
+  font-weight: 700;
   font-size: 13px;
   text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .GradeShortcut {
   font-size: 10px;
+  opacity: 0.7;
 }
 
 .GradeSubtext {
@@ -735,71 +786,80 @@
 
 .FlipMainBtn {
   flex: 1;
-  background: #111111;
+  min-height: 48px;
+  background: var(--color-primary, #c5050c);
   color: #ffffff;
-  border: 2px solid #111111;
-  border-radius: 10px;
-  padding: 14px 20px;
+  border: none;
+  border-radius: var(--radius-pill, 9999px);
+  padding: 12px 24px;
   font-weight: 700;
   font-size: 15px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(197, 5, 12, 0.25);
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .FlipMainBtn:hover {
-  background: #262626;
+  background: var(--color-primary-dark, #a3040a);
   transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(197, 5, 12, 0.35);
+}
+
+.FlipMainBtn:active {
+  transform: translateY(0);
 }
 
 .NavArrowBtn {
-  background: #ffffff;
-  border: 1.5px solid #d1d5db;
-  border-radius: 10px;
-  padding: 14px 18px;
-  font-weight: 700;
+  min-height: 48px;
+  background: var(--surface-card, #ffffff);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-pill, 9999px);
+  padding: 12px 20px;
+  font-weight: 600;
   font-size: 14px;
-  color: #374151;
+  color: var(--text-secondary, #4b5563);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .NavArrowBtn:hover {
-  background: #f3f4f6;
-  border-color: #9ca3af;
+  background: var(--surface-sunken, #f9fafb);
+  border-color: var(--border-strong, #9ca3af);
+  color: var(--text-primary, #111827);
 }
 
 .KeyboardHintsBar {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   flex-wrap: wrap;
   justify-content: center;
   font-size: 11px;
-  color: #6b7280;
+  color: var(--text-tertiary, #9ca3af);
   margin-top: 4px;
 }
 
 .HintPiece {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
 kbd {
-  background: #f3f4f6;
-  border: 1px solid #d1d5db;
+  background: var(--surface-sunken, #f3f4f6);
+  border: 1px solid var(--border-subtle, #d1d5db);
   border-radius: 4px;
   padding: 2px 6px;
-  font-family: monospace;
+  font-family: var(--font-sans, sans-serif);
   font-size: 11px;
   font-weight: 700;
-  color: #111111;
+  color: var(--text-primary, #111827);
 }
 
 /* --- Empty States --- */
 .EmptyKanjiState {
-  background: #ffffff;
-  border: 2px dashed #d1d5db;
-  border-radius: 16px;
+  background: var(--surface-card, #ffffff);
+  border: 2px dashed var(--border-subtle, #d1d5db);
+  border-radius: var(--radius-lg, 18px);
   padding: 48px 24px;
   text-align: center;
   max-width: 600px;
@@ -815,10 +875,11 @@ kbd {
   margin: 0 0 8px 0;
   font-size: 20px;
   font-weight: 700;
+  color: var(--text-primary, #111827);
 }
 
 .EmptyKanjiState p {
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   font-size: 14px;
   margin: 0 0 20px 0;
   line-height: 1.5;
@@ -832,34 +893,39 @@ kbd {
 }
 
 .PrimaryActionButton {
-  background: #111111;
+  background: var(--color-primary, #c5050c);
   color: #ffffff;
   border: none;
-  border-radius: 8px;
-  padding: 10px 18px;
+  border-radius: var(--radius-pill, 9999px);
+  padding: 10px 22px;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(197, 5, 12, 0.25);
+  transition: all 0.15s ease;
 }
 
 .PrimaryActionButton:hover {
-  background: #262626;
+  background: var(--color-primary-dark, #a3040a);
+  transform: translateY(-1px);
 }
 
 .SecondaryActionButton {
-  background: #ffffff;
-  border: 1.5px solid #d1d5db;
-  border-radius: 8px;
-  padding: 10px 18px;
+  background: var(--surface-card, #ffffff);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-pill, 9999px);
+  padding: 10px 22px;
   font-size: 14px;
-  font-weight: 700;
-  color: #374151;
+  font-weight: 600;
+  color: var(--text-secondary, #4b5563);
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .SecondaryActionButton:hover {
-  background: #f3f4f6;
+  background: var(--surface-sunken, #f9fafb);
+  border-color: var(--border-strong, #9ca3af);
+  color: var(--text-primary, #111827);
 }
 
 /* ============================================================ */
@@ -888,7 +954,7 @@ kbd {
 .VocabViewHeader p {
   margin: 0;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   max-width: 650px;
 }
 
@@ -897,8 +963,9 @@ kbd {
   border: 1.5px solid #a7f3d0;
   color: #065f46;
   font-size: 13px;
-  padding: 8px 14px;
-  border-radius: 8px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill, 9999px);
 }
 
 .VocabPracticeLayout {
@@ -933,15 +1000,15 @@ kbd {
   inset: 0;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  background: #ffffff;
-  border: 2px solid #111111;
-  border-radius: 16px;
-  padding: 24px;
+  background: var(--surface-card, #ffffff);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-lg, 18px);
+  padding: 28px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-card, 0 4px 16px rgba(0, 0, 0, 0.06));
   box-sizing: border-box;
 }
 
@@ -951,25 +1018,25 @@ kbd {
 }
 
 .VocabBadge {
-  background: #111111;
+  background: var(--color-primary, #c5050c);
   color: #ffffff;
   font-size: 11px;
   font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill, 9999px);
   text-transform: uppercase;
 }
 
 .BigVocabKanji {
-  font-size: 54px;
+  font-size: 56px;
   font-weight: 700;
-  color: #111111;
-  font-family: 'Yu Mincho', serif;
+  color: var(--text-primary, #111827);
+  font-family: var(--font-jp-heading, serif);
 }
 
 .TapFlipHint {
   font-size: 12px;
-  color: #9ca3af;
+  color: var(--text-tertiary, #9ca3af);
 }
 
 .BackFace {
@@ -981,20 +1048,21 @@ kbd {
 .BackVocabReading {
   font-size: 26px;
   font-weight: 700;
-  color: #059669;
+  color: #10b981;
+  font-family: var(--font-jp-body, sans-serif);
 }
 
 .BackVocabMeaning {
   font-size: 18px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-primary, #111827);
   max-width: 480px;
 }
 
 .ComponentKanjisList {
   width: 100%;
   text-align: left;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--border-subtle, #f3f4f6);
   padding-top: 12px;
 }
 
@@ -1002,7 +1070,7 @@ kbd {
   margin: 0 0 8px 0;
   font-size: 11px;
   text-transform: uppercase;
-  color: #6b7280;
+  color: var(--text-tertiary, #9ca3af);
   letter-spacing: 0.05em;
 }
 
@@ -1016,10 +1084,10 @@ kbd {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #f3f4f6;
-  border: 1px solid #e5e7eb;
-  padding: 4px 10px;
-  border-radius: 6px;
+  background: var(--surface-sunken, #f3f4f6);
+  border: 1px solid var(--border-subtle, #e5e7eb);
+  padding: 5px 12px;
+  border-radius: var(--radius-pill, 9999px);
   font-size: 12px;
 }
 
@@ -1029,23 +1097,30 @@ kbd {
 }
 
 .ChipMeaning {
-  color: #4b5563;
+  color: var(--text-secondary, #4b5563);
 }
 
 .ChipScore {
   font-weight: 700;
-  color: #059669;
+  color: #10b981;
 }
 
 .VocabAudioBtnLarge {
-  background: #111111;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
+  min-height: 40px;
+  background: var(--surface-card, #ffffff);
+  color: var(--text-primary, #111827);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-pill, 9999px);
+  padding: 8px 18px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.VocabAudioBtnLarge:hover {
+  background: var(--surface-sunken, #f9fafb);
+  border-color: var(--border-strong, #9ca3af);
 }
 
 .VocabNavControls {
@@ -1056,7 +1131,8 @@ kbd {
 
 .VocabIndexText {
   font-weight: 700;
-  color: #374151;
+  color: var(--text-secondary, #4b5563);
+  font-variant-numeric: tabular-nums;
 }
 
 /* ============================================================ */
@@ -1079,39 +1155,46 @@ kbd {
 .LevelTabsRow {
   display: flex;
   gap: 6px;
+  background: var(--surface-sunken, #f3f4f6);
+  padding: 4px;
+  border-radius: var(--radius-pill, 9999px);
+  border: 1px solid var(--border-subtle, #e5e7eb);
 }
 
 .LevelTabBtn {
-  border: 1.5px solid #d1d5db;
-  background: #ffffff;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 700;
+  border: none;
+  background: transparent;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill, 9999px);
+  font-weight: 600;
   font-size: 13px;
+  color: var(--text-secondary, #6b7280);
   cursor: pointer;
   transition: all 0.15s;
 }
 
 .LevelTabBtn.active {
-  background: #111111;
-  color: #ffffff;
-  border-color: #111111;
+  background: #ffffff;
+  color: var(--text-primary, #111827);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 .BulkUnlockBtn {
-  background: #059669;
+  background: #10b981;
   color: #ffffff;
   border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-weight: 700;
+  border-radius: var(--radius-pill, 9999px);
+  padding: 8px 18px;
+  font-weight: 600;
   font-size: 13px;
   cursor: pointer;
-  transition: background 0.2s;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+  transition: all 0.15s ease;
 }
 
 .BulkUnlockBtn:hover {
-  background: #047857;
+  background: #059669;
+  transform: translateY(-1px);
 }
 
 .SearchAndAddBar {
@@ -1130,94 +1213,112 @@ kbd {
 
 .SearchIcon {
   position: absolute;
-  left: 12px;
+  left: 14px;
   font-size: 14px;
-  color: #9ca3af;
+  color: var(--text-tertiary, #9ca3af);
 }
 
 .SearchBox input {
   width: 100%;
-  padding: 10px 36px 10px 36px;
-  border: 1.5px solid #d1d5db;
-  border-radius: 8px;
+  min-height: 44px;
+  padding: 10px 38px 10px 40px;
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-pill, 9999px);
   font-size: 13px;
   outline: none;
   font-family: inherit;
+  background: var(--surface-card, #ffffff);
+  box-sizing: border-box;
+  transition: all 0.15s ease;
 }
 
 .SearchBox input:focus {
-  border-color: #111111;
+  border-color: var(--color-primary, #c5050c);
+  box-shadow: 0 0 0 3px rgba(197, 5, 12, 0.12);
 }
 
 .ClearSearchBtn {
   position: absolute;
-  right: 10px;
+  right: 12px;
   border: none;
   background: transparent;
-  color: #9ca3af;
+  color: var(--text-tertiary, #9ca3af);
   cursor: pointer;
   font-size: 14px;
 }
 
 .CustomKanjiAddBox {
   display: flex;
-  gap: 6px;
+  gap: 8px;
 }
 
 .CustomKanjiAddBox input {
-  padding: 10px 14px;
-  border: 1.5px solid #d1d5db;
-  border-radius: 8px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-pill, 9999px);
   font-size: 13px;
   outline: none;
   font-family: inherit;
   width: 180px;
+  background: var(--surface-card, #ffffff);
+  box-sizing: border-box;
+  transition: all 0.15s ease;
 }
 
 .CustomKanjiAddBox input:focus {
-  border-color: #111111;
+  border-color: var(--color-primary, #c5050c);
+  box-shadow: 0 0 0 3px rgba(197, 5, 12, 0.12);
 }
 
 .AddCustomBtn {
-  background: #111111;
+  min-height: 44px;
+  background: var(--color-primary, #c5050c);
   color: #ffffff;
   border: none;
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-weight: 700;
+  border-radius: var(--radius-pill, 9999px);
+  padding: 10px 18px;
+  font-weight: 600;
   font-size: 13px;
   cursor: pointer;
   white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(197, 5, 12, 0.25);
+  transition: all 0.15s ease;
+}
+
+.AddCustomBtn:hover {
+  background: var(--color-primary-dark, #a3040a);
 }
 
 /* Kanji Grid */
 .KanjiCatalogGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
   gap: 12px;
 }
 
 .KanjiGridCard {
-  background: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 12px;
+  background: var(--surface-card, #ffffff);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-md, 14px);
+  padding: 14px 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
   text-align: center;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.03));
 }
 
 .KanjiGridCard:hover {
-  border-color: #111111;
+  border-color: var(--border-strong, #9ca3af);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.06));
 }
 
 .KanjiGridCard.is-learned {
-  border-color: #10b981;
+  border-color: #a7f3d0;
   background: #f0fdf4;
 }
 
@@ -1231,32 +1332,32 @@ kbd {
 .MiniLevelBadge {
   font-size: 10px;
   font-weight: 800;
-  color: #6b7280;
+  color: var(--text-tertiary, #9ca3af);
 }
 
 .MiniScoreBadge {
   font-size: 10px;
   font-weight: 800;
   padding: 1px 6px;
-  border-radius: 4px;
+  border-radius: var(--radius-pill, 9999px);
 }
 
 .MiniStatusBadge {
   font-size: 9px;
-  color: #9ca3af;
+  color: var(--text-tertiary, #9ca3af);
 }
 
 .GridKanjiChar {
-  font-size: 38px;
+  font-size: 40px;
   font-weight: 500;
   line-height: 1;
-  color: #111111;
-  font-family: 'Yu Mincho', serif;
+  color: var(--text-primary, #111827);
+  font-family: var(--font-jp-heading, 'Shippori Antique', serif);
 }
 
 .GridKanjiMeaning {
   font-size: 12px;
-  color: #4b5563;
+  color: var(--text-secondary, #4b5563);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1277,30 +1378,30 @@ kbd {
 
 .ToggleLearnedBtn {
   width: 100%;
-  padding: 5px 8px;
-  border-radius: 6px;
+  padding: 6px 10px;
+  border-radius: var(--radius-pill, 9999px);
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.15s ease;
 }
 
 .ToggleLearnedBtn.btn-add {
-  background: #ffffff;
-  color: #111111;
-  border: 1px solid #d1d5db;
+  background: var(--surface-card, #ffffff);
+  color: var(--text-primary, #111827);
+  border: 1.5px solid var(--border-subtle, #d1d5db);
 }
 
 .ToggleLearnedBtn.btn-add:hover {
-  background: #111111;
+  background: var(--color-primary, #c5050c);
   color: #ffffff;
-  border-color: #111111;
+  border-color: var(--color-primary, #c5050c);
 }
 
 .ToggleLearnedBtn.btn-remove {
   background: #10b981;
   color: #ffffff;
-  border: 1px solid #10b981;
+  border: 1.5px solid #10b981;
 }
 
 .ToggleLearnedBtn.btn-remove:hover {
@@ -1311,8 +1412,8 @@ kbd {
 .NoGridResults {
   grid-column: 1 / -1;
   text-align: center;
-  padding: 30px;
-  color: #9ca3af;
+  padding: 40px;
+  color: var(--text-tertiary, #9ca3af);
 }
 
 /* ============================================================ */
@@ -1331,13 +1432,19 @@ kbd {
 }
 
 .AnalyticsCard {
-  background: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 18px;
+  background: var(--surface-card, #ffffff);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-md, 14px);
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  box-shadow: var(--shadow-card, 0 1px 3px rgba(0, 0, 0, 0.04));
+  transition: all 0.15s ease;
+}
+
+.AnalyticsCard:hover {
+  box-shadow: var(--shadow-hover, 0 4px 14px rgba(0, 0, 0, 0.06));
 }
 
 .AnalyticsIcon {
@@ -1347,19 +1454,20 @@ kbd {
 .AnalyticsNumber {
   font-size: 32px;
   font-weight: 800;
-  color: #111111;
+  color: var(--text-primary, #111827);
   line-height: 1.1;
+  font-variant-numeric: tabular-nums;
 }
 
 .AnalyticsTitle {
   font-size: 14px;
   font-weight: 700;
-  color: #374151;
+  color: var(--text-secondary, #374151);
 }
 
 .AnalyticsSub {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-tertiary, #6b7280);
 }
 
 .card-green { border-left: 4px solid #10b981; }
@@ -1368,16 +1476,18 @@ kbd {
 .card-purple { border-left: 4px solid #8b5cf6; }
 
 .LevelBreakdownSection {
-  background: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 20px;
+  background: var(--surface-card, #ffffff);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-md, 14px);
+  padding: 22px;
+  box-shadow: var(--shadow-card, 0 1px 3px rgba(0, 0, 0, 0.04));
 }
 
 .LevelBreakdownSection h3 {
   margin: 0 0 16px 0;
   font-size: 16px;
   font-weight: 700;
+  color: var(--text-primary, #111827);
 }
 
 .LevelProgressGrid {
@@ -1387,10 +1497,10 @@ kbd {
 }
 
 .LevelProgressCard {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 14px;
+  background: var(--surface-sunken, #f9fafb);
+  border: 1px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-md, 12px);
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1403,30 +1513,32 @@ kbd {
 }
 
 .LvlBadgeLarge {
-  background: #111111;
+  background: var(--color-primary, #c5050c);
   color: #ffffff;
   font-weight: 800;
   font-size: 12px;
-  padding: 3px 8px;
-  border-radius: 4px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill, 9999px);
 }
 
 .LvlCountFraction {
   font-size: 13px;
-  color: #4b5563;
+  color: var(--text-secondary, #4b5563);
+  font-variant-numeric: tabular-nums;
 }
 
 .LvlProgressBar {
   width: 100%;
   height: 8px;
   background: #e5e7eb;
-  border-radius: 999px;
+  border-radius: var(--radius-pill, 9999px);
   overflow: hidden;
 }
 
 .LvlProgressFill {
   height: 100%;
   background: #10b981;
+  border-radius: var(--radius-pill, 9999px);
   transition: width 0.3s ease;
 }
 
@@ -1435,22 +1547,24 @@ kbd {
   justify-content: space-between;
   align-items: center;
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-secondary, #6b7280);
   font-weight: 600;
 }
 
 .LvlUnlockInlineBtn {
-  background: #ffffff;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  padding: 3px 8px;
+  background: var(--surface-card, #ffffff);
+  border: 1px solid var(--border-subtle, #d1d5db);
+  border-radius: var(--radius-pill, 9999px);
+  padding: 4px 10px;
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .LvlUnlockInlineBtn:hover {
-  background: #f3f4f6;
+  background: var(--surface-sunken, #f3f4f6);
+  border-color: var(--border-strong, #9ca3af);
 }
 
 /* ============================================================ */
@@ -1458,7 +1572,7 @@ kbd {
 /* ============================================================ */
 @media (max-width: 768px) {
   .KanjiHeaderBox {
-    padding: 16px;
+    padding: 20px 18px;
   }
 
   .KanjiTitleRow {
