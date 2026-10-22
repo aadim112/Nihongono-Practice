@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import "./NihongoNakaNi.css";
 import { recordLearningActivity } from "../utils/activityTracker";
 
@@ -12,11 +12,18 @@ export default function NihongoNakaNi({ user, selectedLevel }) {
   const [showGrammarHints, setShowGrammarHints] = useState(false);
   const [showVocabHints, setShowVocabHints] = useState(false);
   const [charCount, setCharCount] = useState(0);
-  // New UI states for passage history
+  // Passage history
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [selectedHistoryIdx, setSelectedHistoryIdx] = useState(null);
 
   const userId = user ?? 0;
+  // Use a ref to access the latest passage inside loadPassage without
+  // making `passage` a dependency — this breaks the infinite-reload loop.
+  const passageRef = useRef(passage);
+  useEffect(() => {
+    passageRef.current = passage;
+  }, [passage]);
 
   // ── Format today's date nicely ───────────────────────────────────────
   const todayLabel = () => {
@@ -36,12 +43,15 @@ export default function NihongoNakaNi({ user, selectedLevel }) {
       setChecked(false);
       setAnswer("");
       setCharCount(0);
-      // Preserve current passage in history before loading new one
+      setSelectedHistoryIdx(null);
+      // Preserve current passage in history before loading a new one.
+      // Read via ref so `passage` is NOT a dependency here.
+      const current = passageRef.current;
       setHistory((prev) => {
-        if (passage && !passage.error) {
+        if (current && !current.error) {
           const last = prev[prev.length - 1];
-          if (!last || last.id !== passage.id) {
-            return [...prev, passage];
+          if (!last || last.id !== current.id) {
+            return [...prev, current];
           }
         }
         return prev;
@@ -70,13 +80,14 @@ export default function NihongoNakaNi({ user, selectedLevel }) {
         setLoading(false);
       }
     },
-    [userId, selectedLevel, passage]
+    [userId, selectedLevel] // ← `passage` removed; accessed via ref instead
   );
 
   // Load on mount and when user/level changes
   useEffect(() => {
     loadPassage(false);
-  }, [loadPassage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, selectedLevel]);
 
   const handleAnswerChange = (e) => {
     setAnswer(e.target.value);
@@ -155,6 +166,62 @@ export default function NihongoNakaNi({ user, selectedLevel }) {
           📜 History ({history.length})
         </button>
       </div>
+
+      {/* ── History Panel ─────────────────────────────────────────── */}
+      {showHistory && history.length > 0 && (
+        <div className="nnk-card nnk-history-panel">
+          <div className="nnk-card__label">
+            <span className="nnk-label-icon">📜</span>
+            <span>Previous Passages</span>
+            <button
+              className="nnk-history-close-btn"
+              onClick={() => { setShowHistory(false); setSelectedHistoryIdx(null); }}
+              title="Close history"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Passage index list */}
+          <div className="nnk-history-list">
+            {history.map((p, idx) => (
+              <button
+                key={idx}
+                className={`nnk-history-item ${selectedHistoryIdx === idx ? "nnk-history-item--active" : ""}`}
+                onClick={() => setSelectedHistoryIdx(selectedHistoryIdx === idx ? null : idx)}
+              >
+                <span className="nnk-history-num">#{idx + 1}</span>
+                <span className="nnk-history-level">{p.level || "N5"}</span>
+                <span className="nnk-history-preview">
+                  {p.english ? p.english.slice(0, 70) + (p.english.length > 70 ? "…" : "") : "—"}
+                </span>
+                <span className="nnk-chevron">{selectedHistoryIdx === idx ? "▴" : "▾"}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Expanded passage view */}
+          {selectedHistoryIdx !== null && history[selectedHistoryIdx] && (
+            <div className="nnk-history-detail">
+              <div className="nnk-history-detail__label">
+                <span className="nnk-label-icon">🇬🇧</span>
+                <span>English Passage</span>
+                <span className="nnk-level-tag">{history[selectedHistoryIdx].level}</span>
+              </div>
+              <div className="nnk-passage-body">
+                {renderParagraphs(history[selectedHistoryIdx].english, "nnk-passage-p")}
+              </div>
+              <div className="nnk-history-detail__label" style={{ marginTop: 12 }}>
+                <span className="nnk-label-icon">🇯🇵</span>
+                <span>Reference Japanese Translation</span>
+              </div>
+              <div className="nnk-compare-body nnk-ref-body">
+                {renderParagraphs(history[selectedHistoryIdx].japanese, "nnk-compare-p nnk-ref-p")}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Loading state */}
       {loading && (

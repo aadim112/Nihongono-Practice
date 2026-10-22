@@ -482,6 +482,110 @@
   transform: translateY(-1px);
 }
 
+/* ── Passage History Panel ───────────────────────────────────── */
+.nnk-history-panel {
+  gap: 12px;
+}
+
+.nnk-history-close-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-tertiary, #9ca3af);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm, 8px);
+  transition: color 0.15s, background 0.15s;
+  line-height: 1;
+}
+
+.nnk-history-close-btn:hover {
+  color: var(--color-primary, #c5050c);
+  background: #fef2f2;
+}
+
+.nnk-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nnk-history-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: var(--surface-sunken, #f9fafb);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+  border-radius: var(--radius-sm, 10px);
+  padding: 10px 14px;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-sans, -apple-system, sans-serif);
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.nnk-history-item:hover {
+  border-color: var(--color-primary, #c5050c);
+  background: #fff;
+}
+
+.nnk-history-item--active {
+  border-color: var(--color-primary, #c5050c);
+  background: #fff5f5;
+}
+
+.nnk-history-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-tertiary, #9ca3af);
+  min-width: 24px;
+}
+
+.nnk-history-level {
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--color-primary, #c5050c);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill, 9999px);
+  flex-shrink: 0;
+}
+
+.nnk-history-preview {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-secondary, #4b5563);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nnk-history-detail {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  background: var(--surface-sunken, #f9fafb);
+  border-radius: var(--radius-sm, 10px);
+  border: 1.5px solid var(--border-subtle, #e5e7eb);
+}
+
+.nnk-history-detail__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary, #4b5563);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 /* ── Spinner ─────────────────────────────────────────────────── */
 .nnk-spinner {
   width: 28px;
